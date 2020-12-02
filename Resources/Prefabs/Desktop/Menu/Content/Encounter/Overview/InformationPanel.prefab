@@ -1737,7 +1737,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4894545025600928066}
-  - component: {fileID: 4894545025600928067}
   m_Layer: 5
   m_Name: DownloadDeleteRow
   m_TagString: Untagged
@@ -1767,27 +1766,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.1928, y: -371.66248}
   m_SizeDelta: {x: 394.26, y: 40.929993}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4894545025600928067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4894545025600928069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 564ff53b00630fd4aad1cee9ce252533, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  deleteOnlyRow: {fileID: 4894545025797162737}
-  deleteDownloadRow: {fileID: 4894545026291615871}
-  downloadOnlyRow: {fileID: 4894545025926449104}
-  downloadButtons:
-  - {fileID: 4894545025935371536}
-  - {fileID: 4894545025776119660}
-  deleteButtons:
-  - {fileID: 4894545025556301994}
-  - {fileID: 4894545026734124275}
 --- !u!1 &4894545025608574468
 GameObject:
   m_ObjectHideFlags: 0
@@ -2109,8 +2087,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5af69e75df8573848b9a4149bc4fa57f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  encounterButtons: {fileID: 4894545026328637030}
-  deleteDownloadHandler: {fileID: 4894545025600928067}
 --- !u!114 &3239303624040622703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3944,7 +3920,6 @@ GameObject:
   - component: {fileID: 4894545026328636955}
   - component: {fileID: 4894545026328636954}
   - component: {fileID: 4894545026328636953}
-  - component: {fileID: 4894545026328637030}
   m_Layer: 5
   m_Name: ReaderWriterButtons
   m_TagString: Untagged
@@ -4050,21 +4025,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
---- !u!114 &4894545026328637030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4894545026328636956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe65529ed1359534085fb1d3e823f786, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  readButtons: {fileID: 4894545026362723457}
-  writeButtons: {fileID: 4894545024834995342}
-  templateButtons: {fileID: 4894545026469152932}
 --- !u!1 &4894545026338913893
 GameObject:
   m_ObjectHideFlags: 0

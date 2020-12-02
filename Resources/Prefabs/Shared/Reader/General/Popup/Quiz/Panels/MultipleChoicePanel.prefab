@@ -355,9 +355,7 @@ GameObject:
   - component: {fileID: 5934707393294674414}
   - component: {fileID: 5932469669508094200}
   - component: {fileID: 5824621602868883652}
-  - component: {fileID: 5935897526746096506}
   - component: {fileID: 5826033641479581540}
-  - component: {fileID: 7843692434095657683}
   - component: {fileID: 3444135754634928289}
   m_Layer: 5
   m_Name: Answers
@@ -418,18 +416,6 @@ MonoBehaviour:
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!225 &5935897526746096506
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5855972238147584534}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &5826033641479581540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -450,22 +436,6 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &7843692434095657683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5855972238147584534}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ce13bbe7d09fbb4ba099b5f738c5c5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panelOptions:
-  - {fileID: 3919973617675541203, guid: 4e0c32fa9c67cd14680cc41eeb2381ff, type: 3}
-  toggleGroup: {fileID: 3444135754634928289}
-  feedbackParent: {fileID: 5341153226775086308}
 --- !u!114 &3444135754634928289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -768,7 +738,7 @@ GameObject:
   - component: {fileID: 2213000453388653552}
   - component: {fileID: 83971663267058308}
   m_Layer: 5
-  m_Name: NewMultipleChoicePanel
+  m_Name: MultipleChoicePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -783,7 +753,7 @@ RectTransform:
   m_GameObject: {fileID: 5856726618561694274}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.99999887, y: 0.99999887, z: 0.99999905}
+  m_LocalScale: {x: 1, y: 0.99999887, z: 0.99999905}
   m_Children:
   - {fileID: 5935212775203949112}
   - {fileID: 6649980407709729240}
@@ -1290,6 +1260,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5935405476381634830}
     m_Modifications:
+    - target: {fileID: 4840929948963363511, guid: bce2f6d70cc04d249a5cb820a198b878,
+        type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 4840929948963363511, guid: bce2f6d70cc04d249a5cb820a198b878,
+        type: 3}
+      propertyPath: m_Padding.m_Right
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: 8100406166571621886, guid: bce2f6d70cc04d249a5cb820a198b878,
         type: 3}
       propertyPath: m_Name
