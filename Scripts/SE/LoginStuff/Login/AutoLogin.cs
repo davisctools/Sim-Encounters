@@ -28,9 +28,10 @@ namespace ClinicalTools.SimEncounters
             return user;
         }
 
+        protected virtual string PhpFile { get; } = "Login.php";
         protected virtual UnityWebRequest GetWebRequest()
         {
-            var address = WebAddress.BuildUrl("Login.php");
+            var address = WebAddress.BuildUrl(PhpFile);
             WWWForm form = new WWWForm();
             form.AddField("ACTION", "checkSession");
             form.AddField("deviceid", SystemInfo.deviceUniqueIdentifier);

@@ -25,13 +25,13 @@ namespace ClinicalTools.SimEncounters
             return contentData;
         }
 
-        private const string DownloadPhp = "DownloadEncounters.php";
-        private const string ModeVariable = "mode";
-        private const string ModeValue = "downloadCase";
-        private const string RecordNumberVariable = "recordNumber";
-        private const string ColumnVariable = "column";
-        private const string ColumnValue = "xmlData";
-        private const string AccountIdVariable = "accountId";
+        protected virtual string DownloadPhp { get; } = "DownloadEncounters.php";
+        protected virtual string ModeVariable { get; } = "mode";
+        protected virtual string ModeValue { get; } = "downloadCase";
+        protected virtual string RecordNumberVariable { get; } = "recordNumber";
+        protected virtual string ColumnVariable { get; } = "column";
+        protected virtual string ColumnValue { get; } = "xmlData";
+        protected virtual string AccountIdVariable { get; } = "accountId";
         private UnityWebRequest GetWebRequest(User user, EncounterMetadata metadata)
         {
             var arguments = new UrlArgument[] {

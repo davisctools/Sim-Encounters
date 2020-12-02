@@ -14,7 +14,7 @@ namespace ClinicalTools.SimEncounters
             UrlBuilder = urlBuilder;
         }
 
-        private const string PhpFile = "DeleteEncounter.php";
+        protected virtual string PhpFile { get; } = "DeleteEncounter.php";
         public WaitableTask Delete(User user, EncounterMetadata metadata)
         {
             if (user.IsGuest)

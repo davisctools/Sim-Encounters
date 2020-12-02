@@ -29,7 +29,7 @@ namespace ClinicalTools.SimEncounters
             EncounterContentSerializer = encounterContentSerializer;
         }
 
-        private const string PhpFile = "UploadEncounter.php";
+        protected virtual string PhpFile { get; } = "UploadEncounter.php";
         public WaitableTask Save(User user, Encounter encounter)
         {
             if (user.IsGuest)
@@ -47,7 +47,7 @@ namespace ClinicalTools.SimEncounters
         }
 
 
-        private const string AccountIdVariable = "accountId";
+        protected virtual string AccountIdVariable { get; } = "accountId";
         protected virtual WWWForm CreateForm(User user, Encounter encounter)
         {
             var form = new WWWForm();
@@ -61,11 +61,11 @@ namespace ClinicalTools.SimEncounters
             return form;
         }
 
-        private const string ModeVariable = "mode";
-        private const string UploadModeValue = "upload";
-        private const string UpdateModeValue = "update";
-        private const string RecordNumberVariable = "recordNumber";
-        private void AddFormModeFields(WWWForm form, EncounterMetadata metadata)
+        protected virtual string ModeVariable { get; } = "mode";
+        protected virtual string UploadModeValue { get; } = "upload";
+        protected virtual string UpdateModeValue { get; } = "update";
+        protected virtual string RecordNumberVariable { get; } = "recordNumber";
+        protected virtual void AddFormModeFields(WWWForm form, EncounterMetadata metadata)
         {
             string mode;
             if (metadata.RecordNumber >= 0 && metadata.RecordNumber < 1000) {
@@ -78,10 +78,10 @@ namespace ClinicalTools.SimEncounters
             form.AddField(ModeVariable, mode);
         }
 
-        private const string XmlMimeType = "text/xml";
-        private const string NonImageContentVariable = "xmlData";
-        private const string NonImageContentFilename = "xmlData";
-        private void AddFormContentFields(WWWForm form, EncounterNonImageContent content)
+        protected virtual string XmlMimeType { get; } = "text/xml";
+        protected virtual string NonImageContentVariable { get; } = "xmlData";
+        protected virtual string NonImageContentFilename { get; } = "xmlData";
+        protected virtual void AddFormContentFields(WWWForm form, EncounterNonImageContent content)
         {
             var contentDoc = new XmlDocument();
             var contentSerializer = new XmlSerializer(contentDoc);
@@ -89,10 +89,10 @@ namespace ClinicalTools.SimEncounters
             var fileBytes = GetFileAsByteArray(contentDoc.OuterXml);
             form.AddBinaryData(NonImageContentVariable, fileBytes, NonImageContentFilename, XmlMimeType);
         }
-        private const string ImageContentVariable = "imgData";
-        private const string ImageContentFilename = "imgData";
-        private const int MaxAllowedPacketSize = 10000000;
-        private void AddFormImageDataFields(WWWForm form, EncounterImageContent imageData)
+        protected virtual string ImageContentVariable { get; } = "imgData";
+        protected virtual string ImageContentFilename { get; } = "imgData";
+        protected virtual int MaxAllowedPacketSize { get; } = 10000000;
+        protected virtual void AddFormImageDataFields(WWWForm form, EncounterImageContent imageData)
         {
             var imagesDoc = new XmlDocument();
             var imagesSerializer = new XmlSerializer(imagesDoc);
@@ -106,24 +106,24 @@ namespace ClinicalTools.SimEncounters
                 Debug.LogError("Error: Images exceed upload size limit");
         }
 
-        private const string FirstNameVariable = "firstName";
-        private const string LastNameVariable = "lastName";
-        private const string TitleVariable = "title";
-        private const string DifficultyVariable = "difficulty";
-        private const string SubtitleVariable = "subtitle";
-        private const string DescriptionVariable = "description";
-        private const string DateModifiedVariable = "modified";
-        private const string AudienceVariable = "audience";
-        private const string VersionVariable = "version";
-        private const string VersionValue = "0.1";
-        private const string UrlVariable = "url";
-        private const string CompletionCodeVariable = "urlkey";
-        private const string PublicVariable = "public";
-        private const string TemplateVariable = "template";
-        private const string SpriteDataVariable = "imageData";
-        private const string SpriteWidthVariable = "imageWidth";
-        private const string SpriteHeightVariable = "imageHeight";
-        private void AddMetadataFields(WWWForm form, EncounterMetadata metadata)
+        protected virtual string FirstNameVariable { get; } = "firstName";
+        protected virtual string LastNameVariable { get; } = "lastName";
+        protected virtual string TitleVariable { get; } = "title";
+        protected virtual string DifficultyVariable { get; } = "difficulty";
+        protected virtual string SubtitleVariable { get; } = "subtitle";
+        protected virtual string DescriptionVariable { get; } = "description";
+        protected virtual string DateModifiedVariable { get; } = "modified";
+        protected virtual string AudienceVariable { get; } = "audience";
+        protected virtual string VersionVariable { get; } = "version";
+        protected virtual string VersionValue { get; } = "0.1";
+        protected virtual string UrlVariable { get; } = "url";
+        protected virtual string CompletionCodeVariable { get; } = "urlkey";
+        protected virtual string PublicVariable { get; } = "public";
+        protected virtual string TemplateVariable { get; } = "template";
+        protected virtual string SpriteDataVariable { get; } = "imageData";
+        protected virtual string SpriteWidthVariable { get; } = "imageWidth";
+        protected virtual string SpriteHeightVariable { get; } = "imageHeight";
+        protected virtual void AddMetadataFields(WWWForm form, EncounterMetadata metadata)
         {
             if (metadata is INamed named) {
                 AddEscapedField(form, FirstNameVariable, named.Name.FirstName);
@@ -156,11 +156,11 @@ namespace ClinicalTools.SimEncounters
             form.AddField(SpriteHeightVariable, metadata.Sprite.texture.height);
         }
 
-        private void AddEscapedField(WWWForm form, string variable, string value)
+        protected virtual void AddEscapedField(WWWForm form, string variable, string value)
             => form.AddField(variable, UnityWebRequest.EscapeURL(value));
 
-        private const string TagsVariable = "tags";
-        private void AddCategoryField(WWWForm form, IEnumerable<string> categories)
+        protected virtual string TagsVariable { get; } = "tags";
+        protected virtual void AddCategoryField(WWWForm form, IEnumerable<string> categories)
         {
             var categoryString = "";
             foreach (var category in categories)
@@ -171,9 +171,9 @@ namespace ClinicalTools.SimEncounters
         /**
          * Returns the passed in string as a byte array. Makes code easier to read
          */
-        private byte[] GetFileAsByteArray(string data) => Encoding.UTF8.GetBytes(data);
+        protected virtual byte[] GetFileAsByteArray(string data) => Encoding.UTF8.GetBytes(data);
 
-        private void ProcessResults(WaitableTask actionResult, TaskResult<string> serverResult, EncounterMetadata metadata)
+        protected virtual void ProcessResults(WaitableTask actionResult, TaskResult<string> serverResult, EncounterMetadata metadata)
         {
             if (serverResult.IsError()) {
                 actionResult.SetError(serverResult.Exception);

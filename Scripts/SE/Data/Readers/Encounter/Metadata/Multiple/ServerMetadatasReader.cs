@@ -26,18 +26,18 @@ namespace ClinicalTools.SimEncounters
             return metadatas;
         }
 
-        private const string MENU_PHP = "DownloadEncounters.php";
-        private const string MODE_VARIABLE = "mode";
-        private const string MODE_VALUE = "downloadForOneAccount";
-        private const string ACCOUNT_VARIABLE = "accountId";
+        protected virtual string MenuPhp { get; } = "DownloadEncounters.php";
+        protected virtual string ModeVariable { get; } = "mode";
+        protected virtual string ModeValue { get; } = "downloadForOneAccount";
+        protected virtual string AccountVariable { get; } = "accountId";
 
         private UnityWebRequest GetWebRequest(User user)
         {
             var arguments = new UrlArgument[] {
-                new UrlArgument(MODE_VARIABLE, MODE_VALUE),
-                new UrlArgument(ACCOUNT_VARIABLE, user.AccountId.ToString())
+                new UrlArgument(ModeVariable, ModeValue),
+                new UrlArgument(AccountVariable, user.AccountId.ToString())
             };
-            var url = urlBuilder.BuildUrl(MENU_PHP, arguments);
+            var url = urlBuilder.BuildUrl(MenuPhp, arguments);
             return UnityWebRequest.Get(url);
         }
 

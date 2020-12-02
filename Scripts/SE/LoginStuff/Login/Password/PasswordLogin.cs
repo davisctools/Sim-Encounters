@@ -18,6 +18,7 @@ namespace ClinicalTools.SimEncounters
         }
 
 
+        protected virtual string PhpFile { get; } = "Login.php";
         protected virtual Exception NoUsernameOrEmailException { get; } = new Exception("No username or email provided.");
         protected virtual Exception NoPasswordException { get; } = new Exception("No password provided.");
         public WaitableTask<User> Login(string username, string email, string password)
@@ -29,7 +30,7 @@ namespace ClinicalTools.SimEncounters
 
             var form = CreateForm(username, email, password);
 
-            var address = WebAddress.BuildUrl("Login.php");
+            var address = WebAddress.BuildUrl(PhpFile);
             var webRequest = UnityWebRequest.Post(address, form);
             var serverResult = ServerReader.Begin(webRequest);
 

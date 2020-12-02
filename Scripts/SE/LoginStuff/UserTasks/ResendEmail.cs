@@ -13,10 +13,10 @@ namespace ClinicalTools.SimEncounters
             ServerReader = serverReader;
         }
 
-        private const string phpFile = "Login.php";
-        private const string actionVariable = "ACTION";
-        private const string resendAction = "resendActivation";
-        private const string emailVariable = "email";
+        protected virtual string PhpFile { get; } = "Login.php";
+        protected virtual string ActionVariable {get;}= "ACTION";
+        protected virtual string ResendAction { get; } = "resendActivation";
+        protected virtual string EmailVariable { get; } = "email";
 
         /**
          * Downloads all available and applicable menu files to display on the main manu.
@@ -24,7 +24,7 @@ namespace ClinicalTools.SimEncounters
          */
         public void Resend(string email)
         {
-            var url = WebAddress.BuildUrl(phpFile);
+            var url = WebAddress.BuildUrl(PhpFile);
             var form = CreateForm(email);
 
             var webRequest = UnityWebRequest.Post(url, form);
@@ -36,9 +36,9 @@ namespace ClinicalTools.SimEncounters
         {
             var form = new WWWForm();
 
-            form.AddField(actionVariable, resendAction);
+            form.AddField(ActionVariable, ResendAction);
 
-            form.AddField(emailVariable, email);
+            form.AddField(EmailVariable, email);
 
             return form;
         }

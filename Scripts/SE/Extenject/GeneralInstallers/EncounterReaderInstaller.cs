@@ -22,7 +22,6 @@ namespace ClinicalTools.SimEncounters
 
             subcontainer.Bind<IBasicStatusesReader>().To<BasicStatusesReader>().AsTransient().WhenNotInjectedInto<BasicStatusesReader>();
             subcontainer.Bind<IBasicStatusesReader>().To<LocalBasicStatusesReader>().AsTransient().WhenInjectedInto<BasicStatusesReader>();
-            subcontainer.Bind<IBasicStatusesReader>().To<ServerBasicStatusesReader>().AsTransient().WhenInjectedInto<BasicStatusesReader>();
             FileManagerInstaller.BindFileManager(subcontainer, SaveType.Local);
         }
 
