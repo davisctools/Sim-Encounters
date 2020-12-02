@@ -174,18 +174,6 @@ MonoBehaviour:
   showEncountersToggle: {fileID: 374814568}
   showTemplatesToggle: {fileID: 1117612447}
   overview: {fileID: 0}
---- !u!114 &24000863 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4772133965011270186, guid: 155ed9910588fd14abff92fb5f7cdd03,
-    type: 3}
-  m_PrefabInstance: {fileID: 980495382}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 554f8d9212878734fb6cceff1d941ced, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &57840094 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8468591348424339271, guid: 6fe6802b0b08cd54aac726dd8ec849b2,
@@ -1224,6 +1212,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 155ed9910588fd14abff92fb5f7cdd03, type: 3}
+--- !u!114 &980495383 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1255427738328457610, guid: 155ed9910588fd14abff92fb5f7cdd03,
+    type: 3}
+  m_PrefabInstance: {fileID: 980495382}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75ae1f095abf2744fa7d05ada43ac6a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1093225770 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7430910571683115269, guid: 8a4711454b55b544c9cd639bca632831,
@@ -1392,7 +1392,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   addEncounterPopup: {fileID: 560892637}
   messageHandler: {fileID: 1099429874}
-  metadataSelector: {fileID: 24000863}
+  metadataSelector: {fileID: 980495383}
   backButton: {fileID: 0}
   encounterSelectorPrefab: {fileID: 1373136538030697194, guid: 9daedf7ab0480f247ab88b43720eb536,
     type: 3}
@@ -3096,7 +3096,7 @@ PrefabInstance:
     - target: {fileID: 7430910570488805347, guid: 8a4711454b55b544c9cd639bca632831,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 119.999954
+      value: 0.0007826439
       objectReference: {fileID: 0}
     - target: {fileID: 7430910570715369886, guid: 8a4711454b55b544c9cd639bca632831,
         type: 3}
