@@ -157,7 +157,11 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void AddEscapedField(WWWForm form, string variable, string value)
-            => form.AddField(variable, UnityWebRequest.EscapeURL(value));
+        {
+            if (value == null)
+                value = "";
+            form.AddField(variable, UnityWebRequest.EscapeURL(value));
+        }
 
         protected virtual string TagsVariable { get; } = "tags";
         protected virtual void AddCategoryField(WWWForm form, IEnumerable<string> categories)
