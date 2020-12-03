@@ -43,7 +43,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void ShowInReader()
         {
-            SignalBus.Fire<SceneChangedSignal>();
+            SignalBus.Fire<SerializeEncounterSignal>();
             var sceneInfo = SceneInfoSelector.CurrentValue.SceneInfo;
             EncounterWriter.Save(sceneInfo.User, sceneInfo.Encounter);
 

@@ -82,6 +82,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void HideControlledObjects()
         {
+            Label.text = "";
             foreach (var controlledObject in ControlledObjects) {
                 if (controlledObject == null)
                     Debug.LogError(gameObject.name);

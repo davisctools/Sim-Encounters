@@ -6,7 +6,7 @@ using Zenject;
 namespace ClinicalTools.SimEncounters
 {
     [RequireComponent(typeof(Image))]
-    public class WriterImage : MonoBehaviour, IWriterPanelField
+    public class WriterPanelImage : MonoBehaviour, IWriterPanelField
     {
         public virtual string Name => name;
         public virtual string Value => value;

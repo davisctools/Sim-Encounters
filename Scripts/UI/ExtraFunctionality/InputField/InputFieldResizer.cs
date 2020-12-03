@@ -42,7 +42,7 @@ namespace ClinicalTools.UI
         private bool resizeLock;
         public void ResizeField()
         {
-            Debug.LogWarning($"{name}: Resize field called");
+            Debug.LogWarning($"{name}: Resize field called improperly");
         }
         protected virtual void ResizeField(string str) => ResizeField2();
         protected virtual void ResizeField2()

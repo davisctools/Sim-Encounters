@@ -9,7 +9,6 @@ namespace ClinicalTools.UI
         protected HorizontalLayoutGroup HorizontalLayoutGroup { get; set; }
         void Awake()
         {
-            Debug.LogWarning("LayoutGroupFixScript");
             VerticalLayoutGroup = GetComponent<VerticalLayoutGroup>();
             if (VerticalLayoutGroup)
                 VerticalLayoutGroup.enabled = false;
