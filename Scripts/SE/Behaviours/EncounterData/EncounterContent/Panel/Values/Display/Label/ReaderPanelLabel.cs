@@ -9,18 +9,13 @@ namespace ClinicalTools.SimEncounters
     public class ReaderPanelLabel : MonoBehaviour
     {
         [SerializeField] private string valueName = null;
-        protected virtual string Name
-        {
-            get {
-                if (!string.IsNullOrWhiteSpace(valueName))
-                    return valueName;
-                return name;
-            }
-        }
+        protected virtual string Name => !string.IsNullOrWhiteSpace(valueName) ? valueName : name;
 
         public List<GameObject> ControlledObjects { get => controlledObjects; set => controlledObjects = value; }
         [SerializeField] private List<GameObject> controlledObjects;
 
+        public string DefaultValue { get => defaultValue; set => defaultValue = value; }
+        [SerializeField] private string defaultValue;
         public string Prefix { get => prefix; set => prefix = value; }
         [Multiline] [SerializeField] private string prefix;
         public bool Trim { get => trim; set => trim = value; }
@@ -82,7 +77,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void HideControlledObjects()
         {
-            Label.text = "";
+            Label.text = DefaultValue;
             foreach (var controlledObject in ControlledObjects) {
                 if (controlledObject == null)
                     Debug.LogError(gameObject.name);

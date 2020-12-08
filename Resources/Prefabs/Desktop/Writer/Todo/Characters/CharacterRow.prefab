@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topRect: {fileID: 8230860953515487180}
-  botRect: {fileID: 8230860953515487180}
+  bottomRect: {fileID: 0}
 --- !u!114 &7904912572238426442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,7 +548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topRect: {fileID: 2727152297940929626}
-  botRect: {fileID: 2727152297940929626}
+  bottomRect: {fileID: 0}
 --- !u!114 &9117323784747521707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -834,7 +834,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 791.5, y: 0}
-  m_SizeDelta: {x: 1573, y: 0}
+  m_SizeDelta: {x: 1572, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6577597232454069242
 CanvasRenderer:
@@ -1901,7 +1901,6 @@ GameObject:
   - component: {fileID: 4272224673537115790}
   - component: {fileID: 8148523685984022858}
   - component: {fileID: 6250957793213907473}
-  - component: {fileID: 2976825406536146925}
   m_Layer: 5
   m_Name: CharacterColor
   m_TagString: Untagged
@@ -2029,23 +2028,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &2976825406536146925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5655375659040808703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e48f7701ed552bd4abee751999b78a81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TitleText: 
-  DescriptionText: Delete Option
-  Delay: 1
-  ToolTipCanvas: {fileID: 0}
-  tooltipName: RemoveOptionButton
 --- !u!1 &5751727208761958383
 GameObject:
   m_ObjectHideFlags: 0
@@ -2676,7 +2658,6 @@ GameObject:
   - component: {fileID: 1193969448001850317}
   - component: {fileID: 76269992884370224}
   - component: {fileID: 7678236087808746605}
-  - component: {fileID: 8786261059671039695}
   m_Layer: 5
   m_Name: DeleteIcon
   m_TagString: Untagged
@@ -2803,23 +2784,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &8786261059671039695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6511315477512206026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e48f7701ed552bd4abee751999b78a81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TitleText: 
-  DescriptionText: Delete Entry
-  Delay: 1
-  ToolTipCanvas: {fileID: 0}
-  tooltipName: DeleteEntryButton
 --- !u!1 &6832896523232323826
 GameObject:
   m_ObjectHideFlags: 0
@@ -2992,7 +2956,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1503, y: 0}
+  m_AnchoredPosition: {x: 1502, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5520403879914857819
@@ -3302,7 +3266,6 @@ GameObject:
   - component: {fileID: 1266307899174851215}
   - component: {fileID: 9024628440029434928}
   - component: {fileID: 1630978837877213813}
-  - component: {fileID: 8496834734074816749}
   m_Layer: 5
   m_Name: ImageButton
   m_TagString: Untagged
@@ -3431,23 +3394,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &8496834734074816749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8028604132945055471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e48f7701ed552bd4abee751999b78a81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TitleText: 
-  DescriptionText: Delete Option
-  Delay: 1
-  ToolTipCanvas: {fileID: 0}
-  tooltipName: RemoveOptionButton
 --- !u!1 &8448948491888262038
 GameObject:
   m_ObjectHideFlags: 0
@@ -3460,7 +3406,6 @@ GameObject:
   - component: {fileID: 4048975594133261786}
   - component: {fileID: 8786322863483792579}
   - component: {fileID: 7339271973561771805}
-  - component: {fileID: 8205549955108055713}
   - component: {fileID: 6915376541892464934}
   m_Layer: 5
   m_Name: ReorderBar
@@ -3546,23 +3491,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &8205549955108055713
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8448948491888262038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e48f7701ed552bd4abee751999b78a81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TitleText: 
-  DescriptionText: Drag to reorder
-  Delay: 1
-  ToolTipCanvas: {fileID: 0}
-  tooltipName: ReorderBar
 --- !u!114 &6915376541892464934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3662,7 +3590,6 @@ GameObject:
   - component: {fileID: 8698793299335378334}
   - component: {fileID: 6829424121325755641}
   - component: {fileID: 5659383241759188312}
-  - component: {fileID: 3863320315070086085}
   m_Layer: 5
   m_Name: ColorSelector
   m_TagString: Untagged
@@ -3791,23 +3718,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &3863320315070086085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8809800125143697605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e48f7701ed552bd4abee751999b78a81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TitleText: 
-  DescriptionText: Delete Option
-  Delay: 1
-  ToolTipCanvas: {fileID: 0}
-  tooltipName: RemoveOptionButton
 --- !u!1 &9176867104953603500
 GameObject:
   m_ObjectHideFlags: 0
