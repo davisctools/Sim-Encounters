@@ -47,7 +47,11 @@ namespace ClinicalTools.SimEncounters
 
         public virtual void AddString(XmlNodeInfo nodeData, string value)
         {
-            if (!string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(value))
+                return;
+            if (nodeData == XmlNodeInfo.RootValue)
+                Node.InnerText = value;
+            else
                 CreateElement(nodeData.Name, value, Node);
         }
 

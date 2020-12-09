@@ -7,7 +7,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class CharacterManagerPopup : MonoBehaviour
+    public class CharacterManagerPopup : BaseCharactersEditor, ICloseHandler
     {
         [SerializeField] private Button applyButton;
         [SerializeField] private Button addCharacterButton;
@@ -23,18 +23,21 @@ namespace ClinicalTools.SimEncounters
         protected OrderedCollection<Character> Characters { get; set; }
         protected Dictionary<Character, CharacterEditor> CharacterEditors { get; } = new Dictionary<Character, CharacterEditor>();
 
-        protected virtual void Start() => addCharacterButton.onClick.AddListener(AddCharacter);
-
+        protected virtual void Start()
+        {
+            addCharacterButton.onClick.AddListener(AddCharacter);
+            applyButton.onClick.AddListener(Apply);
+        }
         protected virtual void AddCharacter() => AddCharacterEditor(new Character());
 
-        protected virtual void EditCharacters(OrderedCollection<Character> characters)
+        public override void EditCharacters(OrderedCollection<Character> characters)
         {
             gameObject.SetActive(true);
 
             Characters = characters;
             foreach (var characterEditor in CharacterEditors.Values) {
                 ReorderableGroup.Remove(characterEditor);
-                Destroy(characterEditor);
+                Destroy(characterEditor.gameObject);
             }
 
             CharacterEditors.Clear();
@@ -53,16 +56,19 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void Serialize()
         {
-            Dictionary<int, Character> characterPositions = new Dictionary<int, Character>();
             foreach (var characterEditor in CharacterEditors) {
-                characterPositions.Add(characterEditor.Value.transform.GetSiblingIndex(), characterEditor.Key);
+                var character = characterEditor.Key;
+                var editor = characterEditor.Value;
+                if (editor == null) {
+                    Characters.Remove(character);
+                    continue;
+                }
+
                 characterEditor.Value.Serialize();
                 if (!Characters.Contains(characterEditor.Key))
                     Characters.Add(characterEditor.Key);
+                Characters.MoveValue(editor.transform.GetSiblingIndex(), Characters.IndexOf(character));
             }
-
-            for (int i = 0; i < CharacterEditors.Count - 1; i++)
-                Characters.MoveValue(i, Characters.IndexOf(characterPositions[i]));
         }
 
         protected virtual void Apply()
@@ -71,9 +77,6 @@ namespace ClinicalTools.SimEncounters
             gameObject.SetActive(false);
         }
 
-        protected virtual void Cancel()
-        {
-            gameObject.SetActive(false);
-        }
+        public virtual void Close(object sender) => gameObject.SetActive(false);
     }
 }

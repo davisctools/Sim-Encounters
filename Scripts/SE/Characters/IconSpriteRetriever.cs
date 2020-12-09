@@ -4,13 +4,16 @@ using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class IconSpriteRetriever
+    public class IconSpriteRetriever : IIconSpriteRetriever
     {
-        protected virtual string IconsResourcePath => "";
+        protected virtual string IconsResourcePath => "Icons";
         protected virtual Dictionary<string, Sprite> ResourceSpriteDictionary { get; } = new Dictionary<string, Sprite>();
 
         public Sprite GetIconSprite(Encounter encounter, Icon icon)
         {
+            if (icon == null)
+                return null;
+
             switch (icon.Type) {
                 case Icon.IconType.EncounterImage:
                     return encounter.Metadata.Sprite;

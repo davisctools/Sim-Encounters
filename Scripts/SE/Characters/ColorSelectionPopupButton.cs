@@ -9,13 +9,14 @@ namespace ClinicalTools.SimEncounters
     [RequireComponent(typeof(Button))]
     public class ColorSelectionPopupButton : BaseColorEditor
     {
+        [SerializeField] private Image colorPreview;
 
         public override event Action<Color> ValueChanged;
 
         protected Color Color { get; set; }
 
-        protected ColorSelectionPopup ColorSelectionPopup { get; set; }
-        [Inject] public virtual void Inject(ColorSelectionPopup colorSelectionPopup) => ColorSelectionPopup = colorSelectionPopup;
+        protected BaseColorSelector ColorSelectionPopup { get; set; }
+        [Inject] public virtual void Inject(BaseColorSelector colorSelectionPopup) => ColorSelectionPopup = colorSelectionPopup;
 
         protected virtual void Start() => GetComponent<Button>().onClick.AddListener(OnButtonClicked);
         protected virtual void OnButtonClicked() => ColorSelectionPopup.SelectColor(Color).AddOnCompletedListener(OnColorSelected);
@@ -30,6 +31,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void SetColor(Color color)
         {
             Color = color;
+            colorPreview.color = color;
             ValueChanged?.Invoke(color);
         }
 

@@ -6,6 +6,13 @@ namespace ClinicalTools.SimEncounters
 {
     public class WriterPopupInstaller : MonoInstaller
     {
+        public BaseCharactersEditor CharactersEditor { get => charactersEditor; set => charactersEditor = value; }
+        [SerializeField] private BaseCharactersEditor charactersEditor;
+        public BaseIconSelector IconSelector { get => iconSelector; set => iconSelector = value; }
+        [SerializeField] private BaseIconSelector iconSelector;
+        public BaseColorSelector ColorSelector { get => colorSelector; set => colorSelector = value; }
+        [SerializeField] private BaseColorSelector colorSelector;
+
         public WriterDialoguePopup DialoguePopup { get => dialoguePopup; set => dialoguePopup = value; }
         [SerializeField] private WriterDialoguePopup dialoguePopup;
         public WriterQuizPopup QuizPopup { get => quizPopup; set => quizPopup = value; }
@@ -29,6 +36,11 @@ namespace ClinicalTools.SimEncounters
 
         public override void InstallBindings()
         {
+            Container.BindInstance(ColorSelector);
+            Container.BindInstance(IconSelector);
+            Container.Bind<IIconSpriteRetriever>().To<IconSpriteRetriever>().AsSingle();
+            Container.BindInstance(CharactersEditor);
+
             Container.BindInstance(DialoguePopup);
             Container.BindInstance(QuizPopup);
             Container.BindInstance(SectionEditorPopup);

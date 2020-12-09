@@ -7,15 +7,19 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
+
     [RequireComponent(typeof(RectTransform))]
     public class CharacterEditor : MonoBehaviour, IDraggable
     {
         [SerializeField] private BaseColorEditor colorEditor;
-        [SerializeField] private BaseIconSelector iconSelector;
+        [SerializeField] private BaseIconOptionSelector iconSelector;
+        [SerializeField] private TMP_InputField roleField;
         [SerializeField] private TMP_InputField nameField;
         [SerializeField] private Button deleteButton;
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private LayoutElement layoutElement;
+        public BaseDragHandle DragHandle { get => dragHandle; set => dragHandle = value; }
+        [SerializeField] private BaseDragHandle dragHandle;
 
         public Character Character { get; protected set; }
 
@@ -27,10 +31,23 @@ namespace ClinicalTools.SimEncounters
         public event Action<IDraggable, Vector3> DragEnded;
         public event Action<IDraggable, Vector3> Dragging;
 
+        protected BaseConfirmationPopup ConfirmationPopup { get; set; }
+        [Inject] public virtual void Inject(BaseConfirmationPopup confirmationPopup) => ConfirmationPopup = confirmationPopup;
+
+        protected virtual void Start()
+        {
+            deleteButton.onClick.AddListener(ConfirmDelete);
+            DragHandle.StartDragging += StartDragging;
+        }
+
+        protected virtual void StartDragging() => MouseInput.Instance.RegisterDraggable(this);
+        protected virtual void ConfirmDelete() => ConfirmationPopup.ShowConfirmation(Delete, "Confirm", "Are you sure you want to remove this entry?");
+        protected virtual void Delete() => Destroy(gameObject);
         public virtual void Display(Character character)
         {
             Character = character;
             nameField.text = character.Name;
+            roleField.text = character.Role;
             colorEditor.Display(character.Color);
             iconSelector.Display(character.Icon);
         }
@@ -38,6 +55,7 @@ namespace ClinicalTools.SimEncounters
         public virtual void Serialize()
         {
             Character.Name = nameField.text;
+            Character.Role = roleField.text;
             Character.Color = colorEditor.GetValue();
             Character.Icon = iconSelector.GetValue();
         }

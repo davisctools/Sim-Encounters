@@ -4,15 +4,24 @@ using UnityEngine.UI;
 
 namespace ClinicalTools.SimEncounters
 {
+    [RequireComponent(typeof(Toggle))]
     public class IconSelectorToggle : MonoBehaviour
     {
         [SerializeField] private Image iconDisplay;
-        [SerializeField] private Toggle toggle;
+
+        private Toggle toggle;
+        public Toggle Toggle {
+            get {
+                if (toggle == null) 
+                    toggle = GetComponent<Toggle>();
+                return toggle;
+            }
+        }
         public virtual Icon Icon { get; protected set; }
 
         public event Action<Icon> Selected;
 
-        protected virtual void Start() => toggle.onValueChanged.AddListener(OnToggleChanged);
+        protected virtual void Start() => Toggle.onValueChanged.AddListener(OnToggleChanged);
 
 
         protected virtual void OnToggleChanged(bool value)
@@ -25,8 +34,8 @@ namespace ClinicalTools.SimEncounters
             Icon = icon;
             iconDisplay.sprite = sprite;
         }
-        public virtual void SetToggleGroup(ToggleGroup group) => toggle.group = group;
+        public virtual void SetToggleGroup(ToggleGroup group) => Toggle.group = group;
 
-        public virtual void Select() => toggle.isOn = true;
+        public virtual void Select() => Toggle.isOn = true;
     }
 }

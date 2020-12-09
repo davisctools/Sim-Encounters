@@ -31,7 +31,6 @@ namespace ClinicalTools.SimEncounters
         public virtual Section Deserialize(XmlDeserializer deserializer)
         {
             var section = CreateSection(deserializer);
-
             SetTabs(deserializer, section);
 
             return section;

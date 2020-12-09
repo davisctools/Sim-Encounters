@@ -5,6 +5,8 @@ namespace ClinicalTools.SimEncounters
 {
     public class EncounterNonImageContent
     {
+        public OrderedCollection<Character> Characters { get; } = new OrderedCollection<Character>();
+
         public virtual int CurrentSectionIndex { get; set; }
         public virtual Section GetCurrentSection() => Sections[CurrentSectionIndex].Value;
         public virtual string GetCurrentSectionKey() => Sections[CurrentSectionIndex].Key;

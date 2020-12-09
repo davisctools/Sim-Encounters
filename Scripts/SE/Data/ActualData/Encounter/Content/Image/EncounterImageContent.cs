@@ -9,7 +9,7 @@ namespace ClinicalTools.SimEncounters
         public virtual KeyedCollection<Sprite> Sprites { get; } = new KeyedCollection<Sprite>();
         public virtual KeyedCollection<Sprite> Icons { get; } = new KeyedCollection<Sprite>();
 
-        protected virtual string DefaultIconsFolder { get; } = "Section Icons";
+        protected virtual string DefaultIconsFolder { get; } = "Icons";
 
         public EncounterImageContent()
         {

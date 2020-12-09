@@ -10,6 +10,8 @@ namespace ClinicalTools.UI
         DarkColor = 1,
         LightColor = 2,
         OffBlack = 3, 
+        White = 18,
+
         Green = 4,
 
         Gray1 = 5,
@@ -70,6 +72,8 @@ namespace ClinicalTools.UI
                     return lightColor;
                 case ColorType.OffBlack:
                     return offBlackColor;
+                case ColorType.White:
+                    return Color.white;
                 case ColorType.Green:
                     return greenColor;
                 case ColorType.Gray1:

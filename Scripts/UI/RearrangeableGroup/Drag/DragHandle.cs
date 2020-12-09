@@ -1,5 +1,4 @@
-﻿using ClinicalTools.UI;
-using System;
+﻿using System;
 using UnityEngine.EventSystems;
 
 namespace ClinicalTools.UI

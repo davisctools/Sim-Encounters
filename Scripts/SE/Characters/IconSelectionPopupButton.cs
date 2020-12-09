@@ -5,8 +5,8 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    [RequireComponent(typeof(Icon))]
-    public class IconSelectionPopupButton : BaseIconSelector
+    [RequireComponent(typeof(Button))]
+    public class IconSelectionPopupButton : BaseIconOptionSelector
     {
         [SerializeField] private Image image;
 
@@ -15,13 +15,13 @@ namespace ClinicalTools.SimEncounters
         protected Icon Icon { get; set; }
 
         protected ISelectedListener<EncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
-        protected IconSpriteRetriever IconSpriteRetriever { get; set; }
-        protected IconSelectorPopup IconSelectionPopup { get; set; }
+        protected IIconSpriteRetriever IconSpriteRetriever { get; set; }
+        protected BaseIconSelector IconSelectionPopup { get; set; }
         [Inject]
         public virtual void Inject(
             ISelectedListener<EncounterSelectedEventArgs> encounterSelectedListener,
-            IconSpriteRetriever iconSpriteRetriever, 
-            IconSelectorPopup colorSelectionPopup)
+            IIconSpriteRetriever iconSpriteRetriever,
+            BaseIconSelector colorSelectionPopup)
         {
             EncounterSelectedListener = encounterSelectedListener;
             IconSpriteRetriever = iconSpriteRetriever;
@@ -43,6 +43,8 @@ namespace ClinicalTools.SimEncounters
             Icon = icon;
             ValueChanged?.Invoke(icon);
             image.sprite = IconSpriteRetriever.GetIconSprite(EncounterSelectedListener.CurrentValue.Encounter, icon);
+            if (icon != null)
+                image.color = icon.Color;
         }
 
         public override Icon GetValue() => Icon;

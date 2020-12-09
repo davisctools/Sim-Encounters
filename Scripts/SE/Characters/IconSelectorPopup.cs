@@ -1,4 +1,5 @@
 ﻿using ClinicalTools.Collections;
+using ClinicalTools.UI;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class IconSelectorPopup : MonoBehaviour
+    public class IconSelectorPopup : BaseIconSelector, ICloseHandler
     {
         [SerializeField] private IconSelectorToggle customIconToggle;
         [SerializeField] private Toggle useEncounterImageToggle;
@@ -30,7 +31,7 @@ namespace ClinicalTools.SimEncounters
         protected KeyedCollection<Sprite> Sprites => Encounter.Content.ImageContent.Sprites;
 
         protected Dictionary<string, IconSelectorToggle> ResourceToggles { get; } = new Dictionary<string, IconSelectorToggle>();
-        protected virtual void Awake()
+        protected virtual void Start()
         {
             var iconSelectors = GetComponentsInChildren<IconSelectorToggle>();
             foreach (var iconSelector in iconSelectors) {
@@ -51,7 +52,7 @@ namespace ClinicalTools.SimEncounters
 
         protected Icon LastUploadedIcon { get; set; }
         protected WaitableTask<Icon> CurrentIconTask { get; set; }
-        public virtual WaitableTask<Icon> SelectIcon(Icon currentIcon)
+        public override WaitableTask<Icon> SelectIcon(Icon currentIcon)
         {
             CurrentIconTask?.SetError(new Exception("New popup opened"));
             CurrentIconTask = new WaitableTask<Icon>();
@@ -119,11 +120,13 @@ namespace ClinicalTools.SimEncounters
         protected virtual void Apply()
         {
             CurrentIconTask.SetResult(CurrentIcon);
+            CurrentIconTask = null;
             gameObject.SetActive(false);
         }
-        protected virtual void Cancel()
+        public virtual void Close(object sender)
         {
             CurrentIconTask.SetError(new Exception("Could not set result."));
+            CurrentIconTask = null;
             gameObject.SetActive(false);
         }
     }
