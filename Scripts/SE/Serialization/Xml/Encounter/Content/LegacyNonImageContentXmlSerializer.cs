@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class CENonImageContentXmlSerializer : NonImageContentXmlSerializer
+    public class LegacyNonImageContentXmlSerializer : NonImageContentXmlSerializer
     {
-        public CENonImageContentXmlSerializer(IXmlSerializer<Section> sectionFactory, IXmlSerializer<Character> characterFactory)
+        public LegacyNonImageContentXmlSerializer(IXmlSerializer<Section> sectionFactory, IXmlSerializer<Character> characterFactory)
             : base(sectionFactory, characterFactory) { }
 
         private readonly Character _patientCharacter = new Character {

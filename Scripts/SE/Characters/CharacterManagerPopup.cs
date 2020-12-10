@@ -37,7 +37,8 @@ namespace ClinicalTools.SimEncounters
             Characters = characters;
             foreach (var characterEditor in CharacterEditors.Values) {
                 ReorderableGroup.Remove(characterEditor);
-                Destroy(characterEditor.gameObject);
+                if (characterEditor != null)
+                    Destroy(characterEditor.gameObject);
             }
 
             CharacterEditors.Clear();

@@ -13,7 +13,8 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private string valueName = null;
         public override string Name => !string.IsNullOrWhiteSpace(valueName) ? valueName : name;
 
-        public override string Value => Dropdown.value >= 0 ? CharacterKeys[Dropdown.value] : null;
+        public override string Value 
+            => Dropdown.value >= 0 && Dropdown.value < CharacterKeys.Length ? CharacterKeys[Dropdown.value] : null;
 
         private TMP_Dropdown dropdown;
         protected TMP_Dropdown Dropdown {

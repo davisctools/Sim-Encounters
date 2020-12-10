@@ -23,11 +23,11 @@ namespace ClinicalTools.SimEncounters
         protected virtual void BindCharacterSerializer(DiContainer subcontainer)
             => subcontainer.Bind<IXmlSerializer<Character>>().To<CharacterXmlSerializer>().AsTransient();
         protected virtual void BindIconSerializer(DiContainer subcontainer)
-                    => subcontainer.Bind<IXmlSerializer<Icon>>().To<IconXmlSerializer>().AsTransient();
+                    => subcontainer.Bind<IXmlSerializer<Icon>>().To<LegacyIconXmlSerializer>().AsTransient();
 
         protected virtual void BindNonImageSerializer(DiContainer subcontainer)
         {
-            subcontainer.Bind<IXmlSerializer<EncounterNonImageContent>>().To<CENonImageContentXmlSerializer>().AsTransient();
+            subcontainer.Bind<IXmlSerializer<EncounterNonImageContent>>().To<LegacyNonImageContentXmlSerializer>().AsTransient();
             BindSectionSerializer(subcontainer);
         }
         protected virtual void BindSectionSerializer(DiContainer subcontainer)

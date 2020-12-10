@@ -1,6 +1,5 @@
 ﻿using ClinicalTools.Collections;
 using ClinicalTools.UI;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,12 +9,8 @@ namespace ClinicalTools.SimEncounters
 {
     public class WriterDialoguePanelsDrawer : BaseWriterPanelsDrawer
     {
-        public Button PatientEntryButton { get => patientEntryButton; set => patientEntryButton = value; }
-        [SerializeField] private Button patientEntryButton;
-        public Button ProviderEntryButton { get => providerEntryButton; set => providerEntryButton = value; }
-        [SerializeField] private Button providerEntryButton;
-        public Button InstructorEntryButton { get => instructorEntryButton; set => instructorEntryButton = value; }
-        [SerializeField] private Button instructorEntryButton;
+        public Button EntryButton { get => entryButton; set => entryButton = value; }
+        [SerializeField] private Button entryButton;
 
         public Button ChoiceButton { get => choiceButton; set => choiceButton = value; }
         [SerializeField] private Button choiceButton;
@@ -58,9 +53,8 @@ namespace ClinicalTools.SimEncounters
             CopyButton.onClick.AddListener(CopyPanels);
             PasteButton.onClick.AddListener(ConfirmPastePanels);
 
-            PatientEntryButton.onClick.AddListener(AddPatientEntry);
-            ProviderEntryButton.onClick.AddListener(AddProviderEntry);
-            InstructorEntryButton.onClick.AddListener(AddInstructorEntry);
+            if (EntryButton != null)
+                EntryButton.onClick.AddListener(CreateEntryPanel);
             ChoiceButton.onClick.AddListener(AddChoice);
             TextboxButton.onClick.AddListener(AddTextbox);
         }
@@ -77,14 +71,9 @@ namespace ClinicalTools.SimEncounters
         }
         protected virtual void PastePanels() => AddChildPanels(CopiedPanels);
 
-        private void AddPatientEntry() => CreateEntryPanel("Patient", new Color(0.106f, 0.722f, 0.059f));
-        private void AddProviderEntry() => CreateEntryPanel("Provider", new Color(0, 0.2509804f, 0.9568627f));
-        private void AddInstructorEntry() => CreateEntryPanel("Instructor", new Color(0.569f, 0.569f, 0.569f));
-        private void CreateEntryPanel(string characterName, Color characterColor)
+        protected virtual void CreateEntryPanel()
         {
             var panel = new Panel("Entry");
-            panel.Values.Add("characterName", characterName);
-            panel.Values.Add("charColor", characterColor.ToString());
 
             var panelUI = InstantiatePanel(EntryPrefab);
             ReorderableGroup.Add(panelUI);
