@@ -11,7 +11,8 @@ namespace ClinicalTools.SimEncounters
     [RequireComponent(typeof(RectTransform))]
     public class CharacterEditor : MonoBehaviour, IDraggable
     {
-        [SerializeField] private BaseColorEditor colorEditor;
+        [SerializeField] private BaseColorEditor primaryColorEditor;
+        [SerializeField] private BaseColorEditor secondaryColorEditor;
         [SerializeField] private BaseIconOptionSelector iconSelector;
         [SerializeField] private TMP_InputField roleField;
         [SerializeField] private TMP_InputField nameField;
@@ -48,7 +49,8 @@ namespace ClinicalTools.SimEncounters
             Character = character;
             nameField.text = character.Name;
             roleField.text = character.Role;
-            colorEditor.Display(character.Color);
+            primaryColorEditor.Display(character.PrimaryColor);
+            secondaryColorEditor.Display(character.SecondaryColor);
             iconSelector.Display(character.Icon);
         }
 
@@ -56,7 +58,8 @@ namespace ClinicalTools.SimEncounters
         {
             Character.Name = nameField.text;
             Character.Role = roleField.text;
-            Character.Color = colorEditor.GetValue();
+            Character.PrimaryColor = primaryColorEditor.GetValue();
+            Character.SecondaryColor = secondaryColorEditor.GetValue();
             Character.Icon = iconSelector.GetValue();
         }
 

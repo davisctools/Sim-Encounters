@@ -7,7 +7,7 @@ namespace ClinicalTools.SimEncounters
     public class WriterDropdownPanelField : BaseWriterPanelField
     {
         public override string Value => (Dropdown.value >= 0) ? Dropdown.options[Dropdown.value].text : null;
-        
+
         private TMP_Dropdown dropdown;
         protected TMP_Dropdown Dropdown {
             get {

@@ -33,6 +33,7 @@ namespace ClinicalTools.SimEncounters
 
         public override void InstallBindings()
         {
+            Container.Bind<IIconSpriteRetriever>().To<IconSpriteRetriever>().AsSingle();
             Container.BindInstance(Tooltip);
             Container.BindInstance<ISidebarController>(SidebarController);
             Container.BindInstance(InstructionsPopup);

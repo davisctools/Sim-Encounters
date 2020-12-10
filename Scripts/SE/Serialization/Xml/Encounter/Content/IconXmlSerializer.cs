@@ -5,9 +5,9 @@ namespace ClinicalTools.SimEncounters
 {
     public class IconXmlSerializer : IXmlSerializer<Icon>
     {
-        protected virtual XmlNodeInfo ReferenceInfo { get; } = XmlNodeInfo.RootValue;
-        protected virtual XmlNodeInfo TypeInfo { get; set; } = new XmlNodeInfo("type", XmlTagComparison.AttributeNameEquals);
-        protected virtual XmlNodeInfo ColorInfo { get; } = new XmlNodeInfo("color", XmlTagComparison.AttributeNameEquals);
+        protected virtual XmlNodeInfo ReferenceInfo { get; } = new XmlNodeInfo("ref");
+        protected virtual XmlNodeInfo TypeInfo { get; set; } = new XmlNodeInfo("type");
+        protected virtual XmlNodeInfo ColorInfo { get; } = new XmlNodeInfo("color");
 
         public virtual bool ShouldSerialize(Icon value) => value != null;
 
@@ -22,7 +22,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual string ResourceTypeString => "resource";
         protected virtual string UploadTypeString => "upload";
-        protected virtual string EncounterImageTypeString => "resource";
+        protected virtual string EncounterImageTypeString => "encounter";
         protected virtual string GetTypeString(Icon.IconType type)
         {
             switch (type) {
@@ -63,7 +63,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual Color GetColor(XmlDeserializer deserializer)
         {
-            var color = deserializer.GetColor(TypeInfo);
+            var color = deserializer.GetColor(ColorInfo);
             return color != Color.clear ? color : Color.white;
         }
     }

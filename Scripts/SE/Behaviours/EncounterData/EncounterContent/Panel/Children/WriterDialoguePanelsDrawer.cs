@@ -19,8 +19,18 @@ namespace ClinicalTools.SimEncounters
 
         public Button ChoiceButton { get => choiceButton; set => choiceButton = value; }
         [SerializeField] private Button choiceButton;
+        public Button TextboxButton { get => textboxButton; set => textboxButton = value; }
+        [SerializeField] private Button textboxButton;
+
+        public Button CopyButton { get => copyButton; set => copyButton = value; }
+        [SerializeField] private Button copyButton;
+        public Button PasteButton { get => pasteButton; set => pasteButton = value; }
+        [SerializeField] private Button pasteButton;
+
         public BaseRearrangeableGroup ReorderableGroup { get => reorderableGroup; set => reorderableGroup = value; }
         [SerializeField] private BaseRearrangeableGroup reorderableGroup;
+        public BaseWriterAddablePanel TextboxPrefab { get => textboxPrefab; set => textboxPrefab = value; }
+        [SerializeField] private BaseWriterAddablePanel textboxPrefab;
         public BaseWriterAddablePanel EntryPrefab { get => entryPrefab; set => entryPrefab = value; }
         [SerializeField] private BaseWriterAddablePanel entryPrefab;
         public BaseWriterAddablePanel ChoicePrefab { get => choicePrefab; set => choicePrefab = value; }
@@ -31,18 +41,41 @@ namespace ClinicalTools.SimEncounters
 
 
         protected BaseWriterPanel.Factory PanelFactory { get; set; }
-        [Inject] public virtual void Inject(BaseWriterPanel.Factory panelFactory) => PanelFactory = panelFactory;
-
+        protected BaseConfirmationPopup ConfirmationPopup { get; set; }
+        [Inject]
+        public virtual void Inject(BaseWriterPanel.Factory panelFactory, BaseConfirmationPopup confirmationPopup)
+        {
+            PanelFactory = panelFactory;
+            ConfirmationPopup = confirmationPopup;
+        }
 
         protected virtual void Awake()
         {
             PanelPrefabs.Add(EntryPrefab);
             PanelPrefabs.Add(ChoicePrefab);
+            PanelPrefabs.Add(TextboxPrefab);
+
+            CopyButton.onClick.AddListener(CopyPanels);
+            PasteButton.onClick.AddListener(ConfirmPastePanels);
+
             PatientEntryButton.onClick.AddListener(AddPatientEntry);
             ProviderEntryButton.onClick.AddListener(AddProviderEntry);
             InstructorEntryButton.onClick.AddListener(AddInstructorEntry);
             ChoiceButton.onClick.AddListener(AddChoice);
+            TextboxButton.onClick.AddListener(AddTextbox);
         }
+
+        protected static OrderedCollection<Panel> CopiedPanels { get; set; }
+        protected virtual void CopyPanels() => CopiedPanels = SerializeChildren();
+        protected virtual void ConfirmPastePanels()
+        {
+            if (CopiedPanels == null || CopiedPanels.Count == 0)
+                return;
+
+            ConfirmationPopup.ShowConfirmation(PastePanels, "Paste Panels",
+                $"Confirm pasting in the {CopiedPanels.Count} copied panels.");
+        }
+        protected virtual void PastePanels() => AddChildPanels(CopiedPanels);
 
         private void AddPatientEntry() => CreateEntryPanel("Patient", new Color(0.106f, 0.722f, 0.059f));
         private void AddProviderEntry() => CreateEntryPanel("Provider", new Color(0, 0.2509804f, 0.9568627f));
@@ -59,6 +92,13 @@ namespace ClinicalTools.SimEncounters
             WriterPanels.Add(panelUI);
         }
 
+        protected virtual void AddTextbox()
+        {
+            var panelUI = InstantiatePanel(TextboxPrefab);
+            ReorderableGroup.Add(panelUI);
+            panelUI.Select(this, new PanelSelectedEventArgs(null));
+            WriterPanels.Add(panelUI);
+        }
         protected virtual void AddChoice()
         {
             var panelUI = InstantiatePanel(ChoicePrefab);
@@ -74,20 +114,22 @@ namespace ClinicalTools.SimEncounters
                     Destroy(writerPanel.gameObject);
             }
 
-            var childrenPanelManager = new ChildrenPanelManager();
             WriterPanels = new OrderedCollection<BaseWriterPanel>();
+            AddChildPanels(childPanels);
+        }
 
-            var panels = new List<BaseWriterPanel>();
+        protected virtual void AddChildPanels(OrderedCollection<Panel> childPanels)
+        {
+            var childrenPanelManager = new ChildrenPanelManager();
             foreach (var panel in childPanels) {
                 var prefab = childrenPanelManager.ChoosePrefab(PanelPrefabs, panel.Value);
-
                 var panelUI = InstantiatePanel(prefab);
                 ReorderableGroup.Add(panelUI);
                 panelUI.Select(this, new PanelSelectedEventArgs(panel.Value));
-                panels.Add(panelUI);
                 WriterPanels.Add(panel.Key, panelUI);
             }
         }
+
 
         public override void DrawDefaultChildPanels()
             => WriterPanels = new OrderedCollection<BaseWriterPanel>();

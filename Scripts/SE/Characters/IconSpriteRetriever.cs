@@ -21,6 +21,9 @@ namespace ClinicalTools.SimEncounters
                     var sprites = encounter.Content.ImageContent.Sprites;
                     return sprites.ContainsKey(icon.Reference) ? sprites[icon.Reference] : null;
                 case Icon.IconType.Resource:
+                    if (icon.Reference == null)
+                        return null;
+
                     if (ResourceSpriteDictionary.ContainsKey(icon.Reference))
                         return ResourceSpriteDictionary[icon.Reference];
 

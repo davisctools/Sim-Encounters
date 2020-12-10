@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace ClinicalTools.SimEncounters
@@ -11,10 +10,6 @@ namespace ClinicalTools.SimEncounters
         protected override BaseUserPinGroupDrawer PinsDrawer => null;
         protected override bool SetReadOnSelect => true;
 
-        public virtual GameObject CorrectlySelectedObject { get => correctlySelectedObject; set => correctlySelectedObject = value; }
-        [SerializeField] private GameObject correctlySelectedObject;
-        public virtual GameObject NormalObject { get => normalObject; set => normalObject = value; }
-        [SerializeField] private GameObject normalObject;
         public virtual Toggle Toggle { get => toggle; set => toggle = value; }
         [SerializeField] private Toggle toggle;
         public virtual Sprite OnSprite { get => onSprite; set => onSprite = value; }
@@ -28,7 +23,7 @@ namespace ClinicalTools.SimEncounters
         public virtual ReaderFeedbackUI Feedback { get => feedback; set => feedback = value; }
         [SerializeField] private ReaderFeedbackUI feedback;
 
-        public override event Action<BaseReaderDialogueOption> CorrectlySelected;
+        public override event DialogueOptionCorrectlySelectedHandler CorrectlySelected;
 
         protected virtual void Awake()
         {
@@ -59,9 +54,7 @@ namespace ClinicalTools.SimEncounters
                 return;
             }
 
-            CorrectlySelectedObject.SetActive(true);
-            NormalObject.SetActive(false);
-            CorrectlySelected?.Invoke(this);
+            CorrectlySelected?.Invoke(this, new DialogueOptionCorrectlySelectedEventArgs(this, CurrentPanel));
         }
 
         public override void SetGroup(ToggleGroup group) => Toggle.group = group;

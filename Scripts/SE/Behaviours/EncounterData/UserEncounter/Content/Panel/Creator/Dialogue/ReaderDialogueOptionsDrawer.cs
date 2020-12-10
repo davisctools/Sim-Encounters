@@ -15,8 +15,8 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private ToggleGroup toggleGroup;
         public virtual Transform OptionsParent { get => optionsParent; set => optionsParent = value; }
         [SerializeField] private Transform optionsParent;
-        public virtual Transform CompletedOptionsParent { get => completedOptionsParent; set => completedOptionsParent = value; }
-        [SerializeField] private Transform completedOptionsParent;
+        public virtual UserPanelSelectorBehaviour CorrectPanelBehaviour { get => correctPanelBehaviour; set => correctPanelBehaviour = value; }
+        [SerializeField] private UserPanelSelectorBehaviour correctPanelBehaviour;
 
         protected BaseReaderPanelBehaviour.Factory ReaderPanelFactory { get; set; }
         protected IPanelCompletedHandler PanelCompletedHandler { get; set; }
@@ -31,7 +31,7 @@ namespace ClinicalTools.SimEncounters
 
         public override void Display(OrderedCollection<UserPanel> panels, bool active)
         {
-            foreach (Transform child in transform)
+            foreach (Transform child in OptionsParent)
                 Destroy(child.gameObject);
 
             foreach (var panel in panels.Values)
@@ -52,11 +52,10 @@ namespace ClinicalTools.SimEncounters
             option.CorrectlySelected += OnOptionSelectedCorrectly;
         }
 
-        private void OnOptionSelectedCorrectly(BaseReaderDialogueOption obj)
+        private void OnOptionSelectedCorrectly(object sender, DialogueOptionCorrectlySelectedEventArgs e)
         {
-            if (CompletedOptionsParent != null)
-                obj.transform.SetParent(CompletedOptionsParent);
             PanelCompletedHandler.SetCompleted();
+            CorrectPanelBehaviour.Select(sender, new UserPanelSelectedEventArgs(e.Panel, true));
         }
 
         protected virtual BaseReaderDialogueOption GetChildPanelPrefab(UserPanel childPanel)

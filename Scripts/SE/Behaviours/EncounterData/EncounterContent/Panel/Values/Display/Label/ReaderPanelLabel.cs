@@ -5,6 +5,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
+
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class ReaderPanelLabel : MonoBehaviour
     {

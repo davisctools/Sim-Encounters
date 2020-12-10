@@ -1,5 +1,6 @@
 ﻿using ClinicalTools.Collections;
 using ClinicalTools.UI;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,8 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private BaseReaderPanelBehaviour dialogueEntryRight;
         public CompletableReaderPanelBehaviour DialogueChoice { get => dialogueChoice; set => dialogueChoice = value; }
         [SerializeField] private CompletableReaderPanelBehaviour dialogueChoice;
+        public BaseReaderPanelBehaviour TextboxPrefab { get => textboxPrefab; set => textboxPrefab = value; }
+        [SerializeField] private BaseReaderPanelBehaviour textboxPrefab;
 
         protected IColorManager ColorManager { get; set; }
         protected BaseReaderPanelBehaviour.Factory ReaderPanelFactory { get; set; }
@@ -48,7 +51,7 @@ namespace ClinicalTools.SimEncounters
 
             for (var i = startIndex; i < panels.Count; i++) {
                 var panel = panels[i];
-                if (!panel.Data.Type.Contains("DialogueEntry")) {
+                if (IsDialogueChoice(panel.Data.Type)) {
                     readerPanels.Add(CreateChoice(readerPanels, panels, i));
                     return;
                 }
@@ -57,21 +60,35 @@ namespace ClinicalTools.SimEncounters
             }
         }
 
-        private const string CharacterNameKey = "characterName";
-        private const string ProviderName = "Provider";
+        protected virtual bool IsDialogueChoice(string panelType)
+            => !panelType.Equals("DialogueTextbox", StringComparison.InvariantCultureIgnoreCase) 
+            && !panelType.Contains("DialogueEntry");
+
         protected virtual BaseReaderPanelBehaviour CreateEntry(UserPanel panel)
         {
-            var values = panel.Data.Values;
-            BaseReaderPanelBehaviour entryPrefab =
-                (values.ContainsKey(CharacterNameKey) && values[CharacterNameKey] == ProviderName) ?
-                DialogueEntryRight : DialogueEntryLeft;
-
+            var entryPrefab = GetDialogueEntryPrefab(panel);
             var panelDisplay = ReaderPanelFactory.Create(entryPrefab);
             panelDisplay.transform.SetParent(transform);
             panelDisplay.transform.localScale = Vector3.one;
             panelDisplay.transform.SetAsLastSibling();
             panelDisplay.Select(this, new UserPanelSelectedEventArgs(panel, true));
             return panelDisplay;
+        }
+
+        private const string DirectionKey = "direction";
+        private const string RightValue = "Right";
+        private const string CharacterNameKey = "characterName";
+        private const string ProviderName = "Provider";
+        protected virtual BaseReaderPanelBehaviour GetDialogueEntryPrefab(UserPanel panel)
+        {
+            if (panel.Data.Type.Equals("DialogueTextbox", StringComparison.InvariantCultureIgnoreCase))
+                return TextboxPrefab;
+
+            var values = panel.Data.Values;
+            if (values.ContainsKey(DirectionKey))
+                return values[DirectionKey].Equals(RightValue, StringComparison.InvariantCultureIgnoreCase) ? DialogueEntryRight : DialogueEntryLeft;
+
+            return (values.ContainsKey(CharacterNameKey) && values[CharacterNameKey] == ProviderName) ? DialogueEntryRight : DialogueEntryLeft;
         }
 
         protected virtual CompletableReaderPanelBehaviour CreateChoice(List<BaseReaderPanelBehaviour> readerPanels, List<UserPanel> panels, int panelIndex)

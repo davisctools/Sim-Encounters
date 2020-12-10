@@ -10,7 +10,8 @@ namespace ClinicalTools.SimEncounters
             IconFactory = iconFactory;
         }
 
-        protected virtual XmlNodeInfo ColorInfo { get; } = new XmlNodeInfo("color");
+        protected virtual XmlNodeInfo PrimaryColorInfo { get; } = new XmlNodeInfo("color1");
+        protected virtual XmlNodeInfo SecondaryColorInfo { get; } = new XmlNodeInfo("color2");
         protected virtual XmlNodeInfo IconInfo { get; } = new XmlNodeInfo("icon");
         protected virtual XmlNodeInfo RoleInfo { get; set; } = new XmlNodeInfo("role");
         protected virtual XmlNodeInfo NameInfo { get; set; } = new XmlNodeInfo("name");
@@ -20,7 +21,8 @@ namespace ClinicalTools.SimEncounters
 
         public virtual void Serialize(XmlSerializer serializer, Character value)
         {
-            serializer.AddColor(ColorInfo, value.Color);
+            serializer.AddColor(PrimaryColorInfo, value.PrimaryColor);
+            serializer.AddColor(SecondaryColorInfo, value.SecondaryColor);
             if (value.Icon != null)
                 serializer.AddValue(IconInfo, value.Icon, IconFactory);
             if (!string.IsNullOrWhiteSpace(value.Role))
@@ -33,7 +35,8 @@ namespace ClinicalTools.SimEncounters
         {
             var character = new Character();
             character.Icon = GetIcon(deserializer);
-            character.Color = GetColor(deserializer);
+            character.PrimaryColor = GetPrimaryColor(deserializer);
+            character.SecondaryColor = GetSecondaryColor(deserializer);
             character.Role = GetRole(deserializer);
             character.Name = GetName(deserializer);
 
@@ -42,10 +45,12 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual Icon GetIcon(XmlDeserializer deserializer)
             => deserializer.GetValue(IconInfo, IconFactory);
-        protected virtual Color GetColor(XmlDeserializer deserializer)
-            => deserializer.GetColor(ColorInfo);
+        protected virtual Color GetPrimaryColor(XmlDeserializer deserializer)
+            => deserializer.GetColor(PrimaryColorInfo);
+        protected virtual Color GetSecondaryColor(XmlDeserializer deserializer)
+            => deserializer.GetColor(SecondaryColorInfo);
         protected virtual string GetRole(XmlDeserializer deserializer)
-            => deserializer.GetString(NameInfo);
+            => deserializer.GetString(RoleInfo);
         protected virtual string GetName(XmlDeserializer deserializer)
             => deserializer.GetString(NameInfo);
     }

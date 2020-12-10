@@ -23,7 +23,7 @@ namespace ClinicalTools.SimEncounters
 
         [SerializeField] private ReaderFeedbackUI feedback;
 
-        public override event Action<BaseReaderDialogueOption> CorrectlySelected;
+        public override event DialogueOptionCorrectlySelectedHandler CorrectlySelected;
 
         protected virtual void Awake()
         {
@@ -37,7 +37,7 @@ namespace ClinicalTools.SimEncounters
                 Border.color = OnColor;
                 Feedback.ShowFeedback(isOn);
                 if (Feedback.OptionType == OptionType.Correct)
-                    CorrectlySelected?.Invoke(this);
+                    CorrectlySelected?.Invoke(this, new DialogueOptionCorrectlySelectedEventArgs(this, CurrentPanel));
             } else {
                 Border.color = OffColor;
                 Feedback.CloseFeedback();
