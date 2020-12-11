@@ -1,21 +1,18 @@
 ﻿using ClinicalTools.Collections;
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace ClinicalTools.SimEncounters
 {
-    [RequireComponent(typeof(Button))]
-    public class EncounterImageSelectorButton
-    {
-
-    }
-
     public class KeyedSpriteUploader : BaseSpriteUploader, IKeyedSpriteSelector
     {
         protected WaitableTask<string> CurrentWaitableSpriteKey { get; set; }
         protected KeyedCollection<Sprite> SpriteCollection { get; set; }
         protected string CurrentKey { get; set; }
+
+        protected string LegacyEncounterImageKey = "patientImage";
+        protected string EncounterImageKey => "encounterImage";
+
         public virtual WaitableTask<string> SelectSprite(KeyedCollection<Sprite> sprites, string spriteKey)
         {
             if (CurrentWaitableSpriteKey?.IsCompleted() == false)
@@ -55,7 +52,7 @@ namespace ClinicalTools.SimEncounters
                 SpriteCollection.Remove(CurrentKey);
 
             CurrentWaitableSpriteKey.SetResult(null);
-            
+
             base.Remove();
         }
 

@@ -59,6 +59,7 @@ namespace ClinicalTools.SimEncounters
 
             gameObject.SetActive(true);
 
+            LastUploadedIcon = null;
             CurrentIcon = currentIcon;
             if (currentIcon == null || currentIcon.Type == Icon.IconType.EncounterImage) {
                 SetCurrentToEncounterImage();
@@ -119,6 +120,9 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void Apply()
         {
+            if (LastUploadedIcon?.Reference != null && LastUploadedIcon != CurrentIcon)
+                Sprites.Remove(LastUploadedIcon.Reference);
+
             CurrentIconTask.SetResult(CurrentIcon);
             CurrentIconTask = null;
             gameObject.SetActive(false);

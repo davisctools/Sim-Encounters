@@ -83,7 +83,8 @@ namespace ClinicalTools.SimEncounters
                 HideImage();
         }
 
-        private const string PatientImageKey = "patientImage";
+        protected virtual string LegacyEncounterImageKey => "patientImage";
+        protected virtual string EncounterImageKey => "encounterImage";
         protected virtual Sprite GetSprite(PanelSelectedEventArgs eventArgs)
         {
             if (UseEncounterImage)
@@ -94,7 +95,7 @@ namespace ClinicalTools.SimEncounters
 
             Value = eventArgs.Panel.Values[Name];
 
-            if (Value.Equals(PatientImageKey, StringComparison.InvariantCultureIgnoreCase))
+            if (KeyIsEncounterImage(Value))
                 return EncounterSelectedListener.CurrentValue.Encounter.Metadata.Sprite;
 
             var sprites = EncounterSelectedListener.CurrentValue.Encounter.Content.ImageContent.Sprites;
@@ -103,6 +104,9 @@ namespace ClinicalTools.SimEncounters
             else
                 return null;
         }
+
+        protected virtual bool KeyIsEncounterImage(string key)
+            => key != null && (key.Equals(LegacyEncounterImageKey, StringComparison.InvariantCultureIgnoreCase) || key.Equals(EncounterImageKey, StringComparison.InvariantCultureIgnoreCase));
 
         protected virtual void HideImage()
         {

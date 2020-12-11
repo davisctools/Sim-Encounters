@@ -23,10 +23,14 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private TabEditorPopup tabEditorPopup;
         public BaseConfirmationPopup ConfirmationPopup { get => confirmationPopup; set => confirmationPopup = value; }
         [SerializeField] private BaseConfirmationPopup confirmationPopup;
+
+        public EncounterSpriteUploader EncounterSpriteSelector { get => encounterSpriteSelector; set => encounterSpriteSelector = value; }
+        [SerializeField] private EncounterSpriteUploader encounterSpriteSelector;
         public KeyedSpriteUploader KeyedSpriteSelector { get => keyedSpriteSelector; set => keyedSpriteSelector = value; }
         [SerializeField] private KeyedSpriteUploader keyedSpriteSelector;
         public SpriteUploader SpriteSelector { get => spriteSelector; set => spriteSelector = value; }
         [SerializeField] private SpriteUploader spriteSelector;
+
         public BaseMessageHandler MessageHandler { get => messageHandler; set => messageHandler = value; }
         [SerializeField] private BaseMessageHandler messageHandler;
         public SwipeManager SwipeManager { get => swipeManager; set => swipeManager = value; }
@@ -46,9 +50,11 @@ namespace ClinicalTools.SimEncounters
             Container.BindInstance(SectionEditorPopup);
             Container.BindInstance(TabEditorPopup);
             Container.BindInstance(ConfirmationPopup);
+            Container.BindInstance(SaveEncounterDisplay);
+
+            Container.BindInstance<IEncounterSpriteSelector>(EncounterSpriteSelector);
             Container.BindInstance<IKeyedSpriteSelector>(KeyedSpriteSelector);
             Container.BindInstance<ISpriteSelector>(SpriteSelector);
-            Container.BindInstance(SaveEncounterDisplay);
 
             Container.BindInstance(SwipeManager);
 

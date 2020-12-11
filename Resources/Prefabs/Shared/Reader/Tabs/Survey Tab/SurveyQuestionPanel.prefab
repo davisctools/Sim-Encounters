@@ -304,6 +304,7 @@ GameObject:
   - component: {fileID: 3109142264758873733}
   - component: {fileID: 3002583040210465433}
   - component: {fileID: 3001187074334222785}
+  - component: {fileID: 9010035322334736946}
   m_Layer: 5
   m_Name: Number
   m_TagString: Untagged
@@ -320,7 +321,7 @@ RectTransform:
   m_GameObject: {fileID: 2897365468465010295}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9999999, y: 0.9999999, z: 0.9999999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3111239485998269629}
   m_RootOrder: 0
@@ -447,6 +448,19 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &9010035322334736946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2897365468465010295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa90d20c782a94c42ae593d8a3d07b3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transformToGetSiblingIndexOf: {fileID: 3111622479500964673}
 --- !u!1 &2897653958431530453
 GameObject:
   m_ObjectHideFlags: 0
@@ -868,6 +882,7 @@ MonoBehaviour:
   valueName: 
   controlledObjects:
   - {fileID: 2896999077050692703}
+  defaultValue: 
   prefix: 
   trim: 0
 --- !u!1 &2898029751427181573

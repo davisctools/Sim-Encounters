@@ -26,12 +26,12 @@ namespace ClinicalTools.SimEncounters
 
 
         protected Encounter Encounter => EncounterSelectedListener.CurrentValue.Encounter;
-        protected IKeyedSpriteSelector SpritePopup { get; set; }
+        protected IEncounterSpriteSelector SpritePopup { get; set; }
         protected ISelectedListener<EncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
         protected ISelectedListener<PanelSelectedEventArgs> PanelSelectedListener { get; set; }
         [Inject]
         public virtual void Inject(
-            IKeyedSpriteSelector spritePopup,
+            IEncounterSpriteSelector spritePopup,
             ISelectedListener<EncounterSelectedEventArgs> encounterSelectedListener,
             ISelectedListener<PanelSelectedEventArgs> panelSelectedListener)
         {
@@ -69,13 +69,14 @@ namespace ClinicalTools.SimEncounters
             Image.enabled = imageKey != null;
         }
 
-        private const string PatientImageKey = "patientImage";
+        protected virtual string LegacyEncounterImageKey => "patientImage";
+        protected virtual string EncounterImageKey => "encounterImage";
         protected virtual Sprite GetSprite(string imageKey)
         {
             if (imageKey == null)
                 return null;
 
-            if (imageKey.Equals(PatientImageKey, StringComparison.InvariantCultureIgnoreCase))
+            if (KeyIsEncounterImage(imageKey))
                 return Encounter.Metadata.Sprite;
 
             var sprites = Encounter.Content.ImageContent.Sprites;
@@ -85,9 +86,12 @@ namespace ClinicalTools.SimEncounters
             return null;
         }
 
+        protected virtual bool KeyIsEncounterImage(string key)
+            => key != null && (key.Equals(LegacyEncounterImageKey, StringComparison.InvariantCultureIgnoreCase) || key.Equals(EncounterImageKey, StringComparison.InvariantCultureIgnoreCase));
+
         protected virtual void SelectImage()
         {
-            var newImageKey = SpritePopup.SelectSprite(Encounter.Content.ImageContent.Sprites, Value);
+            var newImageKey = SpritePopup.SelectSprite(Encounter, Value);
             newImageKey.AddOnCompletedListener(ImageSelected);
         }
 
