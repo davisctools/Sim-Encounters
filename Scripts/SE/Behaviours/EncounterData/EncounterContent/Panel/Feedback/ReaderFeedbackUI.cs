@@ -12,11 +12,13 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private TextMeshProUGUI optionTypeLabel;
         public OptionType OptionType {
             get {
-                switch (OptionTypeLabel.text) {
-                    case "Correct":
+                switch (OptionTypeLabel.text.Trim().ToLowerInvariant()) {
+                    case "correct":
                         return OptionType.Correct;
-                    case "Incorrect":
+                    case "incorrect":
                         return OptionType.Incorrect;
+                    case "neutral":
+                        return OptionType.Neutral;
                     default:
                         return OptionType.PartiallyCorrect;
                 }
@@ -68,7 +70,10 @@ namespace ClinicalTools.SimEncounters
             foreach (var image in AnsweredColoredImages)
                 image.color = color;
 
-            IsCorrectLabel.text = GetOptionTypeText(OptionType, isOn);
+            if (OptionType == OptionType.Neutral)
+                IsCorrectLabel.gameObject.SetActive(false);
+            else
+                IsCorrectLabel.text = GetOptionTypeText(OptionType, isOn);
 
             Stripes.gameObject.SetActive(ShowStripes(OptionType, isOn));
         }

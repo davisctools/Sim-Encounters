@@ -29,17 +29,5 @@ namespace ClinicalTools.UI
             if (scrollView != null)
                 scrollView.OnScroll(eventData);
         }
-
-        public override void OnSelect(BaseEventData eventData)
-        {
-            richText = false;
-            base.OnSelect(eventData);
-        }
-
-        public override void OnDeselect(BaseEventData eventData)
-        {
-            richText = true;
-            base.OnDeselect(eventData);
-        }
     }
 }

@@ -9,7 +9,6 @@ namespace ClinicalTools.UI
     {
         TextMeshProUGUI text;
 
-        // Start is called before the first frame update
         private void Start() => text = GetComponent<TextMeshProUGUI>();
 
         public void OnPointerClick(PointerEventData eventData)

@@ -1,18 +1,18 @@
-﻿using TMPro;
+﻿using ClinicalTools.UI;
 using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
-    [RequireComponent(typeof(TMP_InputField))]
+    [RequireComponent(typeof(FormattedInputField))]
     public class WriterTextPanelField : BaseWriterPanelField
     {
-        public override string Value => InputField.text;
+        public override string Value => InputField.GetUnformattedText();
 
-        private TMP_InputField inputField;
-        protected TMP_InputField InputField {
+        private FormattedInputField inputField;
+        protected FormattedInputField InputField {
             get {
                 if (inputField == null)
-                    inputField = GetComponent<TMP_InputField>();
+                    inputField = GetComponent<FormattedInputField>();
                 return inputField;
             }
         }
@@ -20,7 +20,7 @@ namespace ClinicalTools.SimEncounters
         protected override void OnPanelSelected(object sender, PanelSelectedEventArgs e)
         {
             var values = e.Panel.Values;
-            InputField.text = values.ContainsKey(Name) ? values[Name] : "";
+            InputField.SetUnformattedText(values.ContainsKey(Name) ? values[Name] : "");
         }
     }
 }

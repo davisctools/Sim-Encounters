@@ -49,8 +49,8 @@ namespace ClinicalTools.SimEncounters
         protected virtual string AppendValue(IEnumerable<string> values)
             => CaseInfoDivider + string.Join(CategoryDivider, values);
         protected virtual string AppendValue(Name name) => $"{CaseInfoDivider}" +
-            $"{UnityWebRequest.EscapeURL(name.Honorific)}{CategoryDivider}" +
-            $"{UnityWebRequest.EscapeURL(name.FirstName)}{CategoryDivider}" +
-            $"{UnityWebRequest.EscapeURL(name.LastName)}";
+            $"{UnityWebRequest.EscapeURL(name?.Honorific ?? "")}{CategoryDivider}" +
+            $"{UnityWebRequest.EscapeURL(name?.FirstName ?? "")}{CategoryDivider}" +
+            $"{UnityWebRequest.EscapeURL(name?.LastName ?? "")}";
     }
 }
