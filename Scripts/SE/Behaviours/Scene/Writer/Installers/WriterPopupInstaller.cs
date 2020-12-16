@@ -4,6 +4,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
+
     public class WriterPopupInstaller : MonoInstaller
     {
         public BaseCharactersEditor CharactersEditor { get => charactersEditor; set => charactersEditor = value; }

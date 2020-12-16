@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using ClinicalTools.UI;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
 
     [RequireComponent(typeof(TextMeshProUGUI))]
-    public class ReaderPanelLabel : MonoBehaviour
+    public class ReaderPanelLabel : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private string valueName = null;
         protected virtual string Name => !string.IsNullOrWhiteSpace(valueName) ? valueName : name;
@@ -31,10 +33,19 @@ namespace ClinicalTools.SimEncounters
                 return label;
             }
         }
+
+        protected virtual VisitedLinksManager VisitedLinksManager { get; set; }
+        protected virtual TagsFormatter TagsFormatter { get; set; }
         protected ISelectedListener<PanelSelectedEventArgs> PanelSelectedListener { get; set; }
         [Inject]
-        public virtual void Inject(ISelectedListener<PanelSelectedEventArgs> panelSelectedListener)
+        public virtual void Inject(
+            VisitedLinksManager visitedLinksManager,
+            TagsFormatter tagsFormatter,
+            ISelectedListener<PanelSelectedEventArgs> panelSelectedListener)
         {
+            VisitedLinksManager = visitedLinksManager;
+            TagsFormatter = tagsFormatter;
+
             PanelSelectedListener = panelSelectedListener;
             PanelSelectedListener.Selected += OnPanelSelected;
             if (PanelSelectedListener.CurrentValue != null)
@@ -62,6 +73,7 @@ namespace ClinicalTools.SimEncounters
                 HideControlledObjects();
         }
 
+        protected ParsedDocument ParsedDocument { get; set; }
         protected virtual void SetText(string value)
         {
             var text = "";
@@ -73,7 +85,30 @@ namespace ClinicalTools.SimEncounters
 
                 text += value;
             }
-            Label.text = text;
+
+            ParsedDocument = new ParsedDocument(text);
+            Label.text = TagsFormatter.ProcessDocument(ParsedDocument);
+        }
+
+        public virtual void OnPointerClick(PointerEventData eventData)
+        {
+            var linkCount = Label.textInfo.linkInfo.Length;
+            if (linkCount == 0)
+                return;
+
+            var linkIndex = TMP_TextUtilities.FindIntersectingLink(Label, eventData.position, Camera.current);
+            if (linkIndex < 0 || linkIndex >= linkCount)
+                return;
+
+            var link = Label.textInfo.linkInfo[linkIndex];
+            var linkURL = link.GetLinkID();
+            if (!linkURL.StartsWith("URL:"))
+                return;
+
+            var url = linkURL.Substring(4);
+            VisitedLinksManager.VisitLink(url);
+            Application.OpenURL(url);
+            Label.text = TagsFormatter.ProcessDocument(ParsedDocument);
         }
 
         protected virtual void HideControlledObjects()
