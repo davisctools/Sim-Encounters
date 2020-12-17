@@ -7,7 +7,6 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-
     [RequireComponent(typeof(RectTransform))]
     public class CharacterEditor : MonoBehaviour, IDraggable
     {

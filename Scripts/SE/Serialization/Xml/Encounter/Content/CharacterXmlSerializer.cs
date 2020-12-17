@@ -35,8 +35,15 @@ namespace ClinicalTools.SimEncounters
         {
             var character = new Character();
             character.Icon = GetIcon(deserializer);
-            character.PrimaryColor = GetPrimaryColor(deserializer);
-            character.SecondaryColor = GetSecondaryColor(deserializer);
+
+            var primaryColor = GetPrimaryColor(deserializer);
+            if (primaryColor != Color.white)
+                character.PrimaryColor = primaryColor;
+
+            var secondaryColor = GetSecondaryColor(deserializer);
+            if (secondaryColor != Color.white)
+                character.SecondaryColor = secondaryColor;
+
             character.Role = GetRole(deserializer);
             character.Name = GetName(deserializer);
 

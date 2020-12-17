@@ -124,8 +124,8 @@ namespace ClinicalTools.SimEncounters
             var tabs = CurrentSection.Tabs;
             var tabButton = TabButtons[tab];
 
-            rearrangeableGroup.Remove(tabButton);
             TabButtons.Remove(tab);
+            RearrangeableGroup.Remove(tabButton);
             DespawnTabButton(tabButton);
             tabs.Remove(tab);
 

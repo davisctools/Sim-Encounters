@@ -9,14 +9,10 @@ namespace ClinicalTools.SimEncounters
             : base(sectionFactory, characterFactory) { }
 
         private readonly Character _patientCharacter = new Character {
-            PrimaryColor = new Color(0.937f, 0.953f, 0.965f),
-            SecondaryColor = new Color(0.937f, 0.953f, 0.965f),
             Icon = new Icon(),
             Role = "Patient"
         };
         private readonly Character _instructorCharacter = new Character {
-            PrimaryColor = new Color(0.937f, 0.953f, 0.965f),
-            SecondaryColor = new Color(0.937f, 0.953f, 0.965f),
             Icon = new Icon(Icon.IconType.Resource, "Characters\\whitecoat"),
             Role = "Instructor"
         };

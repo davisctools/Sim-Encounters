@@ -29,13 +29,22 @@ namespace ClinicalTools.UI
 
         public override void Remove(IDraggable draggable)
         {
+            RemoveListeners(draggable);
             DraggableObjects.Remove(draggable);
+        }
+
+        protected virtual void RemoveListeners(IDraggable draggable)
+        {
             draggable.DragStarted -= DragStarted;
             draggable.DragEnded -= DragEnded;
             draggable.Dragging -= Dragging;
         }
-        public override void Clear() => DraggableObjects.Clear();
-
+        public override void Clear()
+        {
+            foreach (var draggable in DraggableObjects)
+                RemoveListeners(draggable);
+            DraggableObjects.Clear();
+        }
 
         protected virtual float Offset { get; set; }
         protected virtual int InitialIndex { get; set; }
