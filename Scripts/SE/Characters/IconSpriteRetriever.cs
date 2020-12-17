@@ -7,7 +7,7 @@ namespace ClinicalTools.SimEncounters
 {
     public class IconSpriteRetriever : IIconSpriteRetriever
     {
-        protected virtual string IconsResourcePath => "Icons/Characters";
+        protected virtual string IconsResourcePath => "Icons";
         protected virtual Dictionary<string, Sprite> ResourceSpriteDictionary { get; } = new Dictionary<string, Sprite>();
 
         public Sprite GetIconSprite(Encounter encounter, Icon icon)
@@ -27,10 +27,10 @@ namespace ClinicalTools.SimEncounters
 
                     var reference = icon.Reference;
                     if (icon.Reference.Equals("instructor", StringComparison.InvariantCultureIgnoreCase)) {
-                        reference = "whitecoat";
+                        reference = "Characters/whitecoat";
                         icon.Color = Color.white;
                     } else  if (icon.Reference.Equals("provider", StringComparison.InvariantCultureIgnoreCase)) {
-                        reference = "provider-white";
+                        reference = "Characters/provider-white";
                         icon.Color = Color.white;
                     }
                     if (ResourceSpriteDictionary.ContainsKey(reference))

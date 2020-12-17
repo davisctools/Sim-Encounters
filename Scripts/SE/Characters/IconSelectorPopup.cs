@@ -69,9 +69,9 @@ namespace ClinicalTools.SimEncounters
             } else if (currentIcon.Type == Icon.IconType.Resource) {
                 var reference = currentIcon.Reference;
                 if (reference.Equals("instructor", StringComparison.InvariantCultureIgnoreCase))
-                    reference = "whitecoat";
+                    reference = "Characters\\whitecoat";
                 else if (reference.Equals("provider", StringComparison.InvariantCultureIgnoreCase))
-                    reference = "provider-white";
+                    reference = "Characters\\provider-white";
 
                 if (ResourceToggles.ContainsKey(reference))
                     ResourceToggles[reference].Select();
