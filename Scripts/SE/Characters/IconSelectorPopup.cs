@@ -31,7 +31,7 @@ namespace ClinicalTools.SimEncounters
         protected KeyedCollection<Sprite> Sprites => Encounter.Content.ImageContent.Sprites;
 
         protected Dictionary<string, IconSelectorToggle> ResourceToggles { get; } = new Dictionary<string, IconSelectorToggle>();
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             var iconSelectors = GetComponentsInChildren<IconSelectorToggle>();
             foreach (var iconSelector in iconSelectors) {
@@ -68,6 +68,11 @@ namespace ClinicalTools.SimEncounters
                 SetCurrentToLastUploadedIcon();
             } else if (currentIcon.Type == Icon.IconType.Resource) {
                 var reference = currentIcon.Reference;
+                if (reference.Equals("instructor", StringComparison.InvariantCultureIgnoreCase))
+                    reference = "whitecoat";
+                else if (reference.Equals("provider", StringComparison.InvariantCultureIgnoreCase))
+                    reference = "provider-white";
+
                 if (ResourceToggles.ContainsKey(reference))
                     ResourceToggles[reference].Select();
                 else

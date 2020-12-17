@@ -13,7 +13,7 @@ namespace ClinicalTools.SimEncounters
         public abstract LayoutElement LayoutElement { get; }
 
 
-        public abstract event Action Selected;
+        public abstract event Action<Section> Selected;
         public abstract event Action<Section> Edited;
         public abstract event Action<Section> Deleted;
         public event Action<IDraggable, Vector3> DragStarted;

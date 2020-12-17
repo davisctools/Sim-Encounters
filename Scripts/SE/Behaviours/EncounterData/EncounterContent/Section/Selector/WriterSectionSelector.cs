@@ -6,7 +6,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class WriterSectionsHandler : MonoBehaviour
+    public class WriterSectionSelector : MonoBehaviour
     {
         public virtual BaseRearrangeableGroup RearrangeableGroup { get => rearrangeableGroup; set => rearrangeableGroup = value; }
         [SerializeField] private BaseRearrangeableGroup rearrangeableGroup;
@@ -52,9 +52,9 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void OnEncounterSelected(object sender, EncounterSelectedEventArgs e)
         {
-            RearrangeableGroup.Clear();
             foreach (var sectionButton in SectionButtons)
-                Destroy(sectionButton.Value.gameObject);
+                DespawnButton(sectionButton.Value);
+            RearrangeableGroup.Clear();
             SectionButtons.Clear();
 
             CurrentEncounter = e.Encounter;
@@ -97,9 +97,11 @@ namespace ClinicalTools.SimEncounters
             sectionButton.RectTransform.localScale = Vector3.one;
             sectionButton.SetToggleGroup(SectionsToggleGroup);
             sectionButton.Display(encounter, section);
-            sectionButton.Selected += () => OnSelected(section);
+
+            sectionButton.Selected += OnSelected;
             sectionButton.Edited += OnSectionEdited;
             sectionButton.Deleted += OnDeleted;
+
             SectionButtons.Add(section, sectionButton);
         }
 
@@ -127,19 +129,33 @@ namespace ClinicalTools.SimEncounters
         }
         protected void OnDeleted(Section section)
         {
+            var nonImageContent = CurrentEncounter.Content.NonImageContent;
+            var sections = nonImageContent.Sections;
+            var sectionIndex = nonImageContent.CurrentSectionIndex;
             var button = SectionButtons[section];
+
             RearrangeableGroup.Remove(button);
             SectionButtons.Remove(section);
-            CurrentEncounter.Content.NonImageContent.Sections.Remove(section);
+            sections.Remove(section);
+            DespawnButton(button);
 
-            CurrentSection = section;
+            if (sections.Count == 0)
+                return;
+
+            if (sectionIndex == sections.Count)
+                sectionIndex--;
+            SectionSelector.Select(this, new SectionSelectedEventArgs(sections[sectionIndex].Value));
+        }
+
+        protected virtual void DespawnButton(BaseWriterSectionToggle button)
+        {
+            button.Selected -= OnSelected;
+            button.Edited -= OnSectionEdited;
+            button.Deleted -= OnDeleted;
             SectionButtonPool.Despawn(button);
         }
 
-        private void SectionsRearranged(object sender, RearrangedEventArgs2 e)
-        {
-            var sections = CurrentEncounter.Content.NonImageContent.Sections;
-            sections.MoveValue(e.NewIndex, e.OldIndex);
-        }
+        protected virtual void SectionsRearranged(object sender, RearrangedEventArgs2 e)
+            => CurrentEncounter.Content.NonImageContent.Sections.MoveValue(e.NewIndex, e.OldIndex);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using ClinicalTools.UI;
 using ClinicalTools.UI.Extensions;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,10 +54,10 @@ namespace ClinicalTools.SimEncounters
         protected virtual void OnSectionSelected(object sender, SectionSelectedEventArgs e)
         {
             CurrentSection = e.SelectedSection;
-            RearrangeableGroup.Clear();
             foreach (var tabButton in TabButtons)
-                Destroy(tabButton.Value.gameObject);
-
+                DespawnTabButton(tabButton.Value);
+            
+            RearrangeableGroup.Clear();
             TabButtons.Clear();
 
             if (CurrentSection.Tabs.Count == 0) {
@@ -105,7 +104,7 @@ namespace ClinicalTools.SimEncounters
             tabButton.RectTransform.localScale = Vector3.one;
             tabButton.SetToggleGroup(TabsToggleGroup);
             tabButton.Display(tab);
-            tabButton.Selected += () => OnSelected(tab);
+            tabButton.Selected += OnSelected;
             tabButton.Deleted += OnDeleted;
             TabButtons.Add(tab, tabButton);
         }
@@ -121,10 +120,27 @@ namespace ClinicalTools.SimEncounters
         }
         protected void OnDeleted(Tab tab)
         {
+            var tabIndex = CurrentSection.CurrentTabIndex;
+            var tabs = CurrentSection.Tabs;
             var tabButton = TabButtons[tab];
+
             rearrangeableGroup.Remove(tabButton);
             TabButtons.Remove(tab);
-            CurrentSection.Tabs.Remove(tab);
+            DespawnTabButton(tabButton);
+            tabs.Remove(tab);
+
+            if (tabs.Count == 0)
+                return;
+
+            if (tabIndex == tabs.Count)
+                tabIndex--;
+            TabSelector.Select(this, new TabSelectedEventArgs(tabs[tabIndex].Value));
+        }
+
+        protected virtual void DespawnTabButton(BaseWriterTabToggle tabButton)
+        {
+            tabButton.Selected -= OnSelected;
+            tabButton.Deleted -= OnDeleted;
             TabButtonPool.Despawn(tabButton);
         }
 

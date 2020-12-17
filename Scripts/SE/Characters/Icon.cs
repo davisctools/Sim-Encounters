@@ -7,7 +7,7 @@ namespace ClinicalTools.SimEncounters
         public enum IconType { Resource, Upload, EncounterImage }
         public IconType Type { get; }
         public string Reference { get; }
-        public Color Color { get; } = Color.white;
+        public Color Color { get; set; } = Color.white;
 
         public Icon() => Type = IconType.EncounterImage;
         public Icon(IconType type, string reference)

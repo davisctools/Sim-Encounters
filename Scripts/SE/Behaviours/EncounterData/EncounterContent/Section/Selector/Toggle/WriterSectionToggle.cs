@@ -27,7 +27,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual SectionEditorPopup SectionEditorPopup { get; set; }
         [Inject] public void Inject(SectionEditorPopup sectionEditorPopup) => SectionEditorPopup = sectionEditorPopup;
 
-        public override event Action Selected;
+        public override event Action<Section> Selected;
         public override event Action<Section> Deleted;
         public override event Action<Section> Edited;
 
@@ -61,7 +61,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void OnSelected()
         {
-            Selected?.Invoke();
+            Selected?.Invoke(CurrentSection);
             EditButton.gameObject.SetActive(true);
         }
         protected virtual void OnUnselected()

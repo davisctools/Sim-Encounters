@@ -53,14 +53,18 @@ namespace ClinicalTools.SimEncounters
             if (string.IsNullOrWhiteSpace(logString) && string.IsNullOrWhiteSpace(stackTrace))
                 return;
 
-            if (FileWriter == null) {
-                var dirPath = Path.Combine(Application.persistentDataPath, "logs");
-                if (!Directory.Exists(dirPath))
-                    Directory.CreateDirectory(dirPath);
-                FileWriter = new StreamWriter(Path.Combine(dirPath, $"{DateTime.UtcNow.Ticks}.log"));
-            }
+            if (FileWriter == null)
+                InitializeFileWriter();
 
             FileWriter.WriteLine($"{GetLogTypePrefix(type)}\t{logString}\n{stackTrace}\n\n");
+        }
+
+        protected virtual void InitializeFileWriter()
+        {
+            var dirPath = Path.Combine(Application.persistentDataPath, "logs");
+            if (!Directory.Exists(dirPath))
+                Directory.CreateDirectory(dirPath);
+            FileWriter = new StreamWriter(Path.Combine(dirPath, $"{DateTime.UtcNow.Ticks}.log"));
         }
     }
 }

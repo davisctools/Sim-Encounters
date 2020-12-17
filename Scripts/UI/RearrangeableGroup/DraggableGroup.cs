@@ -27,7 +27,13 @@ namespace ClinicalTools.UI
             Placeholder.transform.SetAsLastSibling();
         }
 
-        public override void Remove(IDraggable draggable) => DraggableObjects.Remove(draggable);
+        public override void Remove(IDraggable draggable)
+        {
+            DraggableObjects.Remove(draggable);
+            draggable.DragStarted -= DragStarted;
+            draggable.DragEnded -= DragEnded;
+            draggable.Dragging -= Dragging;
+        }
         public override void Clear() => DraggableObjects.Clear();
 
 
@@ -50,7 +56,7 @@ namespace ClinicalTools.UI
 
             Offset = DistanceFromMouse(draggable.RectTransform, mousePosition);
         }
-        
+
         protected virtual void SetPlaceholderIndex(IDraggable draggable)
             => Placeholder.transform.SetSiblingIndex(draggable.RectTransform.GetSiblingIndex());
 

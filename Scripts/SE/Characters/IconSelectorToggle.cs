@@ -7,6 +7,7 @@ namespace ClinicalTools.SimEncounters
     [RequireComponent(typeof(Toggle))]
     public class IconSelectorToggle : MonoBehaviour
     {
+        public Image IconDisplay { get => iconDisplay; set => iconDisplay = value; }
         [SerializeField] private Image iconDisplay;
 
         private Toggle toggle;
@@ -32,7 +33,7 @@ namespace ClinicalTools.SimEncounters
         public virtual void SetIcon(Icon icon, Sprite sprite)
         {
             Icon = icon;
-            iconDisplay.sprite = sprite;
+            IconDisplay.sprite = sprite;
         }
         public virtual void SetToggleGroup(ToggleGroup group) => Toggle.group = group;
 

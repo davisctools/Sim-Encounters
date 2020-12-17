@@ -17,13 +17,13 @@ namespace ClinicalTools.SimEncounters
         private readonly Character _instructorCharacter = new Character {
             PrimaryColor = new Color(0.937f, 0.953f, 0.965f),
             SecondaryColor = new Color(0.937f, 0.953f, 0.965f),
-            Icon = new Icon(Icon.IconType.Resource, "instructor", new Color(0.1490196f, 0.1882353f, 0.2196078f)),
+            Icon = new Icon(Icon.IconType.Resource, "whitecoat", new Color(0.1490196f, 0.1882353f, 0.2196078f)),
             Role = "Instructor"
         };
         private readonly Character _providerCharacter = new Character {
             PrimaryColor = new Color(0.372549f, 0.6862745f, 0.6745098f),
             SecondaryColor = new Color(0.827451f, 0.9058824f, 0.9098039f),
-            Icon = new Icon(Icon.IconType.Resource, "provider", Color.white),
+            Icon = new Icon(Icon.IconType.Resource, "provider-white", Color.white),
             Role = "Provider"
         };
 

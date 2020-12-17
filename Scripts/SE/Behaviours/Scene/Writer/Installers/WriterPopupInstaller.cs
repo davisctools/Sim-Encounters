@@ -4,7 +4,6 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-
     public class WriterPopupInstaller : MonoInstaller
     {
         public BaseCharactersEditor CharactersEditor { get => charactersEditor; set => charactersEditor = value; }
@@ -39,8 +38,13 @@ namespace ClinicalTools.SimEncounters
         public BaseSaveEncounterDisplay SaveEncounterDisplay { get => saveEncounterDisplay; set => saveEncounterDisplay = value; }
         [SerializeField] private BaseSaveEncounterDisplay saveEncounterDisplay;
 
+        public GameObject TextEditorHelpPopup { get => textEditorHelpPopup; set => textEditorHelpPopup = value; }
+        [SerializeField] private GameObject textEditorHelpPopup;
+
         public override void InstallBindings()
         {
+            Container.BindInstance(TextEditorHelpPopup).WhenInjectedInto<ShowTextEditorHelpButton>();
+
             Container.BindInstance(ColorSelector);
             Container.BindInstance(IconSelector);
             Container.Bind<IIconSpriteRetriever>().To<IconSpriteRetriever>().AsSingle();

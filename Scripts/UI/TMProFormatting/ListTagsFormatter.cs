@@ -9,12 +9,27 @@ namespace ClinicalTools.UI
 
         protected virtual string AppendClosePreviousListTags(string text)
         {
-            if (text.EndsWith("\n"))
-                text = text.Substring(0, text.Length - 1);
-
-            text += $"{IndentClosingTag}{MarginClosingTag}\n";
+            text = RemoveLastNewLine(text);
+            text += $"{IndentClosingTag}{MarginClosingTag}";
             return text;
         }
+
+        protected string RemoveLastNewLine(string text)
+        {
+            for (int i = text.Length - 1; i >= 0; i--) {
+                if (text[i] == '\n')
+                    return text.Substring(0, i);
+
+                if (!char.IsWhiteSpace(text[i]))
+                    break;
+            }
+
+            return text;
+        }
+        protected string EndWithNewLine(string text)
+            => RemoveLastNewLine(text) + '\n';
+
+
         protected virtual string ReopenPreviousListTags()
             => $"{GetMarginOpeningTag()}{GetIndentOpeningTag()}";
 
@@ -28,7 +43,9 @@ namespace ClinicalTools.UI
         protected virtual string AppendListStart(string text)
         {
             if (IndentLevel++ > 0)
-                text += AppendClosePreviousListTags(text);
+                text = AppendClosePreviousListTags(text);
+            if (text.Length > 0)
+                text = EndWithNewLine(text);
             text += GetMarginOpeningTag();
 
             return text;

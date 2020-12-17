@@ -23,7 +23,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual TabEditorPopup TabEditorPopup { get; set; }
         [Inject] public void Inject(TabEditorPopup tabEditorPopup) => TabEditorPopup = tabEditorPopup;
 
-        public override event Action Selected;
+        public override event Action<Tab> Selected;
         public override event Action<Tab> Edited;
         public override event Action<Tab> Deleted;
         protected virtual void Awake()
@@ -52,7 +52,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void OnSelected()
         {
-            Selected?.Invoke();
+            Selected?.Invoke(CurrentTab);
             EditButton.gameObject.SetActive(true);
         }
         protected virtual void OnUnselected()

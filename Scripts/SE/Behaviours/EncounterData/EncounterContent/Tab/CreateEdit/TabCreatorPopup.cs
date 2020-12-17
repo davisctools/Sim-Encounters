@@ -42,6 +42,8 @@ namespace ClinicalTools.SimEncounters
             CurrentWaitableTab?.SetError(new Exception("New popup opened"));
             CurrentWaitableTab = new WaitableTask<Tab>();
 
+            SelectedPrefab = null;
+
             gameObject.SetActive(true);
             TabGroups.allowSwitchOff = true;
             TabTypes.allowSwitchOff = true;

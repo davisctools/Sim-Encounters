@@ -43,6 +43,8 @@ namespace ClinicalTools.UI
                 return ListTagsFormatter.AppendOrderedList(text, element, this);
             else if (element.StartTag.StartsWith("<a ", StringComparison.InvariantCultureIgnoreCase))
                 return UrlTagsFormatter.AppendUrlTag(text, element, this);
+            else if (element.StartTag.Equals("<noparse>", StringComparison.InvariantCultureIgnoreCase))
+                return text + element.ToString(); 
             else
                 return AppendGenericElementNode(text, element);
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace ClinicalTools.SimEncounters
 {
     public class IconSpriteRetriever : IIconSpriteRetriever
     {
-        protected virtual string IconsResourcePath => "Icons";
+        protected virtual string IconsResourcePath => "Icons/Characters";
         protected virtual Dictionary<string, Sprite> ResourceSpriteDictionary { get; } = new Dictionary<string, Sprite>();
 
         public Sprite GetIconSprite(Encounter encounter, Icon icon)
@@ -24,11 +25,19 @@ namespace ClinicalTools.SimEncounters
                     if (icon.Reference == null)
                         return null;
 
-                    if (ResourceSpriteDictionary.ContainsKey(icon.Reference))
-                        return ResourceSpriteDictionary[icon.Reference];
+                    var reference = icon.Reference;
+                    if (icon.Reference.Equals("instructor", StringComparison.InvariantCultureIgnoreCase)) {
+                        reference = "whitecoat";
+                        icon.Color = Color.white;
+                    } else  if (icon.Reference.Equals("provider", StringComparison.InvariantCultureIgnoreCase)) {
+                        reference = "provider-white";
+                        icon.Color = Color.white;
+                    }
+                    if (ResourceSpriteDictionary.ContainsKey(reference))
+                        return ResourceSpriteDictionary[reference];
 
-                    var sprite = Resources.Load<Sprite>(Path.Combine(IconsResourcePath, icon.Reference));
-                    ResourceSpriteDictionary.Add(icon.Reference, sprite);
+                    var sprite = Resources.Load<Sprite>(Path.Combine(IconsResourcePath, reference));
+                    ResourceSpriteDictionary.Add(reference, sprite);
                     return sprite;
                 default:
                     return null;
