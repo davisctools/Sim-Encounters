@@ -32,8 +32,19 @@ namespace ClinicalTools.SimEncounters
             ReaderPanelFactory = readerPanelFactory;
         }
 
+
+        protected bool WasActive { get; set; }
+        protected OrderedCollection<UserPanel> Panels { get; set; }
         public override void Display(OrderedCollection<UserPanel> panels, bool active)
         {
+            if (!WasActive && active && Panels == panels) {
+                WasActive = active;
+                return;
+            }
+
+            WasActive = active;
+            Panels = panels;
+
             foreach (Transform child in transform)
                 Destroy(child.gameObject);
 
