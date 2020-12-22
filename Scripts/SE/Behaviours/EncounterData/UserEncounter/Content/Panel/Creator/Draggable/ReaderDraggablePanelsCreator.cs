@@ -3,7 +3,7 @@ using UnityEngine;
 using ClinicalTools.SimEncounters.Extensions;
 using System.Collections.Generic;
 using System;
-using Zenject;
+using ClinicalTools.SEColors;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -14,8 +14,7 @@ namespace ClinicalTools.SimEncounters
         public GameObject Feedback { get => feedback; set => feedback = value; }
         [SerializeField] private GameObject feedback;
 
-        protected IColorManager ColorManager { get; set; }
-        [Inject] public virtual void Inject(IColorManager colorManager) => ColorManager = colorManager;
+        protected virtual IColorManager ColorManager { get; } = new ColorManager();
 
         protected virtual void Start() => DraggableGroupUI.Rearranged += Rearranged;
 

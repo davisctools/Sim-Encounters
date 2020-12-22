@@ -51,9 +51,9 @@ namespace ClinicalTools.SimEncounters
 
             var character = Characters[values[Name]];
             foreach (var primaryColoredObject in PrimaryColoredObjects)
-                primaryColoredObject.color = character.PrimaryColor;
+                primaryColoredObject.color = character.ColorTheme.IconBackgroundColor;
             foreach (var secondaryColoredObject in SecondaryColoredObjects)
-                secondaryColoredObject.color = character.SecondaryColor;
+                secondaryColoredObject.color = character.ColorTheme.DialogueBackgroundColor;
             
             if (CharacterIconSprites.Count == 0)
                 return;

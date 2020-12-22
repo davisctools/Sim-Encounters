@@ -1,4 +1,5 @@
-﻿using ClinicalTools.UI;
+﻿using ClinicalTools.SEColors;
+using ClinicalTools.UI;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,6 @@ namespace ClinicalTools.SimEncounters
 {
     public class CharacterColorThemeSelectorPopup : BaseCharacterColorThemeSelector, ICloseHandler
     {
-        [SerializeField] private ToggleGroup toggleGroup;
         [SerializeField] private Button applyButton;
 
         protected Dictionary<CharacterColorTheme, CharacterColorThemeOptionToggle> ColorThemeOptions { get; } 
@@ -54,9 +54,5 @@ namespace ClinicalTools.SimEncounters
             CurrentColorThemeTask = null;
             gameObject.SetActive(false);
         }
-    }
-    public abstract class BaseCharacterColorThemeSelector : MonoBehaviour
-    {
-        public abstract WaitableTask<CharacterColorTheme> SelectColorTheme(CharacterColorTheme colorTheme);
     }
 }

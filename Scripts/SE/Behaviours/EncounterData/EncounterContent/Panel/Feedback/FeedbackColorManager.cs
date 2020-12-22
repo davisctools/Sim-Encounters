@@ -1,4 +1,4 @@
-﻿using ClinicalTools.UI;
+﻿using ClinicalTools.SEColors;
 using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
@@ -7,9 +7,8 @@ namespace ClinicalTools.SimEncounters
     {
         protected virtual Color DefaultColor { get; } = new Color(0.9372549f, 0.9372549f, 0.9372549f, 1f);
 
-        protected IColorManager ColorManager { get; set; }
-        public FeedbackColorManager(IColorManager colorManager) => ColorManager = colorManager;
-        
+        protected virtual IColorManager ColorManager { get; } = new ColorManager();
+
         public virtual Color GetColor(OptionType optionType)
         {
             switch (optionType) {

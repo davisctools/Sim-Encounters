@@ -1,39 +1,40 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using ClinicalTools.SEColors;
+using System.Collections.Generic;
 
 namespace ClinicalTools.SimEncounters
 {
     public class LegacyNonImageContentXmlSerializer : NonImageContentXmlSerializer
     {
+        protected virtual ICharacterColorThemeManager ColorThemeManager { get; } = new CharacterColorThemeManager();
         public LegacyNonImageContentXmlSerializer(IXmlSerializer<Section> sectionFactory, IXmlSerializer<Character> characterFactory)
             : base(sectionFactory, characterFactory) { }
 
-        private readonly Character _patientCharacter = new Character {
+        protected virtual Character PatientCharacter => new Character {
+            ColorTheme = ColorThemeManager.GetColorTheme(ColorThemeName.Gray),
             Icon = new Icon(),
             Role = "Patient"
         };
-        private readonly Character _instructorCharacter = new Character {
+        protected virtual Character InstructorCharacter => new Character {
+            ColorTheme = ColorThemeManager.GetColorTheme(ColorThemeName.Gray),
             Icon = new Icon(Icon.IconType.Resource, "Characters\\whitecoat"),
             Role = "Instructor"
         };
-        private readonly Character _providerCharacter = new Character {
-            PrimaryColor = new Color(0.372549f, 0.6862745f, 0.6745098f),
-            SecondaryColor = new Color(0.827451f, 0.9058824f, 0.9098039f),
+        protected virtual Character ProviderCharacter => new Character {
+            ColorTheme = ColorThemeManager.GetColorTheme(ColorThemeName.BlueGreen),
             Icon = new Icon(Icon.IconType.Resource, "Characters\\provider-white"),
             Role = "Provider"
         };
+        protected virtual List<KeyValuePair<string, Character>> DefaultCharacters
+            => new List<KeyValuePair<string, Character>> {
+                new KeyValuePair<string, Character>("Provider", ProviderCharacter),
+                new KeyValuePair<string, Character>("Patient", PatientCharacter),
+                new KeyValuePair<string, Character>("Instructor", InstructorCharacter)
+            };
 
         protected override List<KeyValuePair<string, Character>> GetCharacters(XmlDeserializer deserializer)
         {
             var characters = base.GetCharacters(deserializer);
-            if (characters?.Count > 0)
-                return characters;
-
-            return new List<KeyValuePair<string, Character>> {
-                new KeyValuePair<string, Character>("Provider", _providerCharacter),
-                new KeyValuePair<string, Character>("Patient", _patientCharacter),
-                new KeyValuePair<string, Character>("Instructor", _instructorCharacter)
-            };
+            return (characters?.Count > 0) ? characters : DefaultCharacters;
         }
     }
 }

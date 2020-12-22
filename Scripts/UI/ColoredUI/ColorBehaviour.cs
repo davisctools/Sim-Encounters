@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using Zenject;
+﻿using ClinicalTools.SEColors;
+using UnityEngine;
 
 namespace ClinicalTools.UI
 {
@@ -9,8 +9,7 @@ namespace ClinicalTools.UI
         public ColorType ColorType { get => colorType; set => colorType = value; }
         [SerializeField] private ColorType colorType;
 
-        protected IColorManager ColorManager { get; set; }
-        [Inject] public virtual void Inject(IColorManager colorManager) => ColorManager = colorManager;
+        protected virtual IColorManager ColorManager { get; } = new ColorManager();
 
         protected virtual void Start() => UpdateColor();
         protected virtual void Update()
@@ -23,8 +22,6 @@ namespace ClinicalTools.UI
         protected virtual void UpdateColor()
         {
             previousType = ColorType;
-            if (ColorManager == null)
-                ColorManager = new ColorManager();
             SetColor(ColorManager.GetColor(ColorType));
         }
 

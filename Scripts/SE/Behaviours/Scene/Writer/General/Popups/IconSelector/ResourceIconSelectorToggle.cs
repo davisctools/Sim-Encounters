@@ -1,4 +1,4 @@
-﻿using ClinicalTools.UI;
+﻿using ClinicalTools.SEColors;
 using System.IO;
 using UnityEngine;
 using Zenject;
@@ -9,8 +9,7 @@ namespace ClinicalTools.SimEncounters
     {
         [SerializeField] private string resourceFolder = "Characters";
 
-        protected IColorManager ColorManager { get; set; }
-        [Inject] public virtual void Inject(IColorManager colorManager) => ColorManager = colorManager;
+        protected virtual IColorManager ColorManager { get; } = new ColorManager();
 
         public override Icon Icon {
             get {

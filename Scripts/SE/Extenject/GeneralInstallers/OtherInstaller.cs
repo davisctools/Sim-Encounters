@@ -12,7 +12,6 @@ namespace ClinicalTools.SimEncounters
             container.DeclareSignal<SceneChangedSignal>().OptionalSubscriber();
 
             container.Bind<ICurve>().To<AccelerationCurve>().AsTransient();
-            container.Bind<IColorManager>().To<ColorManager>().AsTransient();
             container.Bind<IShiftTransformsAnimator>().To<ShiftTransformsAnimator>().AsTransient();
 
             container.BindFactory<Object, GameObject, GameObjectFactory>()

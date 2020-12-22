@@ -1,5 +1,5 @@
 ﻿using ClinicalTools.Collections;
-using ClinicalTools.UI;
+using ClinicalTools.SEColors;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,14 +23,10 @@ namespace ClinicalTools.SimEncounters
         public BaseReaderPanelBehaviour TextboxPrefab { get => textboxPrefab; set => textboxPrefab = value; }
         [SerializeField] private BaseReaderPanelBehaviour textboxPrefab;
 
-        protected IColorManager ColorManager { get; set; }
+        protected virtual IColorManager ColorManager { get; } = new ColorManager();
         protected BaseReaderPanelBehaviour.Factory ReaderPanelFactory { get; set; }
         [Inject]
-        public virtual void Inject(IColorManager colorManager, BaseReaderPanelBehaviour.Factory readerPanelFactory)
-        {
-            ColorManager = colorManager;
-            ReaderPanelFactory = readerPanelFactory;
-        }
+        public virtual void Inject(BaseReaderPanelBehaviour.Factory readerPanelFactory) => ReaderPanelFactory = readerPanelFactory;
 
 
         protected bool WasActive { get; set; }

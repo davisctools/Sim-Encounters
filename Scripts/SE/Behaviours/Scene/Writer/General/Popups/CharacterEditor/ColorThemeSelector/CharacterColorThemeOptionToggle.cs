@@ -1,21 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
 using System;
+using ClinicalTools.SEColors;
 
 namespace ClinicalTools.SimEncounters
 {
+    [ExecuteAlways]
     [RequireComponent(typeof(Toggle))]
     public class CharacterColorThemeOptionToggle : MonoBehaviour
     {
-        [SerializeField] private int colorThemeIndex;
+        [SerializeField] private ColorThemeName colorThemeIndex;
 
         public event Action<CharacterColorTheme> Selected;
 
-        protected CharacterColorThemeManager CharacterColorThemeManager { get; set; }
-        [Inject]
-        public virtual void Inject(CharacterColorThemeManager characterColorThemeManager)
-            => CharacterColorThemeManager = characterColorThemeManager;
+        protected virtual ICharacterColorThemeManager CharacterColorThemeManager { get; } = new CharacterColorThemeManager();
 
         private CharacterColorTheme colorTheme;
         public CharacterColorTheme ColorTheme {
@@ -33,7 +31,19 @@ namespace ClinicalTools.SimEncounters
                 return toggle;
             }
         }
-        protected virtual void Awake()=> Toggle.onValueChanged.AddListener(OnValueChanged);
+        protected virtual void Awake() => Toggle.onValueChanged.AddListener(OnValueChanged);
+
+        ColorThemeName lastColorThemeName = (ColorThemeName)(-1);
+        protected virtual void Update()
+        {
+            if (lastColorThemeName == colorThemeIndex)
+                return;
+
+            lastColorThemeName = colorThemeIndex;
+            colorTheme = CharacterColorThemeManager.GetColorTheme(colorThemeIndex);
+            Toggle.image.color = ColorTheme.IconBackgroundColor;
+        }
+
         protected virtual void OnValueChanged(bool isOn)
         {
             if (isOn)

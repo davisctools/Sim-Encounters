@@ -12,6 +12,8 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private BaseIconSelector iconSelector;
         public BaseColorSelector ColorSelector { get => colorSelector; set => colorSelector = value; }
         [SerializeField] private BaseColorSelector colorSelector;
+        public BaseCharacterColorThemeSelector ColorThemeSelector { get => colorThemeSelector; set => colorThemeSelector = value; }
+        [SerializeField] private BaseCharacterColorThemeSelector colorThemeSelector;
 
         public WriterDialoguePopup DialoguePopup { get => dialoguePopup; set => dialoguePopup = value; }
         [SerializeField] private WriterDialoguePopup dialoguePopup;
@@ -46,6 +48,7 @@ namespace ClinicalTools.SimEncounters
             Container.BindInstance(TextEditorHelpPopup).WhenInjectedInto<ShowTextEditorHelpButton>();
 
             Container.BindInstance(ColorSelector);
+            Container.BindInstance(ColorThemeSelector);
             Container.BindInstance(IconSelector);
             Container.Bind<IIconSpriteRetriever>().To<IconSpriteRetriever>().AsSingle();
             Container.BindInstance(CharactersEditor);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClinicalTools.SEColors;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -26,21 +27,22 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void Start() => GetComponent<Button>().onClick.AddListener(OnButtonClicked);
-        protected virtual void OnButtonClicked() => ColorThemeSelectionPopup.SelectColorTheme(ColorTheme).AddOnCompletedListener(OnIconSelected);
+        protected virtual void OnButtonClicked()
+            => ColorThemeSelectionPopup.SelectColorTheme(ColorTheme).AddOnCompletedListener(OnColorThemeSelected);
 
-        protected virtual void OnIconSelected(TaskResult<CharacterColorTheme> iconResult)
+        protected virtual void OnColorThemeSelected(TaskResult<CharacterColorTheme> colorThemeResult)
         {
-            if (iconResult.HasValue())
-                SetIcon(iconResult.Value);
+            if (colorThemeResult.HasValue())
+                SetIcon(colorThemeResult.Value);
         }
 
-        public override void Display(CharacterColorTheme icon) => SetIcon(icon);
-        protected virtual void SetIcon(CharacterColorTheme icon)
+        public override void Display(CharacterColorTheme colorTheme) => SetIcon(colorTheme);
+        protected virtual void SetIcon(CharacterColorTheme colorTheme)
         {
-            ColorTheme = icon;
-            ValueChanged?.Invoke(icon);
-            if (icon != null)
-                image.color = icon.IconBackgroundColor;
+            ColorTheme = colorTheme;
+            ValueChanged?.Invoke(colorTheme);
+            if (colorTheme != null)
+                image.color = colorTheme.IconBackgroundColor;
         }
 
         public override CharacterColorTheme GetValue() => ColorTheme;

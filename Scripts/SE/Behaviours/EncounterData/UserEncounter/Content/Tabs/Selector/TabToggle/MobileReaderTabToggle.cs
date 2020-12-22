@@ -1,4 +1,5 @@
-﻿using ClinicalTools.UI;
+﻿using ClinicalTools.SEColors;
+using ClinicalTools.UI;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -16,14 +17,13 @@ namespace ClinicalTools.SimEncounters
         public GameObject VisitedCheck { get => visitedCheck; set => visitedCheck = value; }
         [SerializeField] private GameObject visitedCheck;
 
-        protected IColorManager ColorManager { get; set; }
+        protected virtual IColorManager ColorManager { get; } = new ColorManager();
         protected SignalBus SignalBus { get; set; }
         [Inject]
-        public virtual void Inject(SignalBus signalBus, IColorManager colorManager)
+        public virtual void Inject(SignalBus signalBus)
         {
             SignalBus = signalBus;
             SignalBus.Subscribe<EncounterCompletedSignal>(CompletionDraw); 
-            ColorManager = colorManager;
         }
 
         public override event Action Selected;

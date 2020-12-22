@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClinicalTools.SEColors;
+using System;
 using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
