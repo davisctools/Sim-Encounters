@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
-    public abstract class BaseIconOptionSelector : MonoBehaviour
+    public abstract class BaseIconField : MonoBehaviour
     {
         public abstract event Action<Icon> ValueChanged;
 

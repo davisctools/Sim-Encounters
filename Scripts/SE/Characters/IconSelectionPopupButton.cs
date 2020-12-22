@@ -6,7 +6,7 @@ using Zenject;
 namespace ClinicalTools.SimEncounters
 {
     [RequireComponent(typeof(Button))]
-    public class IconSelectionPopupButton : BaseIconOptionSelector
+    public class IconSelectionPopupButton : BaseIconField
     {
         [SerializeField] private Image image;
 
@@ -21,11 +21,11 @@ namespace ClinicalTools.SimEncounters
         public virtual void Inject(
             ISelectedListener<EncounterSelectedEventArgs> encounterSelectedListener,
             IIconSpriteRetriever iconSpriteRetriever,
-            BaseIconSelector colorSelectionPopup)
+            BaseIconSelector iconSelectionPopup)
         {
             EncounterSelectedListener = encounterSelectedListener;
             IconSpriteRetriever = iconSpriteRetriever;
-            IconSelectionPopup = colorSelectionPopup;
+            IconSelectionPopup = iconSelectionPopup;
         }
 
         protected virtual void Start() => GetComponent<Button>().onClick.AddListener(OnButtonClicked);

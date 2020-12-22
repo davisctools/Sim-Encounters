@@ -12,7 +12,7 @@ namespace ClinicalTools.SimEncounters
     {
         [SerializeField] private BaseColorEditor primaryColorEditor;
         [SerializeField] private BaseColorEditor secondaryColorEditor;
-        [SerializeField] private BaseIconOptionSelector iconSelector;
+        [SerializeField] private BaseIconField iconSelector;
         [SerializeField] private TMP_InputField roleField;
         [SerializeField] private TMP_InputField nameField;
         [SerializeField] private Button deleteButton;
