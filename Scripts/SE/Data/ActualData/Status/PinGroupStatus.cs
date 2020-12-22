@@ -4,6 +4,15 @@
     {
         public bool Read { get; set; }
 
+        private ReadMoreStatus readMoreStatus;
+        public ReadMoreStatus ReadMoreStatus {
+            get {
+                if (readMoreStatus == null)
+                    readMoreStatus = new ReadMoreStatus { Read = Read };
+                return readMoreStatus;
+            }
+            set => readMoreStatus = value;
+        }
         private QuizStatus quizStatus;
         public QuizStatus QuizStatus {
             get {

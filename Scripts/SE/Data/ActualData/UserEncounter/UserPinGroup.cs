@@ -7,6 +7,7 @@ namespace ClinicalTools.SimEncounters
         public UserEncounter Encounter { get; }
         public PinGroup Data { get; }
 
+        public UserReadMorePin ReadMorePin { get; }
         public UserDialoguePin DialoguePin { get; }
         public UserQuizPin QuizPin { get; }
         public PinGroupStatus Status { get; }
@@ -19,6 +20,10 @@ namespace ClinicalTools.SimEncounters
             Data = pinGroup;
             Status = status;
 
+            if (pinGroup.ReadMore != null) {
+                ReadMorePin = new UserReadMorePin(Encounter, Data.ReadMore, Status.ReadMoreStatus);
+                ReadMorePin.StatusChanged += UpdateIsRead;
+            }
             if (pinGroup.Dialogue != null) {
                 DialoguePin = new UserDialoguePin(Encounter, Data.Dialogue, Status.DialogueStatus);
                 DialoguePin.StatusChanged += UpdateIsRead;

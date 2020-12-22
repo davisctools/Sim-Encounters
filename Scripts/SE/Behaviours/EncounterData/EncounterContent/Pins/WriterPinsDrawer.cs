@@ -6,21 +6,30 @@ namespace ClinicalTools.SimEncounters
 {
     public class WriterPinsDrawer : BaseWriterPinsDrawer
     {
+        public Button ReadMorePinButton { get => readMorePinButton; set => readMorePinButton = value; }
+        [SerializeField] private Button readMorePinButton;
         public Button DialoguePinButton { get => dialoguePinButton; set => dialoguePinButton = value; }
         [SerializeField] private Button dialoguePinButton;
         public Button QuizPinButton { get => quizPinButton; set => quizPinButton = value; }
         [SerializeField] private Button quizPinButton;
 
+        protected virtual WriterReadMorePopup ReadMorePopup { get; set; }
         protected virtual WriterDialoguePopup DialoguePopup { get; set; }
         protected virtual WriterQuizPopup QuizPopup { get; set; }
-        [Inject] public void Inject(WriterDialoguePopup dialoguePopup, WriterQuizPopup quizPopup)
+        [Inject]
+        public void Inject(
+            WriterReadMorePopup readMorePopup,
+            WriterDialoguePopup dialoguePopup,
+            WriterQuizPopup quizPopup)
         {
+            ReadMorePopup = readMorePopup;
             DialoguePopup = dialoguePopup;
             QuizPopup = quizPopup;
         }
 
         protected virtual void Awake()
         {
+            ReadMorePinButton.onClick.AddListener(EditReadMore);
             DialoguePinButton.onClick.AddListener(EditDialogue);
             QuizPinButton.onClick.AddListener(EditQuiz);
         }
@@ -30,21 +39,32 @@ namespace ClinicalTools.SimEncounters
         {
             CurrentPinData = pinData;
 
+            ReadMorePinButton.image.color = GetButtonColor(CurrentPinData?.ReadMore != null);
             QuizPinButton.image.color = GetButtonColor(CurrentPinData?.Quiz != null);
             DialoguePinButton.image.color = GetButtonColor(CurrentPinData?.Dialogue != null);
         }
 
         public override PinGroup Serialize() => CurrentPinData;
 
+        protected virtual void EditReadMore()
+        {
+            ReadMorePin pin = CurrentPinData.ReadMore ?? new ReadMorePin();
+            var newDialogue = ReadMorePopup.EditReadMore(pin);
+            newDialogue.AddOnCompletedListener(SetReadMore);
+        }
+
+        protected virtual void SetReadMore(TaskResult<ReadMorePin> pinResult)
+        {
+            if (pinResult.IsError())
+                return;
+
+            CurrentPinData.ReadMore = pinResult.Value;
+            DialoguePinButton.image.color = GetButtonColor(pinResult.Value != null);
+        }
         protected virtual void EditDialogue()
         {
-            DialoguePin dialogue;
-            if (CurrentPinData.Dialogue != null)
-                dialogue = CurrentPinData.Dialogue;
-            else
-                dialogue = new DialoguePin();
-
-            var newDialogue = DialoguePopup.EditDialogue(dialogue);
+            DialoguePin pin = CurrentPinData.Dialogue ?? new DialoguePin();
+            var newDialogue = DialoguePopup.EditDialogue(pin);
             newDialogue.AddOnCompletedListener(SetDialogue);
         }
 
@@ -59,13 +79,8 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void EditQuiz()
         {
-            QuizPin quiz;
-            if (CurrentPinData.Quiz != null)
-                quiz = CurrentPinData.Quiz;
-            else
-                quiz = new QuizPin();
-
-            var newQuiz = QuizPopup.EditQuiz(quiz);
+            QuizPin pin = CurrentPinData.Quiz ?? new QuizPin();
+            var newQuiz = QuizPopup.EditQuiz(pin);
             newQuiz.AddOnCompletedListener(SetQuiz);
         }
 

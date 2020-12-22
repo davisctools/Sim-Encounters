@@ -15,6 +15,8 @@ namespace ClinicalTools.SimEncounters
         public BaseCharacterColorThemeSelector ColorThemeSelector { get => colorThemeSelector; set => colorThemeSelector = value; }
         [SerializeField] private BaseCharacterColorThemeSelector colorThemeSelector;
 
+        public WriterReadMorePopup ReadMorePopup { get => readMorePopup; set => readMorePopup = value; }
+        [SerializeField] private WriterReadMorePopup readMorePopup;
         public WriterDialoguePopup DialoguePopup { get => dialoguePopup; set => dialoguePopup = value; }
         [SerializeField] private WriterDialoguePopup dialoguePopup;
         public WriterQuizPopup QuizPopup { get => quizPopup; set => quizPopup = value; }
@@ -53,6 +55,7 @@ namespace ClinicalTools.SimEncounters
             Container.Bind<IIconSpriteRetriever>().To<IconSpriteRetriever>().AsSingle();
             Container.BindInstance(CharactersEditor);
 
+            Container.BindInstance(ReadMorePopup);
             Container.BindInstance(DialoguePopup);
             Container.BindInstance(QuizPopup);
             Container.BindInstance(SectionEditorPopup);
