@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class ReaderDialoguePopupUI : BaseUserDialoguePinDrawer, ISelector<UserDialoguePinSelectedEventArgs>
+    public class ReaderReadMorePopupUI : BaseUserReadMorePinDrawer
     {
         public BaseChildUserPanelsDrawer PanelCreator { get => panelCreator; set => panelCreator = value; }
         [SerializeField] private BaseChildUserPanelsDrawer panelCreator;
@@ -14,22 +14,15 @@ namespace ClinicalTools.SimEncounters
         public ScrollRectGradient ScrollGradient { get => scrollGradient; set => scrollGradient = value; }
         [SerializeField] private ScrollRectGradient scrollGradient;
 
-        public event SelectedHandler<UserDialoguePinSelectedEventArgs> Selected;
-
-        public override void Display(UserDialoguePin dialoguePin)
+        public override void Display(UserReadMorePin userPin)
         {
-            Select(this, new UserDialoguePinSelectedEventArgs(dialoguePin));
-
             gameObject.SetActive(true);
 
-            PanelCreator.Display(dialoguePin.Panels, true);
+            PanelCreator.Display(userPin.Panels, true);
 
             ScrollRect.normalizedPosition = Vector2.one;
             if (ScrollGradient != null)
                 ScrollGradient.ResetGradients();
         }
-
-        public UserDialoguePinSelectedEventArgs CurrentValue { get; protected set; }
-        public void Select(object sender, UserDialoguePinSelectedEventArgs eventArgs) => Selected?.Invoke(sender, eventArgs);
     }
 }

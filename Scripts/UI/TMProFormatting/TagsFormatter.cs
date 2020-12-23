@@ -6,9 +6,13 @@ namespace ClinicalTools.UI
     public class TagsFormatter : IChildTagsFormatter
     {
         protected UrlTagsFormatter UrlTagsFormatter { get; }
+        protected HorizontalRuleTagsFormatter HorizontalRuleTagsFormatter { get; set; }
         protected ListTagsFormatter ListTagsFormatter { get; set; }
-        public TagsFormatter(UrlTagsFormatter urlTagsFormatter) => UrlTagsFormatter = urlTagsFormatter;
-
+        public TagsFormatter(UrlTagsFormatter urlTagsFormatter, HorizontalRuleTagsFormatter hrTagsFormatter)
+        {
+            UrlTagsFormatter = urlTagsFormatter;
+            HorizontalRuleTagsFormatter = hrTagsFormatter;
+        }
         public virtual string ProcessText(string text) => ProcessDocument(new ParsedDocument(text));
         public virtual string ProcessDocument(ParsedDocument document)
         {
@@ -43,8 +47,10 @@ namespace ClinicalTools.UI
                 return ListTagsFormatter.AppendOrderedList(text, element, this);
             else if (element.StartTag.StartsWith("<a ", StringComparison.InvariantCultureIgnoreCase))
                 return UrlTagsFormatter.AppendUrlTag(text, element, this);
+            else if (element.StartTag.Equals("<hr>", StringComparison.InvariantCultureIgnoreCase))
+                return HorizontalRuleTagsFormatter.AppendHorizontalRule(text, element, this);
             else if (element.StartTag.Equals("<noparse>", StringComparison.InvariantCultureIgnoreCase))
-                return text + element.ToString(); 
+                return text + element.ToString();
             else
                 return AppendGenericElementNode(text, element);
         }

@@ -7,30 +7,8 @@ namespace ClinicalTools.SimEncounters
 {
     public class ReaderMobileSidebar : MonoBehaviour, ICloseHandler
     {
-        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelector { get; set; }
         protected ISidebarController SidebarController { get; set; }
-        [Inject]
-        public virtual void Inject(ISelectedListener<UserEncounterSelectedEventArgs> encounterSelector, ISidebarController sidebarController)
-        {
-            EncounterSelector = encounterSelector;
-            SidebarController = sidebarController;
-        }
-        protected virtual void Start()
-        {
-            EncounterSelector.Selected += OnEncounterSelected;
-            if (EncounterSelector.CurrentValue != null)
-                OnEncounterSelected(EncounterSelector, EncounterSelector.CurrentValue);
-        }
-
-        public virtual void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs userEncounter)
-            => StartCoroutine(CloseAfterSecond());
-
-        protected IEnumerator CloseAfterSecond()
-        {
-            yield return new WaitForSeconds(2f);
-            SidebarController.Close();
-        }
-
+        [Inject] public virtual void Inject(ISidebarController sidebarController) => SidebarController = sidebarController;
         public void Close(object sender) => SidebarController.Close();
     }
 }

@@ -5,6 +5,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
+
     public abstract class BaseReaderTabToggle : MonoBehaviour
     {
         public abstract event Action Selected;

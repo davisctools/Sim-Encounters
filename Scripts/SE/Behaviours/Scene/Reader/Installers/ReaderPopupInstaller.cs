@@ -16,6 +16,8 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private BaseSettingsPopup settingsPopup;
         public BaseReaderEncounterInfoPopup EncounterInfoPopup { get => encounterInfoPopup; set => encounterInfoPopup = value; }
         [SerializeField] private BaseReaderEncounterInfoPopup encounterInfoPopup;
+        public BaseUserReadMorePinDrawer ReadMorePopup { get => readMorePopup; set => readMorePopup = value; }
+        [SerializeField] private BaseUserReadMorePinDrawer readMorePopup;
         public BaseUserDialoguePinDrawer DialoguePopup { get => dialoguePopup; set => dialoguePopup = value; }
         [SerializeField] private BaseUserDialoguePinDrawer dialoguePopup;
         public BaseUserQuizPinDrawer QuizPopup { get => quizPopup; set => quizPopup = value; }
@@ -39,6 +41,7 @@ namespace ClinicalTools.SimEncounters
             Container.BindInstance(InstructionsPopup);
             Container.BindInstance(SettingsPopup);
             Container.BindInstance(EncounterInfoPopup);
+            Container.BindInstance(ReadMorePopup);
             Container.BindInstance(DialoguePopup);
             Container.BindInstance(QuizPopup);
             Container.BindInstance(PinButtonsPrefab);

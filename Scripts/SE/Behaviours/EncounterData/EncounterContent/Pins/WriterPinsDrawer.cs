@@ -59,7 +59,7 @@ namespace ClinicalTools.SimEncounters
                 return;
 
             CurrentPinData.ReadMore = pinResult.Value;
-            DialoguePinButton.image.color = GetButtonColor(pinResult.Value != null);
+            ReadMorePinButton.image.color = GetButtonColor(pinResult.Value != null);
         }
         protected virtual void EditDialogue()
         {

@@ -8,6 +8,7 @@ namespace ClinicalTools.SimEncounters
         public override void InstallBindings()
         {
             Container.Bind<TagsFormatter>().To<TagsFormatter>().AsSingle();
+            Container.Bind<HorizontalRuleTagsFormatter>().To<HorizontalRuleTagsFormatter>().AsSingle();
             Container.Bind<UrlTagsFormatter>().To<UrlTagsFormatter>().AsSingle();
             Container.Bind<VisitedLinksManager>().To<VisitedLinksManager>().AsSingle();
         }

@@ -12,6 +12,8 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private BaseUserDialoguePinDrawer dialoguePinButtonPrefab;
         public virtual BaseUserQuizPinDrawer QuizPinButtonPrefab { get => quizPinButtonPrefab; set => quizPinButtonPrefab = value; }
         [SerializeField] private BaseUserQuizPinDrawer quizPinButtonPrefab;
+        public virtual BaseUserReadMorePinDrawer ReadMorePinButtonPrefab { get => readMorePinButtonPrefab; set => readMorePinButtonPrefab = value; }
+        [SerializeField] private BaseUserReadMorePinDrawer readMorePinButtonPrefab;
 
         public override void InstallBindings()
         {
@@ -20,6 +22,9 @@ namespace ClinicalTools.SimEncounters
                      .UnderTransform(PoolParent);
             Container.BindMemoryPool<BaseUserQuizPinDrawer, BaseUserQuizPinDrawer.Pool>()
                      .FromComponentInNewPrefab(QuizPinButtonPrefab)
+                     .UnderTransform(PoolParent);
+            Container.BindMemoryPool<BaseUserReadMorePinDrawer, BaseUserReadMorePinDrawer.Pool>()
+                     .FromComponentInNewPrefab(ReadMorePinButtonPrefab)
                      .UnderTransform(PoolParent);
         }
     }

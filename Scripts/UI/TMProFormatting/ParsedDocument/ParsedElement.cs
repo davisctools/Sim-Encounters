@@ -11,11 +11,14 @@ namespace ClinicalTools.UI
         public ParsedElement(CharEnumerator charEnumerator)
         {
             StartTag = GetTag(charEnumerator);
+            if (StartTag.Equals("<hr>", StringComparison.InvariantCultureIgnoreCase))
+                return;
+
             Children = GetChildren(charEnumerator);
             EndTag = GetTag(charEnumerator);
         }
 
-        public List<object> GetChildren(CharEnumerator charEnumerator)
+        protected virtual List<object> GetChildren(CharEnumerator charEnumerator)
         {
             List<object> children = new List<object>();
             while (charEnumerator.MoveNext()) {
@@ -35,7 +38,7 @@ namespace ClinicalTools.UI
 
         }
 
-        public string GetTag(CharEnumerator charEnumerator)
+        protected virtual string GetTag(CharEnumerator charEnumerator)
         {
             string text = "<";
             do {

@@ -37,6 +37,9 @@ namespace ClinicalTools.SimEncounters
 
         public override void DrawDefaultChildPanels()
         {
+            foreach (var writerPanel in WriterPanels.Values)
+                Destroy(writerPanel.gameObject);
+
             WriterPanels = new OrderedCollection<BaseWriterPanel>();
 
             var panels = new List<BaseWriterPanel>();
