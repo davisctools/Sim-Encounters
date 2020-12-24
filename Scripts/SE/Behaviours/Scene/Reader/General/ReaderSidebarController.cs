@@ -51,7 +51,6 @@ namespace ClinicalTools.SimEncounters
 
             Sidebar.SetActive(false);
             SidebarDimBackground.alpha = 0;
-            SidebarDimBackground.blocksRaycasts = false;
             SidebarDimBackground.interactable = false;
         }
 
