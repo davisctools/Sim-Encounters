@@ -8,14 +8,8 @@ namespace ClinicalTools.SimEncounters
     [RequireComponent(typeof(Button))]
     public class EditReaderCaseButton : MonoBehaviour
     {
+        protected Button Button => (button == null) ? button = GetComponent<Button>() : button;
         private Button button;
-        protected Button Button {
-            get {
-                if (button == null)
-                    button = GetComponent<Button>();
-                return button;
-            }
-        }
 
         protected IWriterSceneStarter WriterSceneStarter { get; set; }
         protected ISelector<ReaderSceneInfoSelectedEventArgs> SceneInfoSelector { get; set; }

@@ -10,14 +10,9 @@ namespace ClinicalTools.SimEncounters
         public Image IconDisplay { get => iconDisplay; set => iconDisplay = value; }
         [SerializeField] private Image iconDisplay;
 
+        protected Toggle Toggle => (toggle == null) ? toggle = GetComponent<Toggle>() : toggle;
         private Toggle toggle;
-        public Toggle Toggle {
-            get {
-                if (toggle == null) 
-                    toggle = GetComponent<Toggle>();
-                return toggle;
-            }
-        }
+
         public virtual Icon Icon { get; protected set; }
 
         public event Action<Icon> Selected;

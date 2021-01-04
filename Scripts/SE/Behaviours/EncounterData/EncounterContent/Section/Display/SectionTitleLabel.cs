@@ -7,14 +7,8 @@ namespace ClinicalTools.SimEncounters
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class SectionTitleLabel : MonoBehaviour
     {
+        protected TextMeshProUGUI Label => (label == null) ? label = GetComponent<TextMeshProUGUI>() : label;
         private TextMeshProUGUI label;
-        protected TextMeshProUGUI Label {
-            get {
-                if (label == null)
-                    label = GetComponent<TextMeshProUGUI>();
-                return label;
-            }
-        }
 
         protected ISelectedListener<SectionSelectedEventArgs> SectionSelector { get; set; }
         [Inject]

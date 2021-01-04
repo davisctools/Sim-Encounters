@@ -8,14 +8,8 @@ namespace ClinicalTools.SimEncounters
     {
         public override string Value => (Dropdown.value >= 0) ? Dropdown.options[Dropdown.value].text : null;
 
+        protected TMP_Dropdown Dropdown => (dropdown == null) ? dropdown = GetComponent<TMP_Dropdown>() : dropdown;
         private TMP_Dropdown dropdown;
-        protected TMP_Dropdown Dropdown {
-            get {
-                if (dropdown == null)
-                    dropdown = GetComponent<TMP_Dropdown>();
-                return dropdown;
-            }
-        }
 
         protected override void OnPanelSelected(object sender, PanelSelectedEventArgs e)
         {

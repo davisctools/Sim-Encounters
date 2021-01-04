@@ -24,15 +24,8 @@ namespace ClinicalTools.SimEncounters
         public bool Trim { get => trim; set => trim = value; }
         [SerializeField] private bool trim;
 
+        protected TextMeshProUGUI Label => (label == null) ? label = GetComponent<TextMeshProUGUI>() : label;
         private TextMeshProUGUI label;
-        protected TextMeshProUGUI Label
-        {
-            get {
-                if (label == null)
-                    label = GetComponent<TextMeshProUGUI>();
-                return label;
-            }
-        }
 
         protected virtual VisitedLinksManager VisitedLinksManager { get; set; }
         protected virtual TagsFormatter TagsFormatter { get; set; }

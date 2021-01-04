@@ -8,14 +8,8 @@ namespace ClinicalTools.SimEncounters
     {
         public override string Value => Label.text;
 
+        protected TextMeshProUGUI Label => (label == null) ? label = GetComponent<TextMeshProUGUI>() : label;
         private TextMeshProUGUI label;
-        protected TextMeshProUGUI Label {
-            get {
-                if (label == null)
-                    label = GetComponent<TextMeshProUGUI>();
-                return label;
-            }
-        }
 
         protected override void OnPanelSelected(object sender, PanelSelectedEventArgs e)
         {

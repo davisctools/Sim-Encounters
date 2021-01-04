@@ -37,15 +37,9 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private Button enlargeImageButton;
         public bool UseEncounterImage { get => useEncounterImage; set => useEncounterImage = value; }
         [SerializeField] private bool useEncounterImage;
-
+        
+        protected Image Image => (image == null) ? image = GetComponent<Image>() : image;
         private Image image;
-        protected Image Image {
-            get {
-                if (image == null)
-                    image = GetComponent<Image>();
-                return image;
-            }
-        }
 
         protected SpriteDrawer SpritePopup { get; set; }
         protected ISelectedListener<EncounterSelectedEventArgs> EncounterSelectedListener { get; set; }

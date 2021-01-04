@@ -10,14 +10,8 @@ namespace ClinicalTools.SimEncounters
         public Image Image { get => image; set => image = value; }
         [SerializeField] private Image image;
 
+        protected Button Button => (button == null) ? button = GetComponent<Button>() : button;
         private Button button;
-        protected Button Button {
-            get {
-                if (button == null)
-                    button = GetComponent<Button>();
-                return button;
-            }
-        }
 
         protected ISpriteSelector SpriteSelector { get; set; }
         [Inject] public virtual void Inject(ISpriteSelector spriteSelector) => SpriteSelector = spriteSelector;

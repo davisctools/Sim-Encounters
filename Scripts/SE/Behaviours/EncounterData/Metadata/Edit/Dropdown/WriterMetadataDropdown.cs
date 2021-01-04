@@ -7,14 +7,8 @@ namespace ClinicalTools.SimEncounters
     [RequireComponent(typeof(TMP_Dropdown))]
     public abstract class WriterMetadataDropdown : WriterMetadataBehaviour
     {
+        protected TMP_Dropdown Dropdown => (dropdown == null) ? dropdown = GetComponent<TMP_Dropdown>() : dropdown;
         private TMP_Dropdown dropdown;
-        protected TMP_Dropdown Dropdown {
-            get {
-                if (dropdown == null)
-                    dropdown = GetComponent<TMP_Dropdown>();
-                return dropdown;
-            }
-        }
 
         protected virtual void SetValue(string value)
         {

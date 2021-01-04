@@ -12,15 +12,8 @@ namespace ClinicalTools.UI
         public int DelayFrames { get => delayFrames; set => delayFrames = value; }
         [SerializeField] private int delayFrames;
 
+        protected Toggle Toggle => (toggle == null) ? toggle = GetComponent<Toggle>() : toggle;
         private Toggle toggle;
-        protected Toggle Toggle {
-            get {
-                if (toggle == null)
-                    toggle = GetComponent<Toggle>();
-                return toggle;
-            }
-        }
-
 
         protected ICloseHandler CloseHandler { get; set; }
         [Inject] public virtual void Inject(ICloseHandler closeHandler) => CloseHandler = closeHandler;

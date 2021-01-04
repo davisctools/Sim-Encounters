@@ -7,15 +7,8 @@ namespace ClinicalTools.UI
     [RequireComponent(typeof(Button))]
     public class CloseButton : MonoBehaviour
     {
+        protected Button Button => (button == null) ? button = GetComponent<Button>() : button;
         private Button button;
-        protected Button Button
-        {
-            get {
-                if (button == null)
-                    button = GetComponent<Button>();
-                return button;
-            }
-        }
 
         protected ICloseHandler CloseHandler { get; set; }
         [Inject] public virtual void Inject(ICloseHandler closeHandler) => CloseHandler = closeHandler;

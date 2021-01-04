@@ -16,14 +16,8 @@ namespace ClinicalTools.SimEncounters
         public override string Value 
             => Dropdown.value >= 0 && Dropdown.value < CharacterKeys.Length ? CharacterKeys[Dropdown.value] : null;
 
+        protected TMP_Dropdown Dropdown => (dropdown == null) ? dropdown = GetComponent<TMP_Dropdown>() : dropdown;
         private TMP_Dropdown dropdown;
-        protected TMP_Dropdown Dropdown {
-            get {
-                if (dropdown == null)
-                    dropdown = GetComponent<TMP_Dropdown>();
-                return dropdown;
-            }
-        }
 
         protected IIconSpriteRetriever IconSpriteRetriever { get; set; }
         protected ISelectedListener<EncounterSelectedEventArgs> EncounterSelectedListener { get; set; }

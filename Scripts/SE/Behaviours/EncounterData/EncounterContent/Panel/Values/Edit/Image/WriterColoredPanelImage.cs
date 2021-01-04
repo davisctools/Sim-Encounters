@@ -11,13 +11,7 @@ namespace ClinicalTools.SimEncounters
         public virtual string Value => value;
         private string value;
 
-        protected Image Image {
-            get {
-                if (image == null)
-                    image = GetComponent<Image>();
-                return image;
-            }
-        }
+        protected Image Image => (image == null) ? image = GetComponent<Image>() : image;
         private Image image;
 
         protected IStringDeserializer<Color> ColorDeserializer { get; set; }

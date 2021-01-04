@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -9,14 +8,8 @@ namespace ClinicalTools.SimEncounters
     {
         public override string Value => Toggle.isOn ? true.ToString() : null;
 
+        protected Toggle Toggle => (toggle == null) ? toggle = GetComponent<Toggle>() : toggle;
         private Toggle toggle;
-        protected Toggle Toggle {
-            get {
-                if (toggle == null)
-                    toggle = GetComponent<Toggle>();
-                return toggle;
-            }
-        }
 
         protected override void OnPanelSelected(object sender, PanelSelectedEventArgs e)
         {

@@ -15,22 +15,13 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual ICharacterColorThemeManager CharacterColorThemeManager { get; } = new CharacterColorThemeManager();
 
+        public CharacterColorTheme ColorTheme 
+            => colorTheme ?? (colorTheme = CharacterColorThemeManager.GetColorTheme(colorThemeIndex));
         private CharacterColorTheme colorTheme;
-        public CharacterColorTheme ColorTheme {
-            get {
-                if (colorTheme == null)
-                    colorTheme = CharacterColorThemeManager.GetColorTheme(colorThemeIndex);
-                return colorTheme;
-            }
-        }
+
+        protected Toggle Toggle => (toggle == null) ? toggle = GetComponent<Toggle>() : toggle;
         private Toggle toggle;
-        protected Toggle Toggle {
-            get {
-                if (toggle == null)
-                    toggle = GetComponent<Toggle>();
-                return toggle;
-            }
-        }
+
         protected virtual void Awake() => Toggle.onValueChanged.AddListener(OnValueChanged);
 
         ColorThemeName lastColorThemeName = (ColorThemeName)(-1);

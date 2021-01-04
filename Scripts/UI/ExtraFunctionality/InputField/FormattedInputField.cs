@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using UnityEngine.EventSystems;
 using Zenject;
 
@@ -12,12 +12,20 @@ namespace ClinicalTools.UI
 
         protected virtual TagsFormatter TagsFormatter { get; set; }
         [Inject] public virtual void Inject(TagsFormatter tagsFormatter) => TagsFormatter = tagsFormatter;
-        
+
         public virtual void SetUnformattedText(string text)
         {
+            if (text == null)
+                text = "";
+            text = ReplaceBadCharacters(text);
+
             UpdateFormattedText(text);
             this.text = richText ? FormattedText : UnformattedText;
         }
+
+        protected virtual string ReplaceBadCharacters(string text)
+            => string.Concat(text.Where(ch => IsCharValid(ch)));
+
         public virtual string GetUnformattedText() => UnformattedText;
 
         protected override void Start()
@@ -51,11 +59,10 @@ namespace ClinicalTools.UI
 
 
         protected virtual char MyValidate(string input, int charIndex, char charToValidate)
-        {
-            if (charToValidate  == '\r' || charToValidate == '	' || charToValidate == Convert.ToChar(8203))
-                return '\0';
+            => IsCharValid(charToValidate) ? charToValidate : '\0';
 
-            return charToValidate;
-        }
+        protected virtual bool IsCharValid(char charToValidate)
+            => charToValidate != '\r' && charToValidate != '\t' && charToValidate != '\x200B';
+        //Convert.ToChar(8203);
     }
 }

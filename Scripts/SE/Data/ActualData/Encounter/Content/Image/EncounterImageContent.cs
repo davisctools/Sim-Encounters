@@ -1,8 +1,17 @@
 ﻿using ClinicalTools.Collections;
+using System;
 using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
+    public class SpecialImage {
+
+        int imageQuality = 0;
+
+        public Sprite Sprite { get; set; }
+
+        public event Action SpriteChanged;
+    }
 
     public class EncounterImageContent
     {

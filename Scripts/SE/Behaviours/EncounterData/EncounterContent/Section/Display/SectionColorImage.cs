@@ -7,14 +7,8 @@ namespace ClinicalTools.SimEncounters
     [RequireComponent(typeof(Image))]
     public class SectionColorImage : MonoBehaviour
     {
+        protected Image Image => (image == null) ? image = GetComponent<Image>() : image;
         private Image image;
-        protected Image Image {
-            get {
-                if (image == null)
-                    image = GetComponent<Image>();
-                return image;
-            }
-        }
 
         protected ISelectedListener<SectionSelectedEventArgs> SectionSelector { get; set; }
         protected IUserEncounterMenuSceneStarter MenuSceneStarter { get; set; }
