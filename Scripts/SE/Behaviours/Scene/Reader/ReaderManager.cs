@@ -23,22 +23,28 @@ namespace ClinicalTools.SimEncounters
         protected ISelector<LoadingReaderSceneInfoSelectedEventArgs> LoadingSceneInfoSelector { get; set; }
         protected IMetadataReader MetadataReader { get; set; }
         protected IUserEncounterReader EncounterReader { get; set; }
-        protected IEncounterQuickStarter EncounterQuickStarter { get; set; }
-        protected QuickActionFactory LinkActionFactory { get; set; }
         [Inject]
         public virtual void Inject(
             ISelector<LoadingReaderSceneInfoSelectedEventArgs> loadingSceneInfoSelector,
-            IMetadataReader metadataReader, 
-            IUserEncounterReader encounterReader, 
-            IEncounterQuickStarter encounterQuickStarter,
-            QuickActionFactory linkActionFactory)
+            IMetadataReader metadataReader,
+            IUserEncounterReader encounterReader)
         {
             LoadingSceneInfoSelector = loadingSceneInfoSelector;
             MetadataReader = metadataReader;
             EncounterReader = encounterReader;
-            EncounterQuickStarter = encounterQuickStarter;
-            LinkActionFactory = linkActionFactory;
+
         }
+
+#if !STANDALONE_SCENE && MOBILE
+        protected IEncounterQuickStarter EncounterQuickStarter { get; set; }
+        protected QuickActionFactory LinkActionFactory { get; set; }
+        [Inject]
+        public virtual void Inject(QuickActionFactory linkActionFactory, IEncounterQuickStarter encounterQuickStarter)
+        {
+            LinkActionFactory = linkActionFactory;
+            EncounterQuickStarter = encounterQuickStarter;
+        }
+#endif
 
         private bool started;
         protected override void Start()

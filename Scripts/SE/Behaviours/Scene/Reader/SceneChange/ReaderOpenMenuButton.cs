@@ -24,6 +24,9 @@ namespace ClinicalTools.SimEncounters
         }
         protected virtual void Start()
         {
+#if STANDALONE_SCENE
+            gameObject.SetActive(false);
+#endif
             LoadingReaderSceneInfoSelector.Selected += OnLoadingReaderSceneInfoSelected;
             if (LoadingReaderSceneInfoSelector.CurrentValue != null)
                 OnLoadingReaderSceneInfoSelected(LoadingReaderSceneInfoSelector, LoadingReaderSceneInfoSelector.CurrentValue);

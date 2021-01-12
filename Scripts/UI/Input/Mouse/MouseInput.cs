@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_WEBGL
+using System.Runtime.InteropServices;
+#endif
 
 namespace ClinicalTools.UI
 {
@@ -11,6 +14,11 @@ namespace ClinicalTools.UI
 
     public class MouseInput : MonoBehaviour
     {
+#if UNITY_WEBGL
+        [DllImport("__Internal")]
+        private static extern void SetCanvasCursor(string str);
+#endif
+
         public static MouseInput Instance { get; private set; }
 
         public SwipeHandler SwipeHandler { get; set; } = new SwipeHandler();
@@ -57,8 +65,14 @@ namespace ClinicalTools.UI
             } else if (cursorState == CursorState.Draggable) {
                 WindowsCursorConctroller.ChangeCursor(WindowsCursor.FourPointedArrowPointingNorthSouthEastAndWest);
             }
-
+#elif UNITY_WEBGL
+            if (cursorState == CursorState.Normal) {
+                SetCanvasCursor("default");
+            } else if (cursorState == CursorState.Draggable) {
+                SetCanvasCursor("move");
+            }
 #else
+            UnityEngine.Debug.Log("aaaaa CURSOR");
             if (cursorState == CursorState.Normal) {
                 CursorImage.sprite = NormalCursorSprite;
                 Cursor.SetCursor(NormalCursorTexture, new Vector2(32, 32), CursorMode.ForceSoftware);

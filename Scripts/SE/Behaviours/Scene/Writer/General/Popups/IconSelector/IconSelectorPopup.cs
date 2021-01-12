@@ -67,6 +67,7 @@ namespace ClinicalTools.SimEncounters
                 LastUploadedIcon = currentIcon;
                 SetCurrentToLastUploadedIcon();
             } else if (currentIcon.Type == Icon.IconType.Resource) {
+                useEncounterImageToggle.isOn = true;
                 var reference = currentIcon.Reference;
                 if (reference.Equals("instructor", StringComparison.InvariantCultureIgnoreCase))
                     reference = "Characters\\whitecoat";
