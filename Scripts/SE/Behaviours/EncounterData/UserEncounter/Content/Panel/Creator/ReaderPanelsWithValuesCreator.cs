@@ -11,8 +11,11 @@ namespace ClinicalTools.SimEncounters
         protected override BaseReaderPanelBehaviour GetChildPanelPrefab(UserPanel childPanel)
         {
             foreach (var valueKey in HasAllValues) {
-                if (!childPanel.Data.Values.ContainsKey(valueKey))
-                    return null;
+                if (childPanel.Data.Values.ContainsKey(valueKey))
+                    continue;
+                if (!childPanel.IsRead())
+                    childPanel.SetChildPanelsRead(true);
+                return null;
             }
 
             return base.GetChildPanelPrefab(childPanel);
