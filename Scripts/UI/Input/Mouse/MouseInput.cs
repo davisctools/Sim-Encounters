@@ -9,7 +9,7 @@ namespace ClinicalTools.UI
 {
     public enum CursorState
     {
-        Normal, Draggable
+        Normal, Draggable, Clickable
     }
 
     public class MouseInput : MonoBehaviour
@@ -60,25 +60,26 @@ namespace ClinicalTools.UI
         protected virtual void SetCursorImage(CursorState cursorState)
         {
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-            if (cursorState == CursorState.Normal) {
-                WindowsCursorConctroller.ChangeCursor(WindowsCursor.StandardArrow);
-            } else if (cursorState == CursorState.Draggable) {
+            if (cursorState == CursorState.Draggable) {
                 WindowsCursorConctroller.ChangeCursor(WindowsCursor.FourPointedArrowPointingNorthSouthEastAndWest);
+            } else {
+                WindowsCursorConctroller.ChangeCursor(WindowsCursor.StandardArrow);
             }
 #elif UNITY_WEBGL
-            if (cursorState == CursorState.Normal) {
-                SetCanvasCursor("default");
-            } else if (cursorState == CursorState.Draggable) {
+            if (cursorState == CursorState.Draggable) {
                 SetCanvasCursor("move");
+            } else if (cursorState == CursorState.Clickable) {
+                SetCanvasCursor("pointer");
+            } else {
+                SetCanvasCursor("default");
             }
 #else
-            UnityEngine.Debug.Log("aaaaa CURSOR");
-            if (cursorState == CursorState.Normal) {
-                CursorImage.sprite = NormalCursorSprite;
-                Cursor.SetCursor(NormalCursorTexture, new Vector2(32, 32), CursorMode.ForceSoftware);
-            } else if (cursorState == CursorState.Draggable) {
+            if (cursorState == CursorState.Draggable) {
                 CursorImage.sprite = DraggableCursorSprite;
                 Cursor.SetCursor(DraggableCursorTexture, new Vector2(32, 32), CursorMode.ForceSoftware);
+            } else {
+                CursorImage.sprite = NormalCursorSprite;
+                Cursor.SetCursor(NormalCursorTexture, new Vector2(32, 32), CursorMode.ForceSoftware);
             }
 #endif
         }
