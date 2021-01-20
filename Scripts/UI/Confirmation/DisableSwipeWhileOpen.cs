@@ -1,5 +1,4 @@
-﻿using ClinicalTools.UI;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 namespace ClinicalTools.UI
@@ -8,7 +7,7 @@ namespace ClinicalTools.UI
     {
         protected SwipeManager SwipeManager { get; set; }
         [Inject]
-        public virtual void Inject(SwipeManager swipeManager) => SwipeManager = swipeManager;
+        public virtual void Inject([InjectOptional] SwipeManager swipeManager) => SwipeManager = swipeManager;
 
         protected virtual void OnEnable()
         {

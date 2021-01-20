@@ -1580,7 +1580,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4894545025556301998
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1737,6 +1737,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4894545025600928066}
+  - component: {fileID: 6268478752598335208}
   m_Layer: 5
   m_Name: DownloadDeleteRow
   m_TagString: Untagged
@@ -1763,9 +1764,22 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0.1928, y: -371.66248}
+  m_AnchoredPosition: {x: 0.19281006, y: 0}
   m_SizeDelta: {x: 394.26, y: 40.929993}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &6268478752598335208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4894545025600928069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8096e7eec593b1541b386a16b80ac695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 4894545025556301994}
 --- !u!1 &4894545025608574468
 GameObject:
   m_ObjectHideFlags: 0
@@ -2733,7 +2747,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4894545025797162750
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2751,8 +2765,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000015258789, y: 398.87744}
-  m_SizeDelta: {x: 0.26000977, y: -0.070007324}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -0.0000076293945, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4894545025797162751
 MonoBehaviour:
@@ -5315,7 +5329,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 75.552505, y: -20.45}
-  m_SizeDelta: {x: 121.07, y: 40.93}
+  m_SizeDelta: {x: 0, y: 40.93}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4894545026769009274
 CanvasRenderer:

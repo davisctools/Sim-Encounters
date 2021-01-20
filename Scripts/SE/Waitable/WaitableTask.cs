@@ -59,7 +59,7 @@ namespace ClinicalTools.SimEncounters
             if (source.IsError())
                 destination.SetError(source.Exception);
             else
-                destination.Complete();
+                destination.SetCompleted();
         }
     }
 

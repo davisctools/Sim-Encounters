@@ -6,6 +6,10 @@ namespace ClinicalTools.SimEncounters
 {
     public class MenuInstaller : MonoInstaller
     {
+        public BaseConfirmationPopup ConfirmationPopup { get => confirmationPopup; set => confirmationPopup = value; }
+        [SerializeField] private BaseConfirmationPopup confirmationPopup;
+        public DeleteEncounterPopup DeleteEncounterPopup { get => deleteEncounterPopup; set => deleteEncounterPopup = value; }
+        [SerializeField] private DeleteEncounterPopup deleteEncounterPopup;
         public BaseAddEncounterPopup AddEncounterPopup { get => addEncounterPopup; set => addEncounterPopup = value; }
         [SerializeField] private BaseAddEncounterPopup addEncounterPopup;
         public BaseMessageHandler MessageHandler { get => messageHandler; set => messageHandler = value; }
@@ -29,6 +33,14 @@ namespace ClinicalTools.SimEncounters
             Container.BindInterfacesTo<LoadingMenuSceneInfoSelector>().AsSingle();
             Container.BindInterfacesTo<MenuSceneInfoSelector>().AsSingle();
 
+            var fileManager = new FileManagerInstaller();
+            fileManager.BindFileManagerWithId(Container, SaveType.Local);
+            fileManager.BindFileManagerWithId(Container, SaveType.Autosave);
+            Container.Bind<IEncounterRemover>().WithId(SaveType.Local).To<LocalEncounterRemover>().AsTransient();
+            Container.Bind<IEncounterRemover>().WithId(SaveType.Server).To<ServerEncounterRemover>().AsTransient();
+
+            Container.BindInstance<IDeleteEncounterHandler>(DeleteEncounterPopup);
+            Container.BindInstance(ConfirmationPopup);
             Container.BindInstance(BackButton);
             Container.BindInstance(AddEncounterPopup);
             Container.BindInstance(MessageHandler);

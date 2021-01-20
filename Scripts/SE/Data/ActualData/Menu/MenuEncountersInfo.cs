@@ -51,7 +51,8 @@ namespace ClinicalTools.SimEncounters
         public virtual void RemoveEncounter(MenuEncounter encounter)
         {
             bool categoriesChanged = false;
-            foreach (var category in Categories.Where(c => c.Value.ContainsEncounter(encounter))) {
+            var containingCategories = Categories.Where(c => c.Value.ContainsEncounter(encounter));
+            foreach (var category in containingCategories) {
                 category.Value.RemoveEncounter(encounter);
 
                 if (category.Value.EncounterCount != 0)

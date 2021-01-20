@@ -43,7 +43,7 @@ namespace ClinicalTools.SimEncounters
         {
             MenuEncounter = e.Encounter;
             var authorAccountId = MenuEncounter.GetLatestMetadata().AuthorAccountId;
-            CanDelete = MenuEncounter.Metadata.ContainsKey(SaveType.Local) ||
+            CanDelete = MenuEncounter.Metadata.ContainsKey(SaveType.Local) || MenuEncounter.Metadata.ContainsKey(SaveType.Autosave) ||
                 (MenuEncounter.Metadata.ContainsKey(SaveType.Server) && authorAccountId == User.AccountId);
             gameObject.SetActive(CanDelete);
         }
@@ -59,7 +59,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void EncounterDeleted(TaskResult result)
         {
-            if (!result.IsError())
+            if (MenuEncounter.Metadata.Count == 0)
                 EncounterOverview.Hide();
         }
     }

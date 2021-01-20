@@ -33,8 +33,5 @@ namespace ClinicalTools.SimEncounters
         }
         public virtual SaveType GetLatestType() => GetLatestTypedMetada().Key;
         public virtual EncounterMetadata GetLatestMetadata() => GetLatestTypedMetada().Value;
-        public virtual void IsMetadataNewer() {
-
-        }
     }
 }

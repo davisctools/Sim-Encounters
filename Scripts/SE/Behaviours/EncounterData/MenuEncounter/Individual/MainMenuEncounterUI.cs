@@ -30,5 +30,13 @@ namespace ClinicalTools.SimEncounters
             CompletedObject.SetActive(status?.Completed == true);
             InProgressObject.SetActive(status?.Completed == false);
         }
+
+        // The proper way to remove this after being deleted is to despawn it
+        // This is easier codewise with little overhead, but still not optimal
+        protected virtual void Update()
+        {
+            if (CurrentValue?.Encounter.Metadata.Count == 0)
+                gameObject.SetActive(false);
+        }
     }
 }
