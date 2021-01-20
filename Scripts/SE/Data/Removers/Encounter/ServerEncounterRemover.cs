@@ -55,23 +55,14 @@ namespace ClinicalTools.SimEncounters
             }
 
             Debug.Log("Returned text from PHP: \n" + serverResult.Value);
-            if (string.IsNullOrWhiteSpace(serverResult.Value)) {
+            if (string.IsNullOrWhiteSpace(serverResult.Value))
                 actionResult.SetError(new Exception("No text returned from the server."));
-                return;
-            }
-
-            if (!int.TryParse(serverResult.Value, out int recordNumber)) {
+            else if (!int.TryParse(serverResult.Value, out int recordNumber))
                 actionResult.SetError(new Exception(serverResult.Value));
-                return;
-            }
-
-            if (recordNumber != metadata.RecordNumber) {
+            else if (recordNumber != metadata.RecordNumber)
                 actionResult.SetError(new Exception("Did not get the correct metadata from the server."));
-                return;
-            }
-
-            actionResult.SetCompleted();
+            else
+                actionResult.SetCompleted();
         }
-
     }
 }

@@ -100,7 +100,7 @@ namespace ClinicalTools.SimEncounters
             CategorySelector.Hide();
 
             ShowEncountersToggle.Show(eventArgs.Category.Name);
-            EncounterSelector.DisplayForRead(SceneInfo, eventArgs.Category.Encounters);
+            EncounterSelector.DisplayForRead(SceneInfo, eventArgs.Category.GetEncounters());
         }
 
         public override void Hide()

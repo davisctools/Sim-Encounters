@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace ClinicalTools.SimEncounters
+﻿namespace ClinicalTools.SimEncounters
 {
     public class MenuEncounterOverview : BaseMenuEncounterOverview,
         ISelector<MenuEncounterSelectedEventArgs>,

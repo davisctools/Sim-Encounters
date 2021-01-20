@@ -51,6 +51,16 @@ namespace ClinicalTools.SimEncounters
             else
                 Completed += action;
         }
+
+        public void CopyValueWhenCompleted(WaitableTask destination)
+            => AddOnCompletedListener((source) => CopyValue(source, destination));
+        private void CopyValue(TaskResult source, WaitableTask destination)
+        {
+            if (source.IsError())
+                destination.SetError(source.Exception);
+            else
+                destination.Complete();
+        }
     }
 
     public class WaitableTask<T>
