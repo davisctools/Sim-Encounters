@@ -6,7 +6,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class DeleteEncounterPopup : MonoBehaviour, IDeleteEncounterHandler
+    public class DeleteEncounterPopup : MonoBehaviour, IDeleteEncounterHandler, ICloseHandler
     {
         public Button LocalButton { get => localButton; set => localButton = value; }
         [SerializeField] private Button localButton;
@@ -161,6 +161,7 @@ namespace ClinicalTools.SimEncounters
             task.SetCompleted();
         }
 
+        public virtual void Close(object sender) => Cancel();
         public virtual void Cancel()
         {
             DeleteTask.SetError(new Exception("Cancelled"));
