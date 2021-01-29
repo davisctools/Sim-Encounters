@@ -126,10 +126,10 @@ namespace ClinicalTools.SimEncounters
         {
             var type = childPanel.Data.Type;
 
-            if (panelOptions.Count == 1)
-                return panelOptions[0];
+            if (PanelOptions.Count == 1)
+                return PanelOptions[0];
 
-            foreach (var panelOption in panelOptions) {
+            foreach (var panelOption in PanelOptions) {
                 if (string.Equals(type, panelOption.Type, StringComparison.OrdinalIgnoreCase))
                     return panelOption;
             }

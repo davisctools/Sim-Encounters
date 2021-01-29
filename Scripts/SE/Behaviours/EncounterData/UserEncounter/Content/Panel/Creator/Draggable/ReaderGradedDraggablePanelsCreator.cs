@@ -7,7 +7,7 @@ using ClinicalTools.SEColors;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class ReaderDraggablePanelsCreator : ReaderGeneralPanelsCreator<ReaderOrderablePanelBehaviour>
+    public class ReaderGradedDraggablePanelsCreator : ReaderGeneralPanelsCreator<ReaderOrderablePanelBehaviour>
     {
         public BaseRearrangeableGroup DraggableGroupUI { get => draggableGroup; set => draggableGroup = value; }
         [SerializeField] private BaseRearrangeableGroup draggableGroup;
@@ -34,7 +34,7 @@ namespace ClinicalTools.SimEncounters
         {
             for (var i = 0; i < ChildOrder.Count; i++) {
                 var distanceFromCorrectPosition = DistanceFromCorrectPosition(i);
-                var panelBehaviour = OrderablePanels[ChildOrder[i]];
+                var panelBehaviour = Children[ChildOrder[i]];
                 if (distanceFromCorrectPosition == 0)
                     panelBehaviour.SetColor(ColorManager.GetColor(ColorType.Correct));
                 else if (distanceFromCorrectPosition == 1)
@@ -52,16 +52,13 @@ namespace ClinicalTools.SimEncounters
             base.DrawChildren(shuffledPanels, active);
         }
 
-        protected Dictionary<UserPanel, ReaderOrderablePanelBehaviour> OrderablePanels { get; } 
-            = new Dictionary<UserPanel, ReaderOrderablePanelBehaviour>();
 
         protected override ReaderOrderablePanelBehaviour DrawPanel(UserPanel panel, bool active)
         {
             var readerPanel = base.DrawPanel(panel, active);
-            if (readerPanel != null) { 
+            if (readerPanel != null)
                 DraggableGroupUI.Add(readerPanel);
-                OrderablePanels.Add(panel, readerPanel);
-            }
+
             return readerPanel;
         }
 

@@ -10,6 +10,7 @@ namespace ClinicalTools.UI
         public virtual RectTransform ChildrenParent => (RectTransform)transform;
 
         public override event RearrangedEventHandler Rearranged;
+        public override List<IDraggable> CurrentOrder => DraggableObjects;
         protected List<IDraggable> DraggableObjects { get; } = new List<IDraggable>();
 
         public override void Add(IDraggable draggable)
