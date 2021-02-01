@@ -8,6 +8,7 @@ namespace ClinicalTools.SimEncounters
 {
     public class TableOfContentsSection : BaseTableOfContentsSection
     {
+        [SerializeField] private Toggle toggle;
         [SerializeField] private Button button;
         [SerializeField] private TextMeshProUGUI label;
         [SerializeField] private Transform tabsParent;
@@ -23,7 +24,11 @@ namespace ClinicalTools.SimEncounters
             TabFactory = tabFactory;
         }
 
-        protected virtual void Start() => button.onClick.AddListener(SelectSection);
+        protected virtual void Start()
+        {
+            if (button != null)
+                button.onClick.AddListener(SelectSection);
+        }
 
         protected UserSection Section { get; set; }
         public override void Display(UserSection section)
@@ -32,6 +37,12 @@ namespace ClinicalTools.SimEncounters
             label.text = section.Data.Name;
             label.color = section.Data.Color;
             DrawTabs(section.Tabs.Values);
+        }
+
+        public override void SetToggleGroup(ToggleGroup toggleGroup)
+        {
+            if (toggle != null)
+                toggle.group = toggleGroup;
         }
 
         protected virtual void DrawTabs(IEnumerable<UserTab> tabs)
@@ -47,7 +58,6 @@ namespace ClinicalTools.SimEncounters
             tableOfContentsTab.transform.localScale = Vector3.one;
             tableOfContentsTab.Display(Section, tab);
         }
-
 
         protected virtual void SelectSection()
             => SectionSelector.Select(this, new UserSectionSelectedEventArgs(Section, ChangeType.JumpTo));

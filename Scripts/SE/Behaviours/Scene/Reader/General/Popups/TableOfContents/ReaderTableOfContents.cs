@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace ClinicalTools.SimEncounters
@@ -6,6 +7,7 @@ namespace ClinicalTools.SimEncounters
     public class ReaderTableOfContents : MonoBehaviour
     {
         [SerializeField] private Transform sectionsParent;
+        [SerializeField] private ToggleGroup toggleGroup;
 
         protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelector { get; set; }
         protected BaseTableOfContentsSection.Factory SectionFactory { get; set; }
@@ -37,6 +39,9 @@ namespace ClinicalTools.SimEncounters
             tableOfContentsTab.transform.SetParent(sectionsParent);
             tableOfContentsTab.transform.localScale = Vector3.one;
             tableOfContentsTab.Display(section);
+            
+            if (toggleGroup != null)
+                tableOfContentsTab.SetToggleGroup(toggleGroup);
         }
     }
 }

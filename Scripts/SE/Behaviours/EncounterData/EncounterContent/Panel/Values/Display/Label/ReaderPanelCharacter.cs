@@ -15,6 +15,8 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private List<Image> primaryColoredObjects;
         public List<Image> SecondaryColoredObjects { get => secondaryColoredObjects; set => secondaryColoredObjects = value; }
         [SerializeField] private List<Image> secondaryColoredObjects;
+        public List<Image> HighlightedColoredObjects { get => highlightedColoredObjects; set => highlightedColoredObjects = value; }
+        [SerializeField] private List<Image> highlightedColoredObjects;
         public List<Image> CharacterIconSprites { get => characterIconSprites; set => characterIconSprites = value; }
         [SerializeField] private List<Image> characterIconSprites;
 
@@ -50,11 +52,13 @@ namespace ClinicalTools.SimEncounters
             }
 
             var character = Characters[values[Name]];
-            foreach (var primaryColoredObject in PrimaryColoredObjects)
-                primaryColoredObject.color = character.ColorTheme.IconBackgroundColor;
-            foreach (var secondaryColoredObject in SecondaryColoredObjects)
-                secondaryColoredObject.color = character.ColorTheme.DialogueBackgroundColor;
-            
+            foreach (var coloredObject in PrimaryColoredObjects)
+                coloredObject.color = character.ColorTheme.IconBackgroundColor;
+            foreach (var coloredObject in SecondaryColoredObjects)
+                coloredObject.color = character.ColorTheme.DialogueBackgroundColor; 
+            foreach (var coloredObject in HighlightedColoredObjects)
+                coloredObject.color = character.ColorTheme.HighlightedDialogueBackgroundColor;
+
             if (CharacterIconSprites.Count == 0)
                 return;
 
@@ -64,6 +68,5 @@ namespace ClinicalTools.SimEncounters
                 characterIconSprite.sprite = sprite;
             }
         }
-
     }
 }

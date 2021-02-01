@@ -10,7 +10,7 @@ namespace ClinicalTools.SimEncounters
             : base(sectionFactory, characterFactory) { }
 
         protected virtual Character PatientCharacter => new Character {
-            ColorTheme = ColorThemeManager.GetColorTheme(ColorThemeName.Pink),
+            ColorTheme = ColorThemeManager.GetColorTheme(ColorThemeName.Gray),
             Icon = new Icon(),
             Role = "Patient"
         };

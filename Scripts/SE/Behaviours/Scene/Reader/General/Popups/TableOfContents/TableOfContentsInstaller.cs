@@ -7,14 +7,17 @@ namespace ClinicalTools.SimEncounters
     {
         [SerializeField] private BaseTableOfContentsSection tableOfContentsSection;
         [SerializeField] private BaseTableOfContentsTab tableOfContentsTab;
+        [SerializeField] private Transform parentTransform;
 
         public override void InstallBindings()
         {
             Container.BindFactory<BaseTableOfContentsSection, BaseTableOfContentsSection.Factory>()
-                     .FromComponentInNewPrefab(tableOfContentsSection);
+                .FromComponentInNewPrefab(tableOfContentsSection)
+                .UnderTransform(parentTransform);
             if (tableOfContentsTab != null) {
                 Container.BindFactory<BaseTableOfContentsTab, BaseTableOfContentsTab.Factory>()
-                         .FromComponentInNewPrefab(tableOfContentsTab);
+                    .FromComponentInNewPrefab(tableOfContentsTab)
+                    .UnderTransform(parentTransform);
             }
         }
     }
