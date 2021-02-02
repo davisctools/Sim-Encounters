@@ -6,7 +6,7 @@ namespace ClinicalTools.SimEncounters
     public class TableOfContentsInstaller : MonoInstaller
     {
         [SerializeField] private BaseTableOfContentsSection tableOfContentsSection;
-        [SerializeField] private BaseTableOfContentsTab tableOfContentsTab;
+        [SerializeField] private BaseSelectableUserTabBehaviour tableOfContentsTab;
         [SerializeField] private Transform parentTransform;
 
         public override void InstallBindings()
@@ -15,7 +15,7 @@ namespace ClinicalTools.SimEncounters
                 .FromComponentInNewPrefab(tableOfContentsSection)
                 .UnderTransform(parentTransform);
             if (tableOfContentsTab != null) {
-                Container.BindFactory<BaseTableOfContentsTab, BaseTableOfContentsTab.Factory>()
+                Container.BindFactory<BaseSelectableUserTabBehaviour, BaseSelectableUserTabBehaviour.Factory>()
                     .FromComponentInNewPrefab(tableOfContentsTab)
                     .UnderTransform(parentTransform);
             }

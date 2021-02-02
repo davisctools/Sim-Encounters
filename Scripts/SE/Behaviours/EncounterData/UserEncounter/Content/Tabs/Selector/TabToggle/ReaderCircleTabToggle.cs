@@ -8,7 +8,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class MobileReaderTabToggle : BaseReaderTabToggle
+    public class ReaderCircleTabToggle : BaseSelectableTabToggle
     {
         public SelectableToggle SelectToggle { get => selectToggle; set => selectToggle = value; }
         [SerializeField] private SelectableToggle selectToggle;
@@ -23,33 +23,25 @@ namespace ClinicalTools.SimEncounters
         public virtual void Inject(SignalBus signalBus)
         {
             SignalBus = signalBus;
-            SignalBus.Subscribe<EncounterCompletedSignal>(CompletionDraw); 
+            SignalBus.Subscribe<EncounterCompletedSignal>(CompletionDraw);
         }
 
-        public override event Action Selected;
-
         protected virtual void OnEnable() => StartCoroutine(AddSelectionListenerAfterDelay());
-        protected virtual void OnDisable() => SelectToggle.Selected -= () => Selected?.Invoke();
+        protected virtual void OnDisable() => SelectToggle.Selected -= Selected;
 
         protected virtual IEnumerator AddSelectionListenerAfterDelay()
         {
             yield return null;
-            SelectToggle.Selected += () => Selected?.Invoke();
+            SelectToggle.Selected += Selected;
         }
 
+        protected virtual void Selected() => TabSelector.Select(this, new UserTabSelectedEventArgs(Tab, ChangeType.JumpTo));
+
         private bool initialized;
-        protected UserTab CurrentTab { get; set; }
         protected Color NotVisitedColor { get; set; }
-        public override void Display(UserTab tab)
+        public override void Initialize(UserTab tab)
         {
-            Selected = null;
-
-            if (CurrentTab == tab) {
-                UpdateIsVisited();
-                return;
-            }
-
-            CurrentTab = tab;
+            base.Initialize(tab);
 
             if (!initialized)
                 Initialize();
@@ -69,7 +61,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void UpdateIsVisited()
         {
-            var visited = CurrentTab?.IsRead() == true;
+            var visited = Tab?.IsRead() == true;
 
             VisitedCheck.SetActive(visited);
             SelectToggle.Toggle.image.color = visited ? ColorManager.GetColor(ColorType.Green) : NotVisitedColor;
@@ -78,13 +70,13 @@ namespace ClinicalTools.SimEncounters
         protected virtual void ToggleUnselected()
         {
             SelectedImage.gameObject.SetActive(false);
-            if (CurrentTab.IsRead())
+            if (Tab.IsRead())
                 UpdateIsVisited();
         }
         protected virtual void ToggleSelected()
         {
             SelectedImage.gameObject.SetActive(true);
-            if (CurrentTab.IsRead())
+            if (Tab.IsRead())
                 UpdateIsVisited();
         }
 

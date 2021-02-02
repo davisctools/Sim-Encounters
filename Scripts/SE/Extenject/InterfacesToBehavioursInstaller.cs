@@ -4,7 +4,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class InterfacesToBehavioursInstaller : MonoInstaller
+    public partial class InterfacesToBehavioursInstaller : MonoInstaller
     {
         public List<MonoBehaviour> Behaviours { get => behaviours; }
         [SerializeField] private List<MonoBehaviour> behaviours = new List<MonoBehaviour>();

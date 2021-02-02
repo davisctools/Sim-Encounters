@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using TMPro;
+﻿using ClinicalTools.UI;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -9,57 +9,44 @@ namespace ClinicalTools.SimEncounters
     public class TableOfContentsSection : BaseTableOfContentsSection
     {
         [SerializeField] private Toggle toggle;
-        [SerializeField] private Button button;
-        [SerializeField] private TextMeshProUGUI label;
-        [SerializeField] private Transform tabsParent;
+        [SerializeField] private Image image;
+        [SerializeField] private Sprite onImage;
+        private Sprite offImage;
 
-        protected ISelector<UserSectionSelectedEventArgs> SectionSelector { get; set; }
-        protected BaseTableOfContentsTab.Factory TabFactory { get; set; }
-        [Inject]
-        public virtual void Inject(
-            ISelector<UserSectionSelectedEventArgs> sectionSelector,
-            BaseTableOfContentsTab.Factory tabFactory)
+        protected virtual void Awake()
         {
-            SectionSelector = sectionSelector;
-            TabFactory = tabFactory;
+            offImage = image.sprite;
+            toggle.onValueChanged.AddListener(ToggleChanged);
         }
 
+        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
+        [Inject] public virtual void Inject(ISelectedListener<UserEncounterSelectedEventArgs> encounterSelectedListener)
+            => EncounterSelectedListener = encounterSelectedListener;
+
+        protected virtual void ToggleChanged(bool isOn)
+            => image.sprite = isOn ? onImage : offImage;
+
+        private bool started = false;
         protected virtual void Start()
         {
-            if (button != null)
-                button.onClick.AddListener(SelectSection);
+            ResetIsOn();
+            started = true;
         }
 
-        protected UserSection Section { get; set; }
-        public override void Display(UserSection section)
+        public override void Initialize(UserSection section)
         {
-            Section = section;
-            label.text = section.Data.Name;
-            label.color = section.Data.Color;
-            DrawTabs(section.Tabs.Values);
+            base.Initialize(section);
+            if (started)
+                ResetIsOn();
         }
 
-        public override void SetToggleGroup(ToggleGroup toggleGroup)
+        protected virtual void OnEnable() => ResetIsOn();
+
+        protected virtual void ResetIsOn()
         {
-            if (toggle != null)
-                toggle.group = toggleGroup;
+            if (Section == null)
+                return;
+            toggle.isOn = EncounterSelectedListener.CurrentValue.Encounter.GetCurrentSection() == Section;
         }
-
-        protected virtual void DrawTabs(IEnumerable<UserTab> tabs)
-        {
-            foreach (var tab in tabs)
-                DrawTab(tab);
-        }
-
-        protected virtual void DrawTab(UserTab tab)
-        {
-            var tableOfContentsTab = TabFactory.Create();
-            tableOfContentsTab.transform.SetParent(tabsParent);
-            tableOfContentsTab.transform.localScale = Vector3.one;
-            tableOfContentsTab.Display(Section, tab);
-        }
-
-        protected virtual void SelectSection()
-            => SectionSelector.Select(this, new UserSectionSelectedEventArgs(Section, ChangeType.JumpTo));
     }
 }

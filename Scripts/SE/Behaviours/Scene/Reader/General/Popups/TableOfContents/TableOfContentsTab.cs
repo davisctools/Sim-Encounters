@@ -2,38 +2,43 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
+using ClinicalTools.SEColors;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class TableOfContentsTab : BaseTableOfContentsTab
+    public class TableOfContentsTab : BaseSelectableUserTabBehaviour
     {
+        [SerializeField] private Image image;
+        [SerializeField] private TMP_Text text;
         [SerializeField] private Button button;
         [SerializeField] private TextMeshProUGUI label;
 
+        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
         protected ISelector<UserSectionSelectedEventArgs> SectionSelector { get; set; }
-        protected ISelector<UserTabSelectedEventArgs> TabSelector { get; set; }
-        [Inject] public virtual void Inject(
-            ISelector<UserSectionSelectedEventArgs> sectionSelector,
-            ISelector<UserTabSelectedEventArgs> tabSelector)
+        [Inject]
+        public virtual void Inject(ISelectedListener<UserEncounterSelectedEventArgs> encounterSelectedListener,
+            ISelector<UserSectionSelectedEventArgs> sectionSelector)
         {
+            EncounterSelectedListener = encounterSelectedListener;
             SectionSelector = sectionSelector;
-            TabSelector = tabSelector;
         }
 
         protected virtual void Start() => button.onClick.AddListener(SelectTab);
 
-        protected UserSection Section { get; set; }
-        protected UserTab Tab { get; set; }
-        public override void Display(UserSection section, UserTab tab)
+        public override void Initialize(UserTab tab)
         {
-            Section = section;
-            Tab = tab;
-            label.text = tab.Data.Name;
-            label.color = section.Data.Color;
+            var colorManager = new ColorManager();
+            base.Initialize(tab);
+            var isCurrentTab = EncounterSelectedListener.CurrentValue.Encounter.GetCurrentSection().GetCurrentTab() == tab;
+            var sectionColor = SectionSelector.CurrentValue.SelectedSection.Data.Color;
+            image.color = isCurrentTab ? SectionSelector.CurrentValue.SelectedSection.Data.Color : colorManager.GetColor(ColorType.Gray1);
+            text.color = isCurrentTab ? Color.white : sectionColor;
+
         }
 
         protected virtual void SelectTab()
         {
+            var Section = SectionSelector.CurrentValue.SelectedSection;
             Section.Data.SetCurrentTab(Tab.Data);
             SectionSelector.Select(this, new UserSectionSelectedEventArgs(Section, ChangeType.JumpTo));
             TabSelector.Select(this, new UserTabSelectedEventArgs(Tab, ChangeType.JumpTo));

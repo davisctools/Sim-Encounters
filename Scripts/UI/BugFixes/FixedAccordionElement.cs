@@ -12,7 +12,7 @@ namespace ClinicalTools.UI
         /// </summary>
         protected override void OnValidate()
         {
-            if (gameObject.activeInHierarchy)
+            if (transform.parent != null && gameObject.activeInHierarchy)
                 base.OnValidate();
         }
 #endif

@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 623304459228606229}
   - component: {fileID: 621621284711305049}
   - component: {fileID: 7165570706380666935}
-  - component: {fileID: 6403240836392567084}
   - component: {fileID: 4031277252077544567}
+  - component: {fileID: 6763669629090076013}
+  - component: {fileID: 151295970004038127}
+  - component: {fileID: 1435235122914459334}
   m_Layer: 5
   m_Name: MobileTabButton
   m_TagString: Untagged
@@ -63,21 +65,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   widthPerHeight: 1
   initialHeightProportionToParent: 1
---- !u!114 &6403240836392567084
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 845803893542645133}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd8809a14a0dfe648a8f580ce32973ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectToggle: {fileID: 7684876732421403779}
-  selectedImage: {fileID: 7787842685839523548}
-  visitedCheck: {fileID: 8968712728761104151}
 --- !u!114 &4031277252077544567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,6 +85,52 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &6763669629090076013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845803893542645133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b365f958b47d88f44be7f868b9a1f6bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectToggle: {fileID: 7684876732421403779}
+  selectedImage: {fileID: 7787842685839523548}
+  visitedCheck: {fileID: 8968712728761104151}
+--- !u!114 &151295970004038127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845803893542645133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b14b89bd9b844e2428e95afb7d604fdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectorBehaviour: {fileID: 6763669629090076013}
+--- !u!114 &1435235122914459334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845803893542645133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 151295970004038127}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
 --- !u!1 &4023734657206445998
 GameObject:
   m_ObjectHideFlags: 0
@@ -249,6 +282,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scale: 0.5
+  sizeWidth: 1
+  sizeHeight: 1
 --- !u!1 &4023843054475091178
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,6 +372,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scale: 0.5
+  sizeWidth: 1
+  sizeHeight: 1
 --- !u!1 &8968712728761104151
 GameObject:
   m_ObjectHideFlags: 0
@@ -425,3 +462,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scale: 0.5
+  sizeWidth: 1
+  sizeHeight: 1

@@ -7,23 +7,20 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class ReaderTabSelector : MonoBehaviour
+    public class UserTabSelectorsGroup<T> : MonoBehaviour
+        where T : BaseSelectableUserTabBehaviour
     {
         public virtual Transform TabButtonsParent { get => tabButtonsParent; set => tabButtonsParent = value; }
         [SerializeField] private Transform tabButtonsParent;
-        public virtual BaseReaderTabToggle TabButtonPrefab { get => tabButtonPrefab; set => tabButtonPrefab = value; }
-        [SerializeField] private BaseReaderTabToggle tabButtonPrefab;
-        public virtual ToggleGroup TabsToggleGroup { get => tabsToggleGroup; set => tabsToggleGroup = value; }
-        [SerializeField] private ToggleGroup tabsToggleGroup;
         public virtual ScrollRect TabButtonsScroll { get => tabButtonsScroll; set => tabButtonsScroll = value; }
         [SerializeField] private ScrollRect tabButtonsScroll;
 
-        protected BaseReaderTabToggle.Pool TabButtonPool { get; set; }
+        protected SceneMonoMemoryPool<T> TabButtonPool { get; set; }
         protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
         protected ISelector<UserTabSelectedEventArgs> UserTabSelector { get; set; }
         [Inject]
         public virtual void Inject(
-            BaseReaderTabToggle.Pool tabButtonPool,
+            SceneMonoMemoryPool<T> tabButtonPool,
             ISelector<UserSectionSelectedEventArgs> userSectionSelector,
             ISelector<UserTabSelectedEventArgs> userTabSelector)
         {
@@ -57,36 +54,40 @@ namespace ClinicalTools.SimEncounters
                 AddButton(Section.GetTab(tab.Key));
         }
 
-        protected Dictionary<UserTab, BaseReaderTabToggle> TabButtons { get; } = new Dictionary<UserTab, BaseReaderTabToggle>();
+        protected Dictionary<UserTab, T> TabButtons { get; } = new Dictionary<UserTab, T>();
         protected void AddButton(UserTab userTab)
+        {
+            var tabButton = CreateNewTabButton();
+            tabButton.Initialize(userTab);
+            TabButtons.Add(userTab, tabButton);
+        }
+
+        protected virtual T CreateNewTabButton()
         {
             var tabButton = TabButtonPool.Spawn();
             tabButton.transform.SetParent(TabButtonsParent);
             tabButton.transform.SetAsLastSibling();
-            tabButton.SetToggleGroup(TabsToggleGroup);
-            tabButton.Display(userTab);
-            tabButton.Selected += () => OnSelected(userTab);
-            TabButtons.Add(userTab, tabButton);
+            return tabButton;
         }
+
 
         protected UserTab CurrentTab { get; set; }
-        protected void OnSelected(UserTab tab)
+        protected virtual void OnSelected(UserTab tab)
         {
-            if (CurrentTab != tab) {
-                CurrentTab = tab;
-                var selectedArgs = new UserTabSelectedEventArgs(tab, ChangeType.JumpTo);
-                UserTabSelector.Select(this, selectedArgs);
-            }
+            if (CurrentTab == tab)
+                return;
 
-            var tabButtonTransform = (RectTransform)TabButtons[tab].transform;
-            EnsureButtonIsShowing(tab, tabButtonTransform);
-            NextFrame.Function(() => NextFrame.Function(() => EnsureButtonIsShowing(tab, tabButtonTransform)));
+            CurrentTab = tab;
+
+            var tabButtonTransform = (RectTransform)TabButtons[CurrentTab].transform;
+            EnsureCurrentTabIsShowing(tabButtonTransform);
+            NextFrame.Function(() => NextFrame.Function(() => EnsureCurrentTabIsShowing(tabButtonTransform)));
         }
 
-        protected virtual void EnsureButtonIsShowing(UserTab tab, RectTransform tabButtonTransform)
+        protected virtual void EnsureCurrentTabIsShowing(RectTransform tabButtonTransform)
         {
-            if (tab == CurrentTab && TabButtonsScroll != null)
-                TabButtonsScroll.EnsureChildIsShowing((RectTransform)TabButtons[tab].transform);
+            if (TabButtonsScroll != null)
+                TabButtonsScroll.EnsureChildIsShowing((RectTransform)TabButtons[CurrentTab].transform);
         }
 
         protected virtual void OnTabSelected(object sender, UserTabSelectedEventArgs eventArgs)
@@ -94,8 +95,7 @@ namespace ClinicalTools.SimEncounters
             if ((object)sender == this)
                 return;
 
-            CurrentTab = eventArgs.SelectedTab;
-            TabButtons[CurrentTab].Select();
+            OnSelected(eventArgs.SelectedTab);
         }
     }
 }
