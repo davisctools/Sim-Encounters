@@ -49,9 +49,19 @@ namespace ClinicalTools.SimEncounters
             CloseSidebarSwipeParamater.OnSwipeUpdate += CloseSwipeUpdate;
             CloseSidebarSwipeParamater.OnSwipeEnd += CloseSwipeEnd;
 
+#if false
+            Open();
+#else
             Sidebar.SetActive(false);
             SidebarDimBackground.alpha = 0;
             SidebarDimBackground.interactable = false;
+#endif
+        }
+
+        public virtual void CloseLater() => StartCoroutine(CloseLaterEnumerator());
+        protected virtual IEnumerator CloseLaterEnumerator() {
+            yield return new WaitForSeconds(3);
+            Close();
         }
 
         protected virtual void OpenSwipeStart(Swipe swipe)

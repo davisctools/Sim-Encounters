@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 namespace ClinicalTools.UI
 {
+    [RequireComponent(typeof(ScrollRect))]
     public class ScrollRectGradient : MonoBehaviour
     {
         public Image BottomGradient { get => bottomGradient; set => bottomGradient = value; }
@@ -11,13 +12,7 @@ namespace ClinicalTools.UI
         [SerializeField] private Image topGradient;
 
         private ScrollRect scrollRect;
-        protected ScrollRect ScrollRect {
-            get {
-                if (scrollRect == null)
-                    scrollRect = GetComponent<ScrollRect>();
-                return scrollRect;
-            }
-        }
+        protected ScrollRect ScrollRect => scrollRect != null ? scrollRect : (scrollRect = GetComponent<ScrollRect>());
 
         protected virtual void Start() => ResetGradients();
 

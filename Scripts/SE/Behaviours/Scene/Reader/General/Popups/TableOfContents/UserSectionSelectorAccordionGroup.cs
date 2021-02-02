@@ -5,24 +5,20 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class ReaderTableOfContents : MonoBehaviour
+    public class UserSectionSelectorAccordionGroup : MonoBehaviour
     {
         [SerializeField] private Accordion accordion;
         [SerializeField] private Transform sectionsParent;
 
         protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelector { get; set; }
-        protected BaseTableOfContentsSection.Factory SectionFactory { get; set; }
+        protected BaseSelectableUserSectionBehaviour.Factory SectionFactory { get; set; }
         [Inject]
         public virtual void Inject(
-            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelector, 
-            BaseTableOfContentsSection.Factory sectionFactory)
+            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelector,
+            BaseSelectableUserSectionBehaviour.Factory sectionFactory)
         {
             EncounterSelector = encounterSelector;
             SectionFactory = sectionFactory;
-        }
-
-        protected virtual void Start()
-        {
             EncounterSelector.Selected += EncounterSelected;
             if (EncounterSelector.CurrentValue != null)
                 EncounterSelected(this, EncounterSelector.CurrentValue);
@@ -33,7 +29,8 @@ namespace ClinicalTools.SimEncounters
             SetAccordionToInstantTransition();
             foreach (var section in e.Encounter.Sections.Values)
                 DrawSection(section);
-            SetAccordionToTweenNextFrame();
+            if (gameObject.activeInHierarchy)
+                SetAccordionToTweenNextFrame();
         }
 
         protected virtual void DrawSection(UserSection section)
