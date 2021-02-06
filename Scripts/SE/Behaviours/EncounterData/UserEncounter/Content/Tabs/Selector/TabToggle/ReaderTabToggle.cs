@@ -37,6 +37,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void StatusChanged() => Visited.SetActive(CurrentTab.IsRead());
         public override void Select() => SelectToggle.Select();
+        public override void Deselect() => SelectToggle.DeselectWithNoNotify();
         protected virtual void OnDestroy() => CurrentTab.StatusChanged -= StatusChanged;
     }
 }

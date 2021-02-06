@@ -650,8 +650,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.5
-  m_fontSizeBase: 37.5
+  m_fontSize: 42.5
+  m_fontSizeBase: 42.5
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -728,7 +728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e65430698d41c6e48bbad6011d3a3569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fontSizePerHeight: 0.3
+  fontSizePerHeight: 0.34
 --- !u!1 &5311883955704453775
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,7 +741,7 @@ GameObject:
   - component: {fileID: 2565855803259605538}
   - component: {fileID: 3398982018463016351}
   - component: {fileID: 906547084893800948}
-  - component: {fileID: 5656769673109103887}
+  - component: {fileID: 6961283699783974715}
   m_Layer: 5
   m_Name: Arrow
   m_TagString: Untagged
@@ -763,10 +763,10 @@ RectTransform:
   m_Father: {fileID: 2087742705811423956}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.04, y: 0.35}
-  m_AnchorMax: {x: 0.04, y: 0.65}
+  m_AnchorMin: {x: 0.04, y: 0.5}
+  m_AnchorMax: {x: 0.04, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 37.5, y: 0}
+  m_SizeDelta: {x: 44.73742, y: 44.73742}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &2565855803259605538
 CanvasRenderer:
@@ -795,7 +795,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2e1b8a27ac302c346b4a685b3a1dc8f5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4907e38ca02336d4fa7d9601efd7c8ca, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -818,7 +818,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colorType: 7
---- !u!114 &5656769673109103887
+--- !u!114 &6961283699783974715
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -827,11 +827,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5311883955704453775}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5018410c16635934e9104d130e119345, type: 3}
+  m_Script: {fileID: 11500000, guid: d569ead9213747143bb0732193957f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  widthPerHeight: 1
-  initialHeightProportionToParent: 0
+  scale: 0.5
+  sizeWidth: 1
+  sizeHeight: 1
 --- !u!1 &6200986123392771551
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,7 +1064,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toggle: {fileID: 5051041798473288020}
   image: {fileID: 3398982018463016351}
-  onImage: {fileID: 21300000, guid: f296070ef9c73aa41a2adf9a4c4d6ea1, type: 3}
+  onImage: {fileID: 21300000, guid: 118823dcfdf6d0741974c1cc60e2329e, type: 3}
 --- !u!114 &1132081857569754210
 MonoBehaviour:
   m_ObjectHideFlags: 0

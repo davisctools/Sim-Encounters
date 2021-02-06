@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -6,7 +7,14 @@ namespace ClinicalTools.SimEncounters
     {
         public virtual bool Read { get; set; }
         protected Dictionary<string, TabStatus> Tabs { get; } = new Dictionary<string, TabStatus>();
-        public virtual void AddTabStatus(string key, TabStatus status) => Tabs.Add(key, status);
+        public virtual void AddTabStatus(string key, TabStatus status)
+        {
+            if (Tabs.ContainsKey(key))
+                Debug.LogWarning($"Duplicate tab status key ({key})");
+            else
+                Tabs.Add(key, status);
+        }
+
         public virtual TabStatus GetTabStatus(string key)
         {
             if (Tabs.ContainsKey(key))

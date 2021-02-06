@@ -32,6 +32,8 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private AndroidBackButton backButton;
         public SwipeManager SwipeManager { get => swipeManager; set => swipeManager = value; }
         [SerializeField] private SwipeManager swipeManager;
+        public AnimationMonitor AnimationMonitor { get => animationMonitor; set => animationMonitor = value; }
+        [SerializeField] private AnimationMonitor animationMonitor;
 
         public override void InstallBindings()
         {
@@ -50,9 +52,13 @@ namespace ClinicalTools.SimEncounters
             Container.BindInstance(BackButton);
             Container.BindInstance(SwipeManager);
 
+
+            Container.BindInstance(AnimationMonitor);
+
             Container.Bind<IUserEncounterMenuSceneStarter>().To<UserEncounterMenuSceneStarter>().AsTransient();
 
             Container.Bind<IStatusWriter>().To<LocalStatusWriter>().AsTransient();
+
 
             Container.Bind<FeedbackColorManager>().To<FeedbackColorManager>().AsTransient();
             Container.Bind<IStringDeserializer<Color>>().To<ColorDeserializer>().AsTransient();

@@ -4,7 +4,7 @@ namespace ClinicalTools.SimEncounters
 {
     public enum ChangeType
     {
-        Inactive, Previous, Next, JumpTo
+        Inactive, Previous, Next, JumpTo, MoveTo
     }
 
     public class UserTabSelectedEventArgs : EventArgs

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -7,7 +8,14 @@ namespace ClinicalTools.SimEncounters
         public virtual bool Read { get; set; }
 
         protected Dictionary<string, SectionStatus> Sections { get; } = new Dictionary<string, SectionStatus>();
-        public virtual void AddSectionStatus(string key, SectionStatus status) => Sections.Add(key, status);
+        public virtual void AddSectionStatus(string key, SectionStatus status)
+        {
+            if (Sections.ContainsKey(key))
+                Debug.LogWarning($"Duplicate section status key ({key})");
+            else
+                Sections.Add(key, status);
+        }
+
         public virtual SectionStatus GetSectionStatus(string key)
         {
             if (Sections.ContainsKey(key))

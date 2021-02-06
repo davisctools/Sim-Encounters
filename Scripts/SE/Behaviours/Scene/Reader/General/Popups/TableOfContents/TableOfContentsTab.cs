@@ -24,16 +24,12 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void Start() => button.onClick.AddListener(SelectTab);
+        protected virtual void OnEnable() => UpdateColors();
 
         public override void Initialize(UserTab tab)
         {
-            var colorManager = new ColorManager();
             base.Initialize(tab);
-            var isCurrentTab = EncounterSelectedListener.CurrentValue.Encounter.GetCurrentSection().GetCurrentTab() == tab;
-            var sectionColor = SectionSelector.CurrentValue.SelectedSection.Data.Color;
-            image.color = isCurrentTab ? SectionSelector.CurrentValue.SelectedSection.Data.Color : colorManager.GetColor(ColorType.Gray1);
-            text.color = isCurrentTab ? Color.white : sectionColor;
-
+            UpdateColors();
         }
 
         protected virtual void SelectTab()
@@ -42,6 +38,18 @@ namespace ClinicalTools.SimEncounters
             Section.Data.SetCurrentTab(Tab.Data);
             SectionSelector.Select(this, new UserSectionSelectedEventArgs(Section, ChangeType.JumpTo));
             TabSelector.Select(this, new UserTabSelectedEventArgs(Tab, ChangeType.JumpTo));
+        }
+
+        protected virtual void UpdateColors()
+        {
+            if (Tab == null)
+                return;
+
+            var colorManager = new ColorManager();
+            var isCurrentTab = EncounterSelectedListener.CurrentValue.Encounter.GetCurrentSection().GetCurrentTab() == Tab;
+            var sectionColor = SectionSelector.CurrentValue.SelectedSection.Data.Color;
+            image.color = isCurrentTab ? sectionColor : colorManager.GetColor(ColorType.Gray1);
+            text.color = isCurrentTab ? Color.white : sectionColor;
         }
     }
 }

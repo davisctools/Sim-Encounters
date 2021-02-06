@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ClinicalTools.SimEncounters
@@ -21,6 +22,8 @@ namespace ClinicalTools.SimEncounters
                 return;
 
             TabButtons[tab].Select();
+            foreach (var tabButton in TabButtons.Where((b) => b.Key != tab))
+                tabButton.Value.Deselect();
 
             base.OnSelected(tab);
         }

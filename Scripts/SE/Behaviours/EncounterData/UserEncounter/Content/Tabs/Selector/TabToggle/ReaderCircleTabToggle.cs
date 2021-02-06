@@ -35,7 +35,11 @@ namespace ClinicalTools.SimEncounters
             SelectToggle.Selected += Selected;
         }
 
-        protected virtual void Selected() => TabSelector.Select(this, new UserTabSelectedEventArgs(Tab, ChangeType.JumpTo));
+        protected virtual void Selected()
+        {
+            if (TabSelector.CurrentValue.SelectedTab != Tab)
+                TabSelector.Select(this, new UserTabSelectedEventArgs(Tab, ChangeType.MoveTo));
+        }
 
         private bool initialized;
         protected Color NotVisitedColor { get; set; }
@@ -84,6 +88,12 @@ namespace ClinicalTools.SimEncounters
         {
             SelectToggle.Select();
             UpdateIsVisited();
+        }
+
+        public override void Deselect()
+        {
+            SelectToggle.DeselectWithNoNotify();
+            ToggleUnselected();
         }
 
         protected virtual void CompletionDraw() => UpdateIsVisited();

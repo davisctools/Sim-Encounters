@@ -30,10 +30,12 @@ namespace ClinicalTools.SimEncounters
 
         protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
         protected ISelector<UserTabSelectedEventArgs> UserTabSelector { get; set; }
+        protected AnimationMonitor AnimationMonitor { get; set; }
         protected SwipeManager SwipeManager { get; set; }
         protected IShiftTransformsAnimator Curve { get; set; }
         [Inject]
         public virtual void Inject(
+            AnimationMonitor animationMonitor,
             IShiftTransformsAnimator curve,
             SwipeManager swipeManager,
             ISelector<UserSectionSelectedEventArgs> userSectionSelector,
@@ -41,9 +43,12 @@ namespace ClinicalTools.SimEncounters
         {
             UserSectionSelector = userSectionSelector;
             UserTabSelector = userTabSelector;
+
+            AnimationMonitor = animationMonitor;
             Curve = curve;
             SwipeManager = swipeManager;
         }
+
         protected virtual void Start()
         {
             UserSectionSelector.Selected += OnSectionSelected;
@@ -88,12 +93,12 @@ namespace ClinicalTools.SimEncounters
             if (Current != null && Current.Tab == eventArgs.SelectedTab)
                 return;
 
-            HandleTabStuff(sender, eventArgs);
+            HandleTabChange(sender, eventArgs);
         }
 
         protected UserTab PreviousTab { get; set; }
         protected UserTab NextTab { get; set; }
-        protected virtual void HandleTabStuff(object sender, UserTabSelectedEventArgs eventArgs)
+        protected virtual void HandleTabChange(object sender, UserTabSelectedEventArgs eventArgs)
         {
             var tabIndex = Tabs.IndexOf(eventArgs.SelectedTab);
             PreviousTab = (tabIndex > 0) ? Tabs[tabIndex - 1].Value : null;
@@ -129,39 +134,59 @@ namespace ClinicalTools.SimEncounters
             var useDelay = Current.Tab != eventArgs.SelectedTab;
             Current.Select(sender, eventArgs);
 
-            TabDraw(useDelay);
+            TabDraw(useDelay, eventArgs.ChangeType);
         }
 
+        #region Transition
         private Coroutine currentCoroutine;
-        protected virtual void TabDraw(bool useDelay)
+        protected virtual void TabDraw(bool useDelay, ChangeType changeType)
         {
             foreach (var tabContent in Contents)
                 tabContent.gameObject.SetActive(tabContent == Current || tabContent == Leaving);
 
             if (currentCoroutine != null) {
-                StopCoroutine(currentCoroutine);
+                AnimationMonitor.StopCoroutine(currentCoroutine);
+                AnimationMonitor.AnimationStopping(this);
                 SwipeManager.ReenableSwipe();
             }
 
-            IEnumerator shiftSectionRoutine = GetShiftRoutine();
-            if (shiftSectionRoutine != null) {
-                currentCoroutine = StartCoroutine(AnimationCoroutine(shiftSectionRoutine, useDelay));
-            } else {
-                Curve.SetPosition(Current.RectTransform);
-                SetNextAndPrevious();
-            }
+            currentCoroutine = AnimationMonitor.StartCoroutine(GetTabTransition(useDelay, changeType));
         }
 
-        protected virtual void SetNextAndPrevious()
+        protected virtual IEnumerator GetTabTransition(bool useDelay, ChangeType changeType)
         {
+            IEnumerator shiftSectionRoutine = GetShiftRoutine(changeType);
+            if (shiftSectionRoutine != null)
+                return AnimationTabTransition(shiftSectionRoutine, useDelay);
+            else
+                return InstantTabTransition();
+        }
+
+        protected virtual IEnumerator SetNextAndPrevious()
+        {
+            yield return null;
+            while (AnimationMonitor.IsAnimationInProgress())
+                yield return null;
+
             if (Previous != null)
                 Previous.Select(this, new UserTabSelectedEventArgs(PreviousTab, ChangeType.Inactive));
             if (Next != null)
                 Next.Select(this, new UserTabSelectedEventArgs(NextTab, ChangeType.Inactive));
         }
-        protected IEnumerator GetShiftRoutine()
+
+        protected virtual IEnumerator InstantTabTransition()
         {
-            if (!gameObject.activeInHierarchy || Leaving == null)
+            Curve.SetPosition(Current.RectTransform);
+            if (Leaving != null)
+                Leaving.gameObject.SetActive(false);
+
+
+            yield return SetNextAndPrevious();
+        }
+
+        protected IEnumerator GetShiftRoutine(ChangeType changeType)
+        {
+            if (changeType == ChangeType.JumpTo || !gameObject.activeInHierarchy || Leaving == null)
                 return null;
             else if (Tabs.IndexOf(Leaving.Tab) < Tabs.IndexOf(Current.Tab))
                 return ShiftForward(Leaving);
@@ -173,8 +198,9 @@ namespace ClinicalTools.SimEncounters
             => Curve.ShiftForward(leavingContent.RectTransform, Current.RectTransform);
         protected IEnumerator ShiftBackward(ReaderTabContent leavingContent)
             => Curve.ShiftBackward(leavingContent.RectTransform, Current.RectTransform);
-        protected virtual IEnumerator AnimationCoroutine(IEnumerator shiftRoutine, bool useDelay)
+        protected virtual IEnumerator AnimationTabTransition(IEnumerator shiftRoutine, bool useDelay)
         {
+            AnimationMonitor.AnimationStarting(this);
             SwipeManager.DisableSwipe();
 
             if (useDelay) {
@@ -186,10 +212,14 @@ namespace ClinicalTools.SimEncounters
 
             yield return shiftRoutine;
             SwipeManager.ReenableSwipe();
-            yield return null;
-            SetNextAndPrevious();
-        }
 
+            AnimationMonitor.AnimationStopping(this);
+
+            yield return SetNextAndPrevious();
+        }
+        #endregion
+
+        #region Swipe
         protected SwipeParameter SwipeParamater { get; set; }
         protected virtual void InitializeSwipeParamaters()
         {
@@ -246,5 +276,6 @@ namespace ClinicalTools.SimEncounters
                     currentCoroutine = StartCoroutine(ShiftBackward(Next));
             }
         }
+        #endregion
     }
 }

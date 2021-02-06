@@ -14,11 +14,16 @@ namespace ClinicalTools.SimEncounters
         public CanvasGroup SidebarDimBackground { get => sidebarDimBackground; set => sidebarDimBackground = value; }
         [SerializeField] private CanvasGroup sidebarDimBackground;
 
+        protected AnimationMonitor AnimationMonitor { get; set; }
         protected AndroidBackButton BackButton { get; set; }
         private SwipeManager swipeManager;
         [Inject]
-        public virtual void Inject(AndroidBackButton backButton, SwipeManager swipeManager)
+        public virtual void Inject(
+            AnimationMonitor animationMonitor,
+            AndroidBackButton backButton,
+            SwipeManager swipeManager)
         {
+            AnimationMonitor = animationMonitor;
             BackButton = backButton;
             this.swipeManager = swipeManager;
         }
@@ -59,7 +64,8 @@ namespace ClinicalTools.SimEncounters
         }
 
         public virtual void CloseLater() => StartCoroutine(CloseLaterEnumerator());
-        protected virtual IEnumerator CloseLaterEnumerator() {
+        protected virtual IEnumerator CloseLaterEnumerator()
+        {
             yield return new WaitForSeconds(3);
             Close();
         }
@@ -147,6 +153,7 @@ namespace ClinicalTools.SimEncounters
         private const float OpenTime = .3f;
         public IEnumerator OpenSidebarEnumerator()
         {
+            AnimationMonitor.AnimationStarting(this);
             BeginShowingSidebar();
 
             var proportionOfAnimation = sidebarDimBackground.alpha;
@@ -157,12 +164,14 @@ namespace ClinicalTools.SimEncounters
             }
             SetSidebar(1);
             CompleteShowingSidebar();
+            AnimationMonitor.AnimationStopping(this);
         }
 
         private const float HideTime = .3f;
         protected void StartCloseEnumerator() => StartCoroutine(CloseSidebarEnumerator());
         public IEnumerator CloseSidebarEnumerator()
         {
+            AnimationMonitor.AnimationStarting(this);
             BeginHidingSidebar();
 
             var proportionOfAnimation = sidebarDimBackground.alpha;
@@ -173,6 +182,7 @@ namespace ClinicalTools.SimEncounters
             }
             SetSidebar(0);
             CompleteHidingSidebar();
+            AnimationMonitor.AnimationStopping(this);
         }
     }
 }

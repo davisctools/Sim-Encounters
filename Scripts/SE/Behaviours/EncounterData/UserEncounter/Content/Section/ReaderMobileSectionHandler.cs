@@ -33,23 +33,27 @@ namespace ClinicalTools.SimEncounters
         protected ISelector<UserEncounterSelectedEventArgs> UserEncounterSelector { get; set; }
         protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
         protected ISelector<UserTabSelectedEventArgs> UserTabSelector { get; set; }
+        protected AnimationMonitor AnimationMonitor { get; set; }
         protected SwipeManager SwipeManager { get; set; }
         protected IShiftTransformsAnimator Curve { get; set; }
         [Inject]
         public virtual void Inject(
+            AnimationMonitor animationMonitor,
             IShiftTransformsAnimator curve,
             SwipeManager swipeManager,
             ISelector<UserEncounterSelectedEventArgs> userEncounterSelector,
             ISelector<UserSectionSelectedEventArgs> userSectionSelector,
             ISelector<UserTabSelectedEventArgs> userTabSelector)
         {
-            Curve = curve;
-            SwipeManager = swipeManager;
-
             UserEncounterSelector = userEncounterSelector;
             UserSectionSelector = userSectionSelector;
             UserTabSelector = userTabSelector;
+
+            AnimationMonitor = animationMonitor;
+            Curve = curve;
+            SwipeManager = swipeManager;
         }
+
         protected virtual void Start()
         {
             UserEncounterSelector.Selected += OnEncounterSelected;
@@ -107,7 +111,7 @@ namespace ClinicalTools.SimEncounters
             if (eventArgs.ChangeType == ChangeType.JumpTo || eventArgs.ChangeType == ChangeType.Inactive)
                 ClearCurrent();
 
-            HandleSectionStuff(sender, eventArgs);
+            HandleSectionChange(sender, eventArgs);
         }
 
         protected virtual void OnTabSelected(object sender, UserTabSelectedEventArgs eventArgs)
@@ -119,7 +123,7 @@ namespace ClinicalTools.SimEncounters
 
         protected UserSection PreviousSection { get; set; }
         protected UserSection NextSection { get; set; }
-        protected virtual void HandleSectionStuff(object sender, UserSectionSelectedEventArgs eventArgs)
+        protected virtual void HandleSectionChange(object sender, UserSectionSelectedEventArgs eventArgs)
         {
             var sectionIndex = Sections.IndexOf(eventArgs.SelectedSection);
             PreviousSection = (sectionIndex > 0) ? Sections[sectionIndex - 1].Value : null;
@@ -156,40 +160,40 @@ namespace ClinicalTools.SimEncounters
             Current.UserSectionSelected += UserSectionSelector.Select;
             Current.UserTabSelected += UserTabSelector.Select;
 
-            TabDraw();
+            SectionDraw();
         }
 
+        #region Animation
         private Coroutine currentCoroutine;
-        protected virtual void TabDraw()
+        protected virtual void SectionDraw()
         {
             foreach (var sectionContent in Contents)
                 sectionContent.gameObject.SetActive(sectionContent == Current || sectionContent == Leaving);
 
             if (currentCoroutine != null) {
-                StopCoroutine(currentCoroutine);
+                AnimationMonitor.StopCoroutine(currentCoroutine);
+                AnimationMonitor.AnimationStopping(this);
                 SwipeManager.ReenableSwipe();
             }
 
-            IEnumerator shiftSectionRoutine = GetShiftRoutine();
-            if (shiftSectionRoutine != null) {
-                currentCoroutine = StartCoroutine(shiftSectionRoutine);
-            } else {
-                Curve.SetPosition(Current.RectTransform);
-                SetNextAndPrevious();
-            }
+            currentCoroutine = AnimationMonitor.StartCoroutine(GetTransition());
         }
 
-        protected IEnumerator GetShiftRoutine()
+        protected virtual IEnumerator GetTransition()
         {
-            if (!gameObject.activeInHierarchy || Leaving == null)
-                return null;
-            else if (Sections.IndexOf(Leaving.Section) < Sections.IndexOf(Current.Section))
-                return ShiftForward(Leaving);
+            IEnumerator shiftSectionRoutine = GetShiftRoutine();
+            if (shiftSectionRoutine != null)
+                return AnimationTransition(shiftSectionRoutine);
             else
-                return ShiftBackward(Leaving);
+                return InstantTransition();
         }
-        protected virtual void SetNextAndPrevious()
+
+        protected virtual IEnumerator SetNextAndPrevious()
         {
+            yield return null;
+            while (AnimationMonitor.IsAnimationInProgress())
+                yield return null;
+
             if (Previous != null) {
                 Previous.Select(this, new UserSectionSelectedEventArgs(PreviousSection, ChangeType.Inactive));
                 Previous.SetLastTab(this, ChangeType.Inactive);
@@ -201,19 +205,43 @@ namespace ClinicalTools.SimEncounters
             }
         }
 
-        protected IEnumerator ShiftForward(ReaderSectionContent leavingContent)
-            => Shift(Curve.ShiftForward(leavingContent.RectTransform, Current.RectTransform));
-        protected IEnumerator ShiftBackward(ReaderSectionContent leavingContent)
-            => Shift(Curve.ShiftBackward(leavingContent.RectTransform, Current.RectTransform));
-        protected IEnumerator Shift(IEnumerator enumerator)
+        protected virtual IEnumerator InstantTransition()
         {
-            SwipeManager.DisableSwipe();
-            yield return enumerator;
-            SwipeManager.ReenableSwipe();
-            yield return null;
-            SetNextAndPrevious();
+            Curve.SetPosition(Current.RectTransform);
+            if (Leaving != null)
+                Leaving.gameObject.SetActive(false);
+
+            yield return SetNextAndPrevious();
         }
 
+        protected IEnumerator GetShiftRoutine()
+        {
+            if (!gameObject.activeInHierarchy || Leaving == null)
+                return null;
+            else if (Sections.IndexOf(Leaving.Section) < Sections.IndexOf(Current.Section))
+                return ShiftForward(Leaving);
+            else
+                return ShiftBackward(Leaving);
+        }
+
+        protected IEnumerator ShiftForward(ReaderSectionContent leavingContent)
+            => AnimationTransition(Curve.ShiftForward(leavingContent.RectTransform, Current.RectTransform));
+        protected IEnumerator ShiftBackward(ReaderSectionContent leavingContent)
+            => AnimationTransition(Curve.ShiftBackward(leavingContent.RectTransform, Current.RectTransform));
+        protected IEnumerator AnimationTransition(IEnumerator enumerator)
+        {
+            AnimationMonitor.AnimationStarting(this);
+            SwipeManager.DisableSwipe();
+            yield return enumerator;
+
+            SwipeManager.ReenableSwipe();
+            AnimationMonitor.AnimationStopping(this);
+
+            yield return SetNextAndPrevious();
+        }
+        #endregion
+
+        #region Swipe
         protected SwipeParameter SwipeParamater { get; set; }
         protected virtual void InitializeSwipeParamaters()
         {
@@ -289,5 +317,6 @@ namespace ClinicalTools.SimEncounters
             swipingLeft = false;
             swipingRight = false;
         }
+        #endregion
     }
 }
