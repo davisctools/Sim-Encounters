@@ -28,7 +28,5 @@ namespace ClinicalTools.SimEncounters
             SectionValue.SelectedSection.SetCurrentTab(eventArgs.SelectedTab.Data);
             SectionSelector.Select(sender, UserSectionValue);
         }
-
-        public new class Factory : PlaceholderFactory<BaseSelectableUserSectionBehaviour> { }
     }
 }

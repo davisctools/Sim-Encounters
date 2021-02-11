@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using System;
+using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -7,6 +8,10 @@ namespace ClinicalTools.SimEncounters
         protected ISelector<UserEncounterSelectedEventArgs> UserEncounterSelector { get; set; }
         protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
         protected ISelector<UserTabSelectedEventArgs> UserTabSelector { get; set; }
+
+        public event SelectedHandler<UserTabSelectedEventArgs> EncounterTabPositionChanged;
+        public UserTabSelectedEventArgs CurrentTab => UserTabSelector.CurrentValue;
+
         [Inject]
         public virtual void Inject(
             ISelector<UserEncounterSelectedEventArgs> userEncounterSelector,
@@ -24,6 +29,7 @@ namespace ClinicalTools.SimEncounters
                 OnSectionSelected(UserSectionSelector, UserSectionSelector.CurrentValue);
 
             UserTabSelector = userTabSelector;
+            UserTabSelector.Selected += OnTabSelected;
         }
 
         protected UserEncounter UserEncounter { get; set; }
@@ -38,6 +44,8 @@ namespace ClinicalTools.SimEncounters
         protected UserSection CurrentUserSection { get; set; }
         protected virtual void OnSectionSelected(object sender, UserSectionSelectedEventArgs eventArgs)
             => CurrentUserSection = eventArgs.SelectedSection;
+        protected virtual void OnTabSelected(object sender, UserTabSelectedEventArgs eventArgs)
+            => EncounterTabPositionChanged?.Invoke(sender, eventArgs);
 
         public virtual bool HasNext() => HasNextSection() || HasNextTab();
         protected virtual bool HasNextSection() => NonImageContent.CurrentSectionIndex + 1 < NonImageContent.Sections.Count;

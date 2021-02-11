@@ -24,12 +24,12 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void Start() => button.onClick.AddListener(SelectTab);
-        protected virtual void OnEnable() => UpdateColors();
+        protected virtual void OnEnable() => Refresh();
 
         public override void Initialize(UserTab tab)
         {
             base.Initialize(tab);
-            UpdateColors();
+            Refresh();
         }
 
         protected virtual void SelectTab()
@@ -38,17 +38,33 @@ namespace ClinicalTools.SimEncounters
             Section.Data.SetCurrentTab(Tab.Data);
             SectionSelector.Select(this, new UserSectionSelectedEventArgs(Section, ChangeType.JumpTo));
             TabSelector.Select(this, new UserTabSelectedEventArgs(Tab, ChangeType.JumpTo));
+            Refresh();
         }
 
-        protected virtual void UpdateColors()
+        protected virtual void LateUpdate()
+        {
+            if (!isCurrentTab)
+                return;
+
+            isCurrentTab = EncounterSelectedListener.CurrentValue.Encounter.GetCurrentSection().GetCurrentTab() == Tab;
+            if (!isCurrentTab)
+                UpdateColors(isCurrentTab);
+        }
+
+        private bool isCurrentTab;
+        protected virtual void Refresh()
         {
             if (Tab == null)
                 return;
 
-            var colorManager = new ColorManager();
-            var isCurrentTab = EncounterSelectedListener.CurrentValue.Encounter.GetCurrentSection().GetCurrentTab() == Tab;
+            isCurrentTab = EncounterSelectedListener.CurrentValue.Encounter.GetCurrentSection().GetCurrentTab() == Tab;
+            UpdateColors(isCurrentTab);
+        }
+
+        protected virtual void UpdateColors(bool isCurrentTab)
+        {
             var sectionColor = SectionSelector.CurrentValue.SelectedSection.Data.Color;
-            image.color = isCurrentTab ? sectionColor : colorManager.GetColor(ColorType.Gray1);
+            image.color = isCurrentTab ? sectionColor : Color.white;
             text.color = isCurrentTab ? Color.white : sectionColor;
         }
     }

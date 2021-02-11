@@ -1,33 +1,62 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
     public class TabCompletedObject : MonoBehaviour
     {
+        [SerializeField] private bool updateWhenCurrentTabChanged;
+
+        protected ILinearEncounterNavigator LinearEncounterNavigator { get; set; }
         protected ISelectedListener<UserTabSelectedEventArgs> TabSelector { get; set; }
         [Inject]
-        public virtual void Inject(ISelectedListener<UserTabSelectedEventArgs> tabSelector)
-            => TabSelector = tabSelector;
-
-        protected virtual void Start()
+        public virtual void Inject(
+            ILinearEncounterNavigator linearEncounterNavigator,
+            ISelectedListener<UserTabSelectedEventArgs> tabSelector)
         {
-            TabSelector.Selected += OnSectionSelected;
+            LinearEncounterNavigator = linearEncounterNavigator;
+            TabSelector = tabSelector;
+
+            TabSelector.Selected += OnTabSelected;
             if (TabSelector.CurrentValue != null)
-                OnSectionSelected(TabSelector, TabSelector.CurrentValue);
+                OnTabSelected(TabSelector, TabSelector.CurrentValue);
+
+            if (updateWhenCurrentTabChanged)
+                LinearEncounterNavigator.EncounterTabPositionChanged += EncounterTabPositionChanged;
         }
 
-        protected virtual UserTab CurrentTab { get; set; }
-        protected virtual void OnSectionSelected(object sender, UserTabSelectedEventArgs eventArgs)
+        private bool updateOnNextTabChange;
+        protected virtual void EncounterTabPositionChanged(object sender, UserTabSelectedEventArgs e)
         {
-            if (CurrentTab != null)
-                CurrentTab.StatusChanged -= UpdateOn;
-
-            CurrentTab = eventArgs.SelectedTab;
-            CurrentTab.StatusChanged += UpdateOn;
+            if (!updateOnNextTabChange || Tab == e.SelectedTab)
+                return;
+            updateOnNextTabChange = false;
             UpdateOn();
         }
 
-        protected virtual void UpdateOn() => gameObject.SetActive(CurrentTab.IsRead());
+        protected virtual UserTab Tab { get; set; }
+        protected virtual void OnTabSelected(object sender, UserTabSelectedEventArgs eventArgs)
+        {
+            if (Tab != null)
+                Tab.StatusChanged -= TabStatusChanged;
+
+            Tab = eventArgs.SelectedTab;
+            Tab.StatusChanged += TabStatusChanged;
+            TabStatusChanged();
+        }
+
+        protected virtual void TabStatusChanged()
+        {
+            if (Tab.IsRead() == gameObject.activeSelf)
+                return;
+
+            if (updateWhenCurrentTabChanged && LinearEncounterNavigator.CurrentTab?.SelectedTab == Tab)
+                updateOnNextTabChange = true;
+            else
+                UpdateOn();
+        }
+
+        protected virtual void UpdateOn() => gameObject.SetActive(Tab.IsRead());
     }
 }

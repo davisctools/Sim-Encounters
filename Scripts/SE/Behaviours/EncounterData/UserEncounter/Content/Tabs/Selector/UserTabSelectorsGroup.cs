@@ -43,14 +43,21 @@ namespace ClinicalTools.SimEncounters
             if (Section == eventArgs.SelectedSection)
                 return;
             Section = eventArgs.SelectedSection;
-
-            foreach (var tabButton in TabButtons)
-                TabButtonPool.Despawn(tabButton.Value);
-            TabButtons.Clear();
+            
+            ClearButtons();
 
             foreach (var tab in Section.Data.Tabs)
                 AddButton(Section.GetTab(tab.Key));
         }
+
+        protected virtual void ClearButtons()
+        {
+            foreach (var tabButton in TabButtons)
+                DespawnButton(tabButton.Value);
+            TabButtons.Clear();
+        }
+
+        protected virtual void DespawnButton(T tabButton) => TabButtonPool.Despawn(tabButton);
 
         protected Dictionary<UserTab, T> TabButtons { get; } = new Dictionary<UserTab, T>();
         protected void AddButton(UserTab userTab)

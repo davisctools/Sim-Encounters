@@ -27,5 +27,11 @@ namespace ClinicalTools.SimEncounters
 
             base.OnSelected(tab);
         }
+
+        protected override void DespawnButton(BaseSelectableTabToggle toggle)
+        {
+            base.DespawnButton(toggle);
+            toggle.Deselect();
+        }
     }
 }

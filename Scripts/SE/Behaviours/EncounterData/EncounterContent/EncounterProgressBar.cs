@@ -16,7 +16,7 @@ namespace ClinicalTools.SimEncounters
         protected RectTransformFactory RectTransformFactory { get; set; }
         [Inject]
         public virtual void Inject(
-            ISelectedListener<EncounterSelectedEventArgs> encounterSelector, 
+            ISelectedListener<EncounterSelectedEventArgs> encounterSelector,
             ISelectedListener<TabSelectedEventArgs> tabSelector,
             RectTransformFactory rectTransformFactory)
         {
@@ -68,8 +68,8 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void OnTabSelected(object sender, TabSelectedEventArgs eventArgs)
-            => FillImage.fillAmount = 1f * NonImageContent.GetCurrentTabNumber() / tabCount;
-        
+            => FillImage.fillAmount = NonImageContent.GetCurrentTabNumber() / tabCount;
+
         protected virtual void OnDestroy()
         {
             EncounterSelector.Selected -= OnEncounterSelected;
