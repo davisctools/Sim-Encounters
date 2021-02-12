@@ -39,6 +39,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void OnEnable() => ResetIsOn();
+        //protected virtual void OnDisable() => toggle.isOn = false;
 
         protected virtual void ResetIsOn()
         {

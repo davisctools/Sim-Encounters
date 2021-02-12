@@ -20,7 +20,12 @@ namespace ClinicalTools.SimEncounters
         protected virtual void OnEnable() => SetAccordionToTweenNextFrame();
 
         protected virtual void SetAccordionToTweenNextFrame() => NextFrame.Function(SetAccordionToTweenTransition);
+        
         protected virtual void SetAccordionToInstantTransition() => accordion.transition = Accordion.Transition.Instant;
-        protected virtual void SetAccordionToTweenTransition() => accordion.transition = Accordion.Transition.Tween;
+        protected virtual void SetAccordionToTweenTransition()
+        {
+            if (gameObject.activeInHierarchy)
+                accordion.transition = Accordion.Transition.Tween;
+        }
     }
 }
