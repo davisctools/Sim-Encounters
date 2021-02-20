@@ -1,20 +1,29 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace ClinicalTools.UI
 {
     public class CanvasResizer : MonoBehaviour
     {
-        protected static CanvasResizer Instance { get; set; }
+        public event Action<float> Resized;
 
-        private static float resizeValue = .1f;
-        public static float ResizeValue01 {
-            get => resizeValue;
-            set => resizeValue = Mathf.Clamp01(value);
+        private const float MinValue = .925f;
+        private const float MaxValue = 1.3f;
+        private const float StartValue = 1.075f;
+
+        public float ResizeValue { get; protected set; } = StartValue;
+
+        private const float Scale = MaxValue - MinValue;
+
+        private float resizeValue01 = (StartValue - MinValue) / Scale;
+        public float ResizeValue01 {
+            get => resizeValue01;
+            set {
+                resizeValue01 = Mathf.Clamp01(value);
+                ResizeValue = MinValue + Scale * ResizeValue01;
+                Resized?.Invoke(ResizeValue);
+            }
         }
-        public static float GetResizeValue() => 1f + .8f * ResizeValue01;
-
-        protected void Awake() => Instance = this;
-
 
         private float startDistance;
         private float prevDistance = 0;
@@ -23,9 +32,6 @@ namespace ClinicalTools.UI
         bool zooming = true;
         private void Update()
         {
-            if (Instance != this)
-                return;
-
             var tapCount = Input.touchCount;
             if (tapCount <= 1) {
                 zooming = false;

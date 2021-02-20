@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 222362569779212166}
   - component: {fileID: 114501127972167580}
   - component: {fileID: 4524885937464487259}
+  - component: {fileID: 4352973732570160289}
   m_Layer: 5
   m_Name: CustomContentValue
   m_TagString: Untagged
@@ -152,6 +153,18 @@ MonoBehaviour:
   defaultValue: 
   prefix: 
   trim: 1
+--- !u!114 &4352973732570160289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000313001149090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 873d06ddee4b48748ae346fbd25c0d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1128936606106292
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,11 +352,11 @@ GameObject:
   - component: {fileID: 224334975368244802}
   - component: {fileID: 222877321579418336}
   - component: {fileID: 114249012410440944}
-  - component: {fileID: 6581964146360255722}
   - component: {fileID: 6984009271511823866}
   - component: {fileID: 3842892320383809643}
   - component: {fileID: 5783788397783301331}
   - component: {fileID: 8332721899276634573}
+  - component: {fileID: 6017503677766284635}
   m_Layer: 5
   m_Name: TextboxImagePanel
   m_TagString: Untagged
@@ -393,36 +406,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 4
-    m_Bottom: 4
-  m_ChildAlignment: 4
-  m_Spacing: 0
+    m_Left: 36
+    m_Right: 36
+    m_Top: 24
+    m_Bottom: 36
+  m_ChildAlignment: 1
+  m_Spacing: 5
   m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 0
+  m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &6581964146360255722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1611877227813298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab213a18ef57689489a6282379401bb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  useProportionOfParent: 0
-  left: 0.05
-  right: 0.05
-  top: 0.01
-  bottom: 0.01
-  spacing: 0
 --- !u!114 &6984009271511823866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,6 +486,23 @@ MonoBehaviour:
   _installerPrefabs: []
   _autoRun: 1
   _kernel: {fileID: 0}
+--- !u!114 &6017503677766284635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611877227813298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 783d49a7033d6444e92308a1ec44963f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resizableLeft: 0
+  resizableRight: 0
+  resizableTop: 0
+  resizableBottom: 0
+  resizableSpacing: 1
 --- !u!1001 &3799540911993797396
 PrefabInstance:
   m_ObjectHideFlags: 0

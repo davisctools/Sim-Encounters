@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6121861664749220709}
   - component: {fileID: 4403783828767215428}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 7075571894930476696}
   - component: {fileID: 6969809659118135660}
   - component: {fileID: 7924404942842266900}
+  - component: {fileID: 321115817744213225}
   m_Layer: 5
   m_Name: ContentRows
   m_TagString: Untagged
@@ -179,6 +180,23 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &321115817744213225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7001085860936408708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 783d49a7033d6444e92308a1ec44963f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resizableLeft: 0
+  resizableRight: 0
+  resizableTop: 0
+  resizableBottom: 1
+  resizableSpacing: 1
 --- !u!1 &7001089156633982400
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,6 +494,7 @@ GameObject:
   - component: {fileID: 7077725851703843058}
   - component: {fileID: 6969907110591719656}
   - component: {fileID: 6910563023687735855}
+  - component: {fileID: 4687506760745174676}
   m_Layer: 5
   m_Name: ContentValue
   m_TagString: Untagged
@@ -616,6 +635,18 @@ MonoBehaviour:
   defaultValue: 
   prefix: 
   trim: 1
+--- !u!114 &4687506760745174676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7002906629833848278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 873d06ddee4b48748ae346fbd25c0d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1868545188263860815
 PrefabInstance:
   m_ObjectHideFlags: 0

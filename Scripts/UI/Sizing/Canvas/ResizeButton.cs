@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace ClinicalTools.UI
 {
@@ -19,6 +20,8 @@ namespace ClinicalTools.UI
 
         protected virtual void Awake() => Button.onClick.AddListener(Resize);
 
+        protected CanvasResizer CanvasResizer { get; set; }
+        [Inject] public virtual void Inject(CanvasResizer canvasResizer) => CanvasResizer = canvasResizer;
         protected virtual void Resize()
         {
             CanvasResizer.ResizeValue01 += GetResizeValue();

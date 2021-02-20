@@ -5,6 +5,8 @@ namespace ClinicalTools.SimEncounters
 {
     public class SectionCompletedObject : MonoBehaviour
     {
+        [SerializeField] private bool hideOnCompleted;
+
         protected ISelectedListener<UserSectionSelectedEventArgs> SectionSelector { get; set; }
         [Inject]
         public virtual void Inject(ISelectedListener<UserSectionSelectedEventArgs> sectionSelector)
@@ -28,6 +30,6 @@ namespace ClinicalTools.SimEncounters
             UpdateOn();
         }
 
-        protected virtual void UpdateOn() => gameObject.SetActive(CurrentSection.IsRead());
+        protected virtual void UpdateOn() => gameObject.SetActive(CurrentSection.IsRead() ? !hideOnCompleted : hideOnCompleted);
     }
 }

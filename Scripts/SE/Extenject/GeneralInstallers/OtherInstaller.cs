@@ -11,6 +11,8 @@ namespace ClinicalTools.SimEncounters
             SignalBusInstaller.Install(container);
             container.DeclareSignal<SceneChangedSignal>().OptionalSubscriber();
 
+            container.Bind<SizeManager>().To<SizeManager>().AsSingle();
+
             container.Bind<ICurve>().To<AccelerationCurve>().AsTransient();
             container.Bind<IShiftTransformsAnimator>().To<ShiftTransformsAnimator>().AsTransient();
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClinicalTools.UI;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -16,7 +17,7 @@ namespace ClinicalTools.SimEncounters
         {
             base.OnRectTransformDimensionsChange();
 
-            var currentWidth = ((RectTransform)transform).rect.width;
+            var currentWidth = GetWidth();
             if (Mathf.Abs(currentWidth - width) < Tolerance)
                 return;
 
@@ -41,15 +42,18 @@ namespace ClinicalTools.SimEncounters
         protected Image Image => (image == null) ? image = GetComponent<Image>() : image;
         private Image image;
 
+        protected CanvasResizer CanvasResizer { get; set; }
         protected SpriteDrawer SpritePopup { get; set; }
         protected ISelectedListener<EncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
         protected ISelectedListener<PanelSelectedEventArgs> PanelSelectedListener { get; set; }
         [Inject]
         public virtual void Inject(
+            CanvasResizer canvasResizer,
             SpriteDrawer spritePopup,
             ISelectedListener<EncounterSelectedEventArgs> encounterSelectedListener,
             ISelectedListener<PanelSelectedEventArgs> panelSelectedListener)
         {
+            CanvasResizer = canvasResizer;
             SpritePopup = spritePopup;
             EncounterSelectedListener = encounterSelectedListener;
             PanelSelectedListener = panelSelectedListener;
@@ -58,6 +62,7 @@ namespace ClinicalTools.SimEncounters
         protected override void Start()
         {
             base.Start();
+            CanvasResizer.Resized += UpdateLayoutElement;
             PanelSelectedListener.Selected += OnPanelSelected;
             if (PanelSelectedListener.CurrentValue != null)
                 OnPanelSelected(PanelSelectedListener, PanelSelectedListener.CurrentValue);
@@ -100,7 +105,9 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual bool KeyIsEncounterImage(string key)
-            => key != null && (key.Equals(LegacyEncounterImageKey, StringComparison.InvariantCultureIgnoreCase) || key.Equals(EncounterImageKey, StringComparison.InvariantCultureIgnoreCase));
+            => key != null 
+                && (key.Equals(LegacyEncounterImageKey, StringComparison.InvariantCultureIgnoreCase)
+                    || key.Equals(EncounterImageKey, StringComparison.InvariantCultureIgnoreCase));
 
         protected virtual void HideImage()
         {
@@ -122,13 +129,20 @@ namespace ClinicalTools.SimEncounters
             UpdateHeight();
         }
 
+        protected virtual float GetWidth()
+        {
+            var rectWidth = ((RectTransform)transform).rect.width;
+            return (CanvasResizer != null) ? rectWidth / CanvasResizer.ResizeValue : rectWidth;
+        }
+
+        private Vector2 unscaledDimensions = new Vector2();
         protected virtual void UpdateHeight()
         {
             if (Sprite == null)
                 return;
 
             if (width == 0)
-                width = ((RectTransform)transform).rect.width;
+                width = GetWidth();
 
             var spriteHeight = Sprite.rect.height;
             var spriteWidth = Sprite.rect.width;
@@ -139,16 +153,31 @@ namespace ClinicalTools.SimEncounters
                 EnlargeImageButton.onClick.AddListener(() => SpritePopup.Display(Image.sprite));
             }
 
+            var height = width * spriteRatio;
+            if (MaxHeight > Tolerance && MaxHeight < height) {
+                unscaledDimensions.y = MaxHeight;
+                unscaledDimensions.x = MaxHeight / spriteRatio;
+            } else {
+                unscaledDimensions.y = height;
+                unscaledDimensions.x = width;
+            }
+
+
+            UpdateLayoutElement(CanvasResizer.ResizeValue);
+        }
+
+        protected virtual void UpdateLayoutElement(float scale)
+        {
             if (LayoutElement == null)
                 return;
 
-            var height = width * spriteRatio;
-            if (MaxHeight > Tolerance && MaxHeight < height) {
-                height = MaxHeight;
-                LayoutElement.preferredWidth = MaxHeight / spriteRatio;
-                LayoutElement.flexibleWidth = -1;
-            }
-            LayoutElement.preferredHeight = height;
+            LayoutElement.preferredHeight = unscaledDimensions.y * scale;
+
+            if (unscaledDimensions.x <= 0)
+                return;
+
+            LayoutElement.preferredWidth = unscaledDimensions.x * scale;
+            LayoutElement.flexibleWidth = -1;
         }
     }
 }

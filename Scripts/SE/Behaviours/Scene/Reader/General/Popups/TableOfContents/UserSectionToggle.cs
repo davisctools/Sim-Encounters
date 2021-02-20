@@ -12,7 +12,6 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private GameObject outline;
         [SerializeField] private TextMeshProUGUI text;
         [SerializeField] private Toggle toggle;
-        [SerializeField] private GameObject completedObject;
 
         protected virtual void Awake()
         {
@@ -37,26 +36,17 @@ namespace ClinicalTools.SimEncounters
             if (isOn) {
                 text.color = Color.white;
                 toggle.image.color = Section.Data.Color;
-                completedObject.SetActive(false);
                 outline.gameObject.SetActive(false);
-                layoutGroup.padding.left = 30;
-                layoutGroup.padding.right = 30;
             } else if (Section.IsRead()) {
                 var colorManager = new ColorManager();
                 text.color = colorManager.GetColor(ColorType.Gray5);
                 toggle.image.color = Color.white;
-                completedObject.SetActive(true);
                 outline.gameObject.SetActive(true);
-                layoutGroup.padding.left = 30;
-                layoutGroup.padding.right = 10;
             } else {
                 var colorManager = new ColorManager();
                 text.color = Color.white;
                 toggle.image.color = colorManager.GetColor(ColorType.Gray5);
-                completedObject.SetActive(false);
                 outline.gameObject.SetActive(false);
-                layoutGroup.padding.left = 30;
-                layoutGroup.padding.right = 30;
             }
         }
 

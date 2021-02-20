@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace ClinicalTools.UI
 {
@@ -10,8 +11,11 @@ namespace ClinicalTools.UI
         private Slider slider;
 
         private float currentResizeValue;
-        protected virtual void Awake()
+
+        protected CanvasResizer CanvasResizer { get; set; }
+        [Inject] public virtual void Inject(CanvasResizer canvasResizer)
         {
+            CanvasResizer = canvasResizer;
             Slider.value = CanvasResizer.ResizeValue01;
             currentResizeValue = CanvasResizer.ResizeValue01;
             Slider.onValueChanged.AddListener(SliderValueChanged);
@@ -24,7 +28,7 @@ namespace ClinicalTools.UI
 
         protected virtual void Update()
         {
-            if (currentResizeValue == CanvasResizer.ResizeValue01)
+            if (CanvasResizer == null || currentResizeValue == CanvasResizer.ResizeValue01)
                 return;
 
             Slider.value = CanvasResizer.ResizeValue01;

@@ -91,6 +91,7 @@ MonoBehaviour:
   maxHeight: 400
   layoutElement: {fileID: 3460460302916930719}
   enlargeImageButton: {fileID: 3910684557874830521}
+  useEncounterImage: 0
 --- !u!1 &8702138215964747485
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,6 +105,7 @@ GameObject:
   - component: {fileID: 8744580127770414919}
   - component: {fileID: 4417718092801801155}
   - component: {fileID: 2116181542101005198}
+  - component: {fileID: 7079062487871249195}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -260,6 +262,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colorType: 9
+--- !u!114 &7079062487871249195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8702138215964747485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 873d06ddee4b48748ae346fbd25c0d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8702831474573920531
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,6 +288,7 @@ GameObject:
   - component: {fileID: 8597012926163732233}
   - component: {fileID: 3910684557874830521}
   - component: {fileID: 5215635032203672104}
+  - component: {fileID: 1882729606301969710}
   m_Layer: 5
   m_Name: ImageBG
   m_TagString: Untagged
@@ -427,6 +442,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1882729606301969710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8702831474573920531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 783d49a7033d6444e92308a1ec44963f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resizableLeft: 0
+  resizableRight: 0
+  resizableTop: 0
+  resizableBottom: 0
+  resizableSpacing: 1
 --- !u!1 &8702928036907420101
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ namespace ClinicalTools.UI
         public static float Scalar { get; set; } = 1.1f;
         protected override void HandleConstantPhysicalSize()
         {
-            var editorDPI = m_FallbackScreenDPI * Screen.height / 2500 * CanvasResizer.GetResizeValue();
+            var editorDPI = m_FallbackScreenDPI * Screen.height / 2500 * 1.08f;
             float currentDpi = editorDPI;
 
             //currentDpi = 96;
