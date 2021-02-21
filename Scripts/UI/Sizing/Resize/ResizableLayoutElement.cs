@@ -14,6 +14,7 @@ namespace ClinicalTools.UI
 
         private float defaultMinWidth, defaultPreferredWidth, defaultMinHeight, defaultPreferredHeight;
         protected LayoutElement LayoutElement { get; set; }
+        protected CanvasResizer Resizer { get; set; }
         [Inject]
         public virtual void Inject(CanvasResizer resizer)
         {
@@ -23,8 +24,9 @@ namespace ClinicalTools.UI
             defaultMinHeight = LayoutElement.minHeight;
             defaultPreferredHeight = LayoutElement.preferredHeight;
 
-            resizer.Resized += Resized;
-            Resized(resizer.ResizeValue);
+            Resizer = resizer;
+            Resizer.Resized += Resized;
+            Resized(Resizer.ResizeValue);
         }
 
         protected virtual void Resized(float size)
@@ -37,6 +39,11 @@ namespace ClinicalTools.UI
                 LayoutElement.minHeight = defaultMinHeight * size;
             if (resizablePreferredHeight)
                 LayoutElement.preferredHeight = defaultPreferredHeight * size;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (Resizer) Resizer.Resized -= Resized;
         }
     }
 }

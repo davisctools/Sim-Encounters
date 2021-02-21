@@ -17,6 +17,7 @@ namespace ClinicalTools.UI
         private int defaultLeft, defaultRight, defaultTop, defaultBottom;
         private float defaultSpacing;
         protected HorizontalOrVerticalLayoutGroup LayoutGroup { get; set; }
+        protected CanvasResizer Resizer { get; set; }
         [Inject]
         public virtual void Inject(CanvasResizer resizer)
         {
@@ -27,8 +28,9 @@ namespace ClinicalTools.UI
             defaultBottom = LayoutGroup.padding.bottom;
             defaultSpacing = LayoutGroup.spacing;
 
-            resizer.Resized += Resized;
-            Resized(resizer.ResizeValue);
+            Resizer = resizer;
+            Resizer.Resized += Resized;
+            Resized(Resizer.ResizeValue);
         }
 
         protected virtual void Resized(float size)
@@ -43,6 +45,11 @@ namespace ClinicalTools.UI
                 LayoutGroup.padding.bottom = (int)(defaultBottom * size);
             if (resizableSpacing)
                 LayoutGroup.spacing = defaultSpacing * size;
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (Resizer) Resizer.Resized -= Resized;
         }
     }
 }

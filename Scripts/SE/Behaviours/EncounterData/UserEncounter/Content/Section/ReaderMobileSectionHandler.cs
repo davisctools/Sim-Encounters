@@ -7,6 +7,117 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
+    public abstract class SwipableSection : MonoBehaviour
+    {
+        public enum Direction { NA, Left, Right }
+        public abstract void SwipeStart();
+        public abstract void SwipeUpdate(Direction dir, float dist);
+        public abstract void SwipeEnd(Direction dir, float dist, bool changingSections);
+    }
+
+    public class ReaderGeneralSectionHandler : MonoBehaviour
+    {
+        [SerializeField] SwipableSection[] swipableSections;
+
+        protected SwipeManager SwipeManager { get; set; }
+        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelector { get; set; }
+        protected ISelector<UserSectionSelectedEventArgs> SectionSelector { get; set; }
+        [Inject]
+        public virtual void Inject(
+            SwipeManager swipeManager,
+            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelector,
+            ISelector<UserSectionSelectedEventArgs> sectionSelector)
+        {
+            SwipeManager = swipeManager;
+
+            EncounterSelector = encounterSelector;
+            SectionSelector = sectionSelector;
+            SectionSelector.Selected += OnSectionSelected;
+            if (SectionSelector.CurrentValue != null)
+                OnSectionSelected(SectionSelector, SectionSelector.CurrentValue);
+        }
+
+
+        protected UserSection NextSection { get; set; }
+        protected UserSection PreviousSection { get; set; }
+        protected UserSection CurrentSection { get; set; }
+        protected virtual void OnSectionSelected(object sender, UserSectionSelectedEventArgs e)
+        {
+            var encounter = EncounterSelector.CurrentValue.Encounter;
+            var nonImageContent = encounter.Data.Content.NonImageContent;
+            var sectionIndex = nonImageContent.CurrentSectionIndex;
+            PreviousSection = (sectionIndex > 0) ? encounter.Sections[sectionIndex - 1].Value : null;
+            NextSection = (sectionIndex + 1 < encounter.Sections.Count) ? encounter.Sections[sectionIndex + 1].Value : null;
+            CurrentSection = e.SelectedSection;
+        }
+
+        protected SwipeParameter SwipeParamater { get; set; }
+        protected virtual void InitializeSwipeParamaters()
+        {
+            SwipeParamater = new SwipeParameter();
+            SwipeParamater.AngleRanges.Add(new AngleRange(-30, 30));
+            SwipeParamater.AngleRanges.Add(new AngleRange(150, 210));
+            SwipeParamater.OnSwipeStart += SwipeStart;
+            SwipeParamater.OnSwipeUpdate += SwipeUpdate;
+            SwipeParamater.OnSwipeEnd += SwipeEnd;
+        }
+
+        protected virtual void SwipeStart(Swipe obj)
+        {
+            foreach (var swipableSection in swipableSections)
+                swipableSection.SwipeStart();
+            SwipeUpdate(obj);
+        }
+        protected virtual void SwipeUpdate(Swipe obj)
+        {
+            var dist = (obj.LastPosition.x - obj.StartPosition.x) / Screen.width;
+            if (dist > 0)
+                RightSwipeUpdate(Mathf.Clamp01(dist));
+            else
+                LeftSwipeUpdate(Mathf.Clamp01(-dist));
+        }
+
+        protected SwipableSection.Direction SwipingDirection { get; set; }
+        protected virtual void RightSwipeUpdate(float dist)
+        {
+            SwipingDirection = SwipableSection.Direction.Right;
+            foreach (var swipableSection in swipableSections)
+                swipableSection.SwipeUpdate(SwipableSection.Direction.Right, dist);
+        }
+        protected virtual void LeftSwipeUpdate(float dist)
+        {
+            SwipingDirection = SwipableSection.Direction.Left;
+            foreach (var swipableSection in swipableSections)
+                swipableSection.SwipeUpdate(SwipableSection.Direction.Left, dist);
+        }
+
+        protected virtual void SwipeEnd(Swipe obj)
+        {
+            bool changingSections = false;
+            var dist = (obj.LastPosition.x - obj.StartPosition.x) / Screen.width;
+            if (SwipingDirection == SwipableSection.Direction.Right && dist > 0 && PreviousSection != null
+                && CurrentSection.Data.CurrentTabIndex == 0) {
+
+                if (dist > .5f || obj.Velocity.x / Screen.dpi > 1.5f) {
+                    PreviousSection.Data.CurrentTabIndex = PreviousSection.Data.Tabs.Count - 1;
+                    SectionSelector.Select(this, new UserSectionSelectedEventArgs(PreviousSection, ChangeType.Previous));
+                    changingSections = true;
+                }
+
+            } else if (SwipingDirection == SwipableSection.Direction.Right && dist < 0 && NextSection != null
+                && CurrentSection.Data.CurrentTabIndex + 1 == CurrentSection.Tabs.Count) {
+
+                if (dist < -.5f || obj.Velocity.x / Screen.dpi < -1.5f) {
+                    SectionSelector.Select(this, new UserSectionSelectedEventArgs(NextSection, ChangeType.Next));
+                    changingSections = true;
+                }
+            }
+
+            foreach (var swipableSection in swipableSections)
+                swipableSection.SwipeEnd(SwipingDirection, dist, changingSections);
+        }
+    }
+
     public class ReaderMobileSectionHandler : MonoBehaviour
     {
         public CanvasGroup CanvasGroup { get => canvasGroup; set => canvasGroup = value; }
@@ -30,7 +141,7 @@ namespace ClinicalTools.SimEncounters
             Contents[3] = SectionDrawer4;
         }
 
-        protected ISelector<UserEncounterSelectedEventArgs> UserEncounterSelector { get; set; }
+        protected ISelectedListener<UserEncounterSelectedEventArgs> UserEncounterSelector { get; set; }
         protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
         protected ISelector<UserTabSelectedEventArgs> UserTabSelector { get; set; }
         protected AnimationMonitor AnimationMonitor { get; set; }
@@ -41,7 +152,7 @@ namespace ClinicalTools.SimEncounters
             AnimationMonitor animationMonitor,
             IShiftTransformsAnimator curve,
             SwipeManager swipeManager,
-            ISelector<UserEncounterSelectedEventArgs> userEncounterSelector,
+            ISelectedListener<UserEncounterSelectedEventArgs> userEncounterSelector,
             ISelector<UserSectionSelectedEventArgs> userSectionSelector,
             ISelector<UserTabSelectedEventArgs> userTabSelector)
         {

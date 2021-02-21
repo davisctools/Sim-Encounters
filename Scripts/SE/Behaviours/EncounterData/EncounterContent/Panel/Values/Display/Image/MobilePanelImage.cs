@@ -70,6 +70,7 @@ namespace ClinicalTools.SimEncounters
         protected override void OnDestroy()
         {
             base.OnDestroy();
+            if (CanvasResizer) CanvasResizer.Resized -= UpdateLayoutElement;
             PanelSelectedListener.Selected -= OnPanelSelected;
         }
 
