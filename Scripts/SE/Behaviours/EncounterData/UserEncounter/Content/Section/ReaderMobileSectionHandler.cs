@@ -4,121 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using static ClinicalTools.SimEncounters.ISwipableSection;
 
 namespace ClinicalTools.SimEncounters
 {
-    public abstract class SwipableSection : MonoBehaviour
-    {
-        public enum Direction { NA, Left, Right }
-        public abstract void SwipeStart();
-        public abstract void SwipeUpdate(Direction dir, float dist);
-        public abstract void SwipeEnd(Direction dir, float dist, bool changingSections);
-    }
-
-    public class ReaderGeneralSectionHandler : MonoBehaviour
-    {
-        [SerializeField] SwipableSection[] swipableSections;
-
-        protected SwipeManager SwipeManager { get; set; }
-        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelector { get; set; }
-        protected ISelector<UserSectionSelectedEventArgs> SectionSelector { get; set; }
-        [Inject]
-        public virtual void Inject(
-            SwipeManager swipeManager,
-            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelector,
-            ISelector<UserSectionSelectedEventArgs> sectionSelector)
-        {
-            SwipeManager = swipeManager;
-
-            EncounterSelector = encounterSelector;
-            SectionSelector = sectionSelector;
-            SectionSelector.Selected += OnSectionSelected;
-            if (SectionSelector.CurrentValue != null)
-                OnSectionSelected(SectionSelector, SectionSelector.CurrentValue);
-        }
-
-
-        protected UserSection NextSection { get; set; }
-        protected UserSection PreviousSection { get; set; }
-        protected UserSection CurrentSection { get; set; }
-        protected virtual void OnSectionSelected(object sender, UserSectionSelectedEventArgs e)
-        {
-            var encounter = EncounterSelector.CurrentValue.Encounter;
-            var nonImageContent = encounter.Data.Content.NonImageContent;
-            var sectionIndex = nonImageContent.CurrentSectionIndex;
-            PreviousSection = (sectionIndex > 0) ? encounter.Sections[sectionIndex - 1].Value : null;
-            NextSection = (sectionIndex + 1 < encounter.Sections.Count) ? encounter.Sections[sectionIndex + 1].Value : null;
-            CurrentSection = e.SelectedSection;
-        }
-
-        protected SwipeParameter SwipeParamater { get; set; }
-        protected virtual void InitializeSwipeParamaters()
-        {
-            SwipeParamater = new SwipeParameter();
-            SwipeParamater.AngleRanges.Add(new AngleRange(-30, 30));
-            SwipeParamater.AngleRanges.Add(new AngleRange(150, 210));
-            SwipeParamater.OnSwipeStart += SwipeStart;
-            SwipeParamater.OnSwipeUpdate += SwipeUpdate;
-            SwipeParamater.OnSwipeEnd += SwipeEnd;
-        }
-
-        protected virtual void SwipeStart(Swipe obj)
-        {
-            foreach (var swipableSection in swipableSections)
-                swipableSection.SwipeStart();
-            SwipeUpdate(obj);
-        }
-        protected virtual void SwipeUpdate(Swipe obj)
-        {
-            var dist = (obj.LastPosition.x - obj.StartPosition.x) / Screen.width;
-            if (dist > 0)
-                RightSwipeUpdate(Mathf.Clamp01(dist));
-            else
-                LeftSwipeUpdate(Mathf.Clamp01(-dist));
-        }
-
-        protected SwipableSection.Direction SwipingDirection { get; set; }
-        protected virtual void RightSwipeUpdate(float dist)
-        {
-            SwipingDirection = SwipableSection.Direction.Right;
-            foreach (var swipableSection in swipableSections)
-                swipableSection.SwipeUpdate(SwipableSection.Direction.Right, dist);
-        }
-        protected virtual void LeftSwipeUpdate(float dist)
-        {
-            SwipingDirection = SwipableSection.Direction.Left;
-            foreach (var swipableSection in swipableSections)
-                swipableSection.SwipeUpdate(SwipableSection.Direction.Left, dist);
-        }
-
-        protected virtual void SwipeEnd(Swipe obj)
-        {
-            bool changingSections = false;
-            var dist = (obj.LastPosition.x - obj.StartPosition.x) / Screen.width;
-            if (SwipingDirection == SwipableSection.Direction.Right && dist > 0 && PreviousSection != null
-                && CurrentSection.Data.CurrentTabIndex == 0) {
-
-                if (dist > .5f || obj.Velocity.x / Screen.dpi > 1.5f) {
-                    PreviousSection.Data.CurrentTabIndex = PreviousSection.Data.Tabs.Count - 1;
-                    SectionSelector.Select(this, new UserSectionSelectedEventArgs(PreviousSection, ChangeType.Previous));
-                    changingSections = true;
-                }
-
-            } else if (SwipingDirection == SwipableSection.Direction.Right && dist < 0 && NextSection != null
-                && CurrentSection.Data.CurrentTabIndex + 1 == CurrentSection.Tabs.Count) {
-
-                if (dist < -.5f || obj.Velocity.x / Screen.dpi < -1.5f) {
-                    SectionSelector.Select(this, new UserSectionSelectedEventArgs(NextSection, ChangeType.Next));
-                    changingSections = true;
-                }
-            }
-
-            foreach (var swipableSection in swipableSections)
-                swipableSection.SwipeEnd(SwipingDirection, dist, changingSections);
-        }
-    }
-
-    public class ReaderMobileSectionHandler : MonoBehaviour
+    public class ReaderMobileSectionHandler : MonoBehaviour, ISwipableSection
     {
         public CanvasGroup CanvasGroup { get => canvasGroup; set => canvasGroup = value; }
         [SerializeField] private CanvasGroup canvasGroup;
@@ -192,15 +82,7 @@ namespace ClinicalTools.SimEncounters
             ClearCurrent();
         }
 
-        protected virtual void OnEnable()
-        {
-            if (SwipeParamater == null)
-                InitializeSwipeParamaters();
-            SwipeManager.AddSwipeAction(SwipeParamater);
-
-            ClearCurrent();
-        }
-        protected virtual void OnDisable() => SwipeManager.RemoveSwipeAction(SwipeParamater);
+        protected virtual void OnEnable() => ClearCurrent();
 
         protected virtual void ClearCurrent()
         {
@@ -353,80 +235,47 @@ namespace ClinicalTools.SimEncounters
         #endregion
 
         #region Swipe
-        protected SwipeParameter SwipeParamater { get; set; }
-        protected virtual void InitializeSwipeParamaters()
+        public void SwipeStart()
         {
-            SwipeParamater = new SwipeParameter();
-            SwipeParamater.AngleRanges.Add(new AngleRange(-30, 30));
-            SwipeParamater.AngleRanges.Add(new AngleRange(150, 210));
-            SwipeParamater.OnSwipeStart += SwipeStart;
-            SwipeParamater.OnSwipeUpdate += SwipeUpdate;
-            SwipeParamater.OnSwipeEnd += SwipeEnd;
-        }
-
-        private void SwipeStart(Swipe obj)
-        {
-            DragOverrideScript.DragAllowed = false;
             CanvasGroup.blocksRaycasts = false;
-            SwipeUpdate(obj);
+
+            if (currentCoroutine != null) {
+                StopCoroutine(currentCoroutine);
+                currentCoroutine = null;
+            }
         }
-        private void SwipeUpdate(Swipe obj)
+        public void SwipeUpdate(Direction dir, float dist)
         {
-            var dist = (obj.LastPosition.x - obj.StartPosition.x) / Screen.width;
-            if (dist > 0)
-                RightSwipeUpdate(Mathf.Clamp01(dist));
+            if (dir == Direction.NA) {
+                if (Next != null)
+                    Next.gameObject.SetActive(false);
+                if (Previous != null)
+                    Previous.gameObject.SetActive(false);
+                Curve.SetPosition(Current.RectTransform);
+                return;
+            }
+
+            ReaderSectionContent hiddenContent = (dir == Direction.Right) ? Next : Previous;
+            ReaderSectionContent shownContent = (dir == Direction.Right) ? Previous : Next;
+            if (hiddenContent != null)
+                hiddenContent.gameObject.SetActive(false);
+            shownContent.gameObject.SetActive(true);
+            if (dir == Direction.Right)
+                Curve.SetMoveAmountBackward(Current.RectTransform, shownContent.RectTransform, dist);
             else
-                LeftSwipeUpdate(Mathf.Clamp01(-dist));
+                Curve.SetMoveAmountForward(Current.RectTransform, shownContent.RectTransform, dist);
         }
 
-        private bool swipingLeft, swipingRight;
-        private void RightSwipeUpdate(float dist)
+        public void SwipeEnd(Direction dir, float dist, bool changingSections)
         {
-            if (Next != null)
-                Next.gameObject.SetActive(false);
-            if (Previous == null || Current.Section.Data.CurrentTabIndex != 0) {
-                Curve.SetPosition(Current.RectTransform);
-                return;
-            }
-            swipingRight = true;
-            Previous.gameObject.SetActive(true);
-            Curve.SetMoveAmountBackward(Current.RectTransform, Previous.RectTransform, dist);
-        }
-        private void LeftSwipeUpdate(float dist)
-        {
-            if (Previous != null)
-                Previous.gameObject.SetActive(false);
-            if (Next == null || Current.Section.Data.CurrentTabIndex + 1 != Current.Section.Tabs.Count) {
-                Curve.SetPosition(Current.RectTransform);
-                return;
-            }
-            swipingLeft = true;
-            Next.gameObject.SetActive(true);
-            Curve.SetMoveAmountForward(Current.RectTransform, Next.RectTransform, dist);
-        }
-
-        private void SwipeEnd(Swipe obj)
-        {
-            DragOverrideScript.DragAllowed = true;
             CanvasGroup.blocksRaycasts = true;
+            if (changingSections)
+                return;
 
-            var dist = (obj.LastPosition.x - obj.StartPosition.x) / Screen.width;
-            if (swipingRight && dist > 0 && Previous != null && Current.Section.Data.CurrentTabIndex == 0) {
-                if (dist > .5f || obj.Velocity.x / Screen.dpi > 1.5f) {
-                    Previous.Section.Data.CurrentTabIndex = Previous.Section.Data.Tabs.Count - 1;
-                    UserSectionSelector.Select(this, new UserSectionSelectedEventArgs(Previous.Section, ChangeType.Previous));
-                } else {
-                    currentCoroutine = StartCoroutine(ShiftForward(Previous));
-                }
-            } else if (swipingLeft && dist < 0 && Next != null && Current.Section.Data.CurrentTabIndex + 1 == Current.Section.Tabs.Count) {
-                if (dist < -.5f || obj.Velocity.x / Screen.dpi < -1.5f)
-                    UserSectionSelector.Select(this, new UserSectionSelectedEventArgs(Next.Section, ChangeType.Next));
-                else
-                    currentCoroutine = StartCoroutine(ShiftBackward(Next));
-            }
-
-            swipingLeft = false;
-            swipingRight = false;
+            if (dir == Direction.Right && dist > 0)
+                currentCoroutine = StartCoroutine(ShiftForward(Previous));
+            else if (dir == Direction.Left && dist < 0)
+                currentCoroutine = StartCoroutine(ShiftBackward(Next));
         }
         #endregion
     }

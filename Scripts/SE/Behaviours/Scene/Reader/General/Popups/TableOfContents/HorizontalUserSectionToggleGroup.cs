@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using static ClinicalTools.SimEncounters.ISwipableSection;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class HorizontalUserSectionToggleGroup : UserSectionToggleGroup
+    public class HorizontalUserSectionToggleGroup : UserSectionToggleGroup, ISwipableSection
     {
         [SerializeField] private ScrollRect scrollRect;
 
@@ -58,5 +59,28 @@ namespace ClinicalTools.SimEncounters
             return GetWidth(corners);
         }
         protected virtual float GetWidth(Vector3[] corners) => corners[2].x - corners[0].x;
+
+        public void SwipeStart()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SwipeUpdate(Direction dir, float dist)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SwipeEnd(Direction dir, float dist, bool changingSections)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private float lastPosition;
+        private float currentPosition;
+        private float nextPosition;
+        protected virtual void Show()
+        {
+
+        }
     }
 }
