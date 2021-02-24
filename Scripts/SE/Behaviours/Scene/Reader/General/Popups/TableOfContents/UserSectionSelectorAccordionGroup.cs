@@ -8,10 +8,10 @@ namespace ClinicalTools.SimEncounters
     {
         [SerializeField] private Accordion accordion;
 
-        protected override void EncounterSelected(object sender, UserEncounterSelectedEventArgs e)
+        protected override void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs e)
         {
             SetAccordionToInstantTransition();
-            base.EncounterSelected(sender, e);
+            base.OnEncounterSelected(sender, e);
             if (gameObject.activeInHierarchy)
                 SetAccordionToTweenNextFrame();
         }

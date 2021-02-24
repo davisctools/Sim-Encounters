@@ -8,11 +8,11 @@ namespace ClinicalTools.SimEncounters
 {
     public class ReaderGeneralSectionHandler : MonoBehaviour
     {
-        public enum Direction { NA, Left, Right }
+        public enum Direction { NA, Next, Previous }
 
-        [SerializeField] MonoBehaviour[] swipableSectionBehaviours;
-        [SerializeField] RectTransform swipeBounds;
-        List<ISwipableSection> swipableSections = new List<ISwipableSection>();
+        [SerializeField] private MonoBehaviour[] swipableSectionBehaviours;
+        [SerializeField] private RectTransform swipeBounds;
+        protected List<ISwipableSection> SwipableSections { get; set; } = new List<ISwipableSection>();
 
         protected AnimationMonitor AnimationMonitor { get; set; }
         protected SwipeManager SwipeManager { get; set; }
@@ -29,7 +29,7 @@ namespace ClinicalTools.SimEncounters
         {
             foreach (var behaviour in swipableSectionBehaviours) {
                 if (behaviour is ISwipableSection swipableSection)
-                    swipableSections.Add(swipableSection);
+                    SwipableSections.Add(swipableSection);
             }
 
             AnimationMonitor = animationMonitor;
@@ -68,7 +68,7 @@ namespace ClinicalTools.SimEncounters
 
             if (CurrentCoroutine != null)
                 StopCoroutine(CurrentCoroutine);
-            var direction = (e.ChangeType == ChangeType.Next) ? Direction.Left : Direction.Right;
+            var direction = (e.ChangeType == ChangeType.Next) ? Direction.Next : Direction.Previous;
             CurrentCoroutine = StartCoroutine(SectionChanged(direction));
         }
 
@@ -93,6 +93,9 @@ namespace ClinicalTools.SimEncounters
                 CurrentCoroutine = null;
             }
 
+            var section = SectionSelector.CurrentValue.SelectedSection.Data;
+            CanSwipeLeft = NextSection != null && section.CurrentTabIndex + 1 == section.Tabs.Count;
+            CanSwipeRight = PreviousSection != null && section.CurrentTabIndex == 0;
             StartMove();
             SwipeUpdate(obj);
         }
@@ -104,7 +107,7 @@ namespace ClinicalTools.SimEncounters
 
             dist = Mathf.Clamp01(Mathf.Abs(dist));
 
-            foreach (var swipableSection in swipableSections)
+            foreach (var swipableSection in SwipableSections)
                 swipableSection.Move(swipingDirection, dist);
         }
 
@@ -129,22 +132,24 @@ namespace ClinicalTools.SimEncounters
 
         protected Coroutine CurrentCoroutine { get; set; }
         protected virtual float GetDistance(Swipe obj) => (obj.LastPosition.x - obj.StartPosition.x) / Screen.width;
+
+        protected bool CanSwipeRight { get; set; }
+        protected bool CanSwipeLeft { get; set; }
         protected virtual Direction GetDirection(float dist)
         {
-            var section = SectionSelector.CurrentValue.SelectedSection.Data;
-            if (dist > 0 && PreviousSection != null && section.CurrentTabIndex == 0)
-                return Direction.Right;
-            else if (dist < 0 && NextSection != null && section.CurrentTabIndex + 1 == section.Tabs.Count)
-                return Direction.Left;
+            if (dist > 0 && CanSwipeRight)
+                return Direction.Previous;
+            else if (dist < 0 && CanSwipeLeft)
+                return Direction.Next;
             else
                 return Direction.NA;
         }
 
         protected virtual UserSectionSelectedEventArgs GetSwipeSectionSelectedEventArgs(Swipe obj, Direction swipingDirection, float dist)
         {
-            if (swipingDirection == Direction.Right && (dist > .5f || obj.Velocity.x / Screen.dpi > 1.5f))
+            if (swipingDirection == Direction.Previous && (dist > .5f || obj.Velocity.x / Screen.dpi > 1.5f))
                 return new UserSectionSelectedEventArgs(PreviousSection, ChangeType.Previous);
-            else if (swipingDirection == Direction.Left && (dist < -.5f || obj.Velocity.x / Screen.dpi < -1.5f))
+            else if (swipingDirection == Direction.Next && (dist < -.5f || obj.Velocity.x / Screen.dpi < -1.5f))
                 return new UserSectionSelectedEventArgs(NextSection, ChangeType.Next);
             else
                 return null;
@@ -178,22 +183,24 @@ namespace ClinicalTools.SimEncounters
         {
             AnimationMonitor.AnimationStarting(this);
             DragOverrideScript.DragAllowed = false;
-            foreach (var swipableSection in swipableSections)
+            foreach (var swipableSection in SwipableSections)
                 swipableSection.StartMove();
         }
 
         protected virtual void Move(Direction direction, float elapsedTime, bool changingSections)
         {
             var dist = Curve.GetCurveY(elapsedTime / MaxTime);
-            if (!changingSections)
+            if (changingSections)
+                direction = direction == Direction.Next ? Direction.Previous : Direction.Next;
+
                 dist = 1 - dist;
-            foreach (var swipableSection in swipableSections)
+            foreach (var swipableSection in SwipableSections)
                 swipableSection.Move(direction, dist);
         }
 
         protected virtual void EndMove()
         {
-            foreach (var swipableSection in swipableSections)
+            foreach (var swipableSection in SwipableSections)
                 swipableSection.EndMove();
 
             AnimationMonitor.AnimationStopping(this);

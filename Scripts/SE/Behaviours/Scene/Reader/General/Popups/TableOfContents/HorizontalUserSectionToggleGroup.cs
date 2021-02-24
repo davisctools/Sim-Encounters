@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using ClinicalTools.UI;
+using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 using static ClinicalTools.SimEncounters.ReaderGeneralSectionHandler;
 
 namespace ClinicalTools.SimEncounters
@@ -8,9 +10,29 @@ namespace ClinicalTools.SimEncounters
     {
         [SerializeField] private ScrollRect scrollRect;
 
-        protected override void SectionSelected(object sender, UserSectionSelectedEventArgs e)
+        protected ICurve Curve { get; set; }
+        [Inject] public virtual void Inject(ICurve curve) => Curve = curve;
+
+        protected UserSection CurrentSection { get; set; }
+        protected UserSection NextSection { get; set; }
+        protected UserSection PreviousSection { get; set; }
+        protected override void OnSectionSelected(object sender, UserSectionSelectedEventArgs e)
         {
-            base.SectionSelected(sender, e);
+            if (CurrentSection == e.SelectedSection)
+                return;
+
+            var encounter = EncounterSelector.CurrentValue.Encounter;
+            var content = encounter.Data.Content.NonImageContent;
+            var sections = encounter.Sections;
+            var currentIndex = content.CurrentSectionIndex;
+            CurrentSection = e.SelectedSection;
+            NextSection = (currentIndex + 1 < sections.Count) ? sections[currentIndex + 1].Value : null;
+            PreviousSection = (currentIndex > 0) ? sections[currentIndex - 1].Value : null;
+
+            if (e.ChangeType != ChangeType.Next && e.ChangeType != ChangeType.Previous)
+                UpdatePosition(CurrentSection);
+
+                base.OnSectionSelected(sender, e);
         }
 
         private bool shouldUpdate;
@@ -20,13 +42,14 @@ namespace ClinicalTools.SimEncounters
                 return;
 
             shouldUpdate = false;
-            UpdatePosition(SectionSelector.CurrentValue.SelectedSection);
+            scrollRect.horizontalNormalizedPosition = 
+                GetSectionHorizontalNormalizedPosition(SectionSelector.CurrentValue.SelectedSection);
         }
 
         protected virtual void UpdatePosition(UserSection section)
         {
             Canvas.ForceUpdateCanvases();
-            StartMove();
+            shouldUpdate = true;
             scrollRect.horizontalNormalizedPosition = GetSectionHorizontalNormalizedPosition(section);
         }
 
@@ -68,54 +91,72 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual float GetWidth(Vector3[] corners) => corners[2].x - corners[0].x;
 
-
+        protected float MaxTime { get; } = .5f;
+        protected float TimeUntilBack { get; set; } = 0;
+        protected float InitialDistance { get; set; } = 0;
         protected float CurrentSectionPosition { get; set; }
         protected float NextSectionPosition { get; set; }
         protected float PreviousSectionPosition { get; set; }
-        protected UserSection CurrentMoveSection { get; set; }
-        protected UserSection NextMoveSection { get; set; }
-        protected UserSection PreviousMoveSection { get; set; }
         public void StartMove()
         {
-            var encounter = EncounterSelector.CurrentValue.Encounter;
-            var content = encounter.Data.Content.NonImageContent;
-            var sections = encounter.Sections;
-            var currentIndex = content.CurrentSectionIndex;
-            CurrentMoveSection = sections[currentIndex].Value;
-            NextMoveSection = (currentIndex + 1 < sections.Count) ? sections[currentIndex + 1].Value : null;
-            PreviousMoveSection = (currentIndex > 0) ? sections[currentIndex - 1].Value : null;
+            UpdatePositionPoints();
+            if (Mathf.Abs(CurrentSectionPosition - scrollRect.horizontalNormalizedPosition) > .001f) {
+                TimeUntilBack = MaxTime;
+                InitialDistance = CurrentSectionPosition - scrollRect.horizontalNormalizedPosition;
+            }
+            LastDirection = Direction.NA;
         }
 
         protected virtual void UpdatePositionPoints()
         {
-            CurrentSectionPosition = GetSectionHorizontalNormalizedPosition(CurrentMoveSection);
-            NextSectionPosition = GetSectionHorizontalNormalizedPosition(NextMoveSection);
-            PreviousSectionPosition = GetSectionHorizontalNormalizedPosition(PreviousMoveSection);
+            CurrentSectionPosition = GetSectionHorizontalNormalizedPosition(CurrentSection);
+            NextSectionPosition = GetSectionHorizontalNormalizedPosition(NextSection);
+            PreviousSectionPosition = GetSectionHorizontalNormalizedPosition(PreviousSection);
         }
 
+        protected Direction LastDirection { get; set; }
         public void Move(Direction dir, float dist)
         {
+            if (CurrentSection != SectionSelector.CurrentValue.SelectedSection)
+                OnSectionSelected(SectionSelector, SectionSelector.CurrentValue);
+
             UpdatePositionPoints();
             if (dir == Direction.NA) {
-                scrollRect.horizontalNormalizedPosition = CurrentSectionPosition;
+                if (LastDirection != Direction.NA)
+                    SetPositionInMove( CurrentSectionPosition);
+                LastDirection = dir;
                 return;
             }
 
-            var desiredPosition = dir == Direction.Left ? NextSectionPosition : PreviousSectionPosition;
+            var desiredPosition = dir == Direction.Next ? NextSectionPosition : PreviousSectionPosition;
             
             if (desiredPosition == CurrentSectionPosition) {
-                scrollRect.horizontalNormalizedPosition = CurrentSectionPosition;
+                SetPositionInMove(CurrentSectionPosition);
                 return;
             }
 
             // We're given the distance from the start, but we want the distance from the goal
             dist = 1 - dist;
-            scrollRect.horizontalNormalizedPosition = desiredPosition - (dist * (desiredPosition - CurrentSectionPosition));
+            SetPositionInMove(desiredPosition - (dist * (desiredPosition - CurrentSectionPosition)));
+        }
+
+        protected virtual void SetPositionInMove(float position)
+        {
+            scrollRect.horizontalNormalizedPosition = position;
+            if (TimeUntilBack <= 0)
+                return;
+
+            scrollRect.horizontalNormalizedPosition -= Curve.GetCurveY(TimeUntilBack / MaxTime) * InitialDistance;
+            TimeUntilBack -= Time.deltaTime;
         }
 
         public void EndMove()
         {
-            UpdatePosition(SectionSelector.CurrentValue.SelectedSection);
+            if (CurrentSection != SectionSelector.CurrentValue.SelectedSection)
+                OnSectionSelected(SectionSelector, SectionSelector.CurrentValue);
+
+            if (LastDirection != Direction.NA)
+                UpdatePosition(SectionSelector.CurrentValue.SelectedSection);
         }
     }
 }

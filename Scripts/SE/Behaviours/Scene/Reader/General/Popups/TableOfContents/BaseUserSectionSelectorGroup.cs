@@ -19,12 +19,12 @@ namespace ClinicalTools.SimEncounters
         {
             EncounterSelector = encounterSelector;
             SectionFactory = sectionFactory;
-            EncounterSelector.Selected += EncounterSelected;
+            EncounterSelector.Selected += OnEncounterSelected;
             if (EncounterSelector.CurrentValue != null)
-                EncounterSelected(this, EncounterSelector.CurrentValue);
+                OnEncounterSelected(this, EncounterSelector.CurrentValue);
         }
 
-        protected virtual void EncounterSelected(object sender, UserEncounterSelectedEventArgs e)
+        protected virtual void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs e)
         {
             foreach (var section in e.Encounter.Sections.Values)
                 DrawSection(section);

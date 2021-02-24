@@ -14,15 +14,15 @@ namespace ClinicalTools.SimEncounters
         public virtual void Inject(ISelectedListener<UserSectionSelectedEventArgs> sectionSelector)
             => SectionSelector = sectionSelector;
 
-        protected virtual void Awake() => SectionSelector.Selected += SectionSelected;
+        protected virtual void Awake() => SectionSelector.Selected += OnSectionSelected;
 
-        protected override void EncounterSelected(object sender, UserEncounterSelectedEventArgs e)
+        protected override void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs e)
         {
-            base.EncounterSelected(sender, e);
+            base.OnEncounterSelected(sender, e);
             SectionButtons[e.Encounter.GetCurrentSection()].Select();
         }
 
-        protected virtual void SectionSelected(object sender, UserSectionSelectedEventArgs e)
+        protected virtual void OnSectionSelected(object sender, UserSectionSelectedEventArgs e)
             => SectionButtons[e.SelectedSection].Select();
 
         protected override UserSectionToggle CreateSectionObject()

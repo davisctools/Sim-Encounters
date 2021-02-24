@@ -1,6 +1,5 @@
 ﻿using ClinicalTools.SEColors;
 using ClinicalTools.UI;
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,14 +13,14 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private SelectableToggle selectToggle;
         public Image SelectedImage { get => selectedImage; set => selectedImage = value; }
         [SerializeField] private Image selectedImage;
-        public GameObject VisitedCheck { get => visitedCheck; set => visitedCheck = value; }
-        [SerializeField] private GameObject visitedCheck;
 
         protected virtual IColorManager ColorManager { get; } = new ColorManager();
+        protected ILinearEncounterNavigator LinearEncounterNavigator { get; set; }
         protected SignalBus SignalBus { get; set; }
         [Inject]
-        public virtual void Inject(SignalBus signalBus)
+        public virtual void Inject(ILinearEncounterNavigator linearEncounterNavigator, SignalBus signalBus)
         {
+            LinearEncounterNavigator = linearEncounterNavigator;
             SignalBus = signalBus;
             SignalBus.Subscribe<EncounterCompletedSignal>(CompletionDraw);
         }
@@ -59,30 +58,18 @@ namespace ClinicalTools.SimEncounters
             NotVisitedColor = SelectToggle.Toggle.image.color;
             SelectToggle.Unselected += ToggleUnselected;
             SelectToggle.Selected += ToggleSelected;
+            LinearEncounterNavigator.EncounterTabPositionChanged += EncounterTabPositionChanged;
         }
+
+        protected virtual void EncounterTabPositionChanged(object sender, UserTabSelectedEventArgs e) => UpdateIsVisited();
 
         public override void SetToggleGroup(ToggleGroup group) => SelectToggle.SetToggleGroup(group);
 
-        protected virtual void UpdateIsVisited()
-        {
-            var visited = Tab?.IsRead() == true;
+        protected virtual void UpdateIsVisited() 
+            => SelectToggle.Toggle.image.color = Tab?.IsRead() == true ? ColorManager.GetColor(ColorType.Green) : NotVisitedColor;
 
-            VisitedCheck.SetActive(visited);
-            SelectToggle.Toggle.image.color = visited ? ColorManager.GetColor(ColorType.Green) : NotVisitedColor;
-        }
-
-        protected virtual void ToggleUnselected()
-        {
-            SelectedImage.gameObject.SetActive(false);
-            if (Tab.IsRead())
-                UpdateIsVisited();
-        }
-        protected virtual void ToggleSelected()
-        {
-            SelectedImage.gameObject.SetActive(true);
-            if (Tab.IsRead())
-                UpdateIsVisited();
-        }
+        protected virtual void ToggleSelected() => SelectedImage.gameObject.SetActive(true);
+        protected virtual void ToggleUnselected() => SelectedImage.gameObject.SetActive(false);
 
         public override void Select()
         {

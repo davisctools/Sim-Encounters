@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using static ClinicalTools.SimEncounters.ISwipableSection;
 using static ClinicalTools.SimEncounters.ReaderGeneralSectionHandler;
 
 namespace ClinicalTools.SimEncounters
@@ -161,9 +160,10 @@ namespace ClinicalTools.SimEncounters
             foreach (var sectionContent in Contents)
                 sectionContent.gameObject.SetActive(sectionContent == Current || sectionContent == Leaving);
 
+            ResetMovement();
+
             if (currentCoroutine != null)
                 StopCoroutine(currentCoroutine);
-
             currentCoroutine = StartCoroutine(SetNextAndPrevious());
         }
 
@@ -186,17 +186,10 @@ namespace ClinicalTools.SimEncounters
 
         #endregion
 
-        #region Swipe
-        protected ReaderSectionContent MovingCurrent { get; set; }
-        protected ReaderSectionContent MovingNext { get; set; }
-        protected ReaderSectionContent MovingPrevious { get; set; }
+        #region Swipe}
         public void StartMove()
         {
             CanvasGroup.blocksRaycasts = false;
-
-            MovingCurrent = Current;
-            MovingNext = Next;
-            MovingPrevious = Previous;
 
             if (currentCoroutine != null) {
                 StopCoroutine(currentCoroutine);
@@ -205,10 +198,13 @@ namespace ClinicalTools.SimEncounters
         }
         public void Move(Direction dir, float dist)
         {
+            if (Current == null || Current.Section != UserSectionSelector.CurrentValue.SelectedSection)
+                OnSectionSelected(UserSectionSelector, UserSectionSelector.CurrentValue);
+
             if (dir == Direction.NA)
                 ResetMovement();
             else
-                MoveDirection(dir == Direction.Right, dist);
+                MoveDirection(dir == Direction.Previous, dist);
         }
 
         protected virtual void ResetMovement()
@@ -221,15 +217,15 @@ namespace ClinicalTools.SimEncounters
         }
         protected virtual void MoveDirection(bool movingRight, float dist)
         {
-            ReaderSectionContent hiddenContent = (movingRight) ? MovingNext : MovingPrevious;
-            ReaderSectionContent shownContent = (movingRight) ? MovingPrevious : MovingNext;
+            ReaderSectionContent hiddenContent = (movingRight) ? Next : Previous;
+            ReaderSectionContent shownContent = (movingRight) ? Previous : Next;
             if (hiddenContent != null)
                 hiddenContent.gameObject.SetActive(false);
             shownContent.gameObject.SetActive(true);
             if (movingRight)
-                Curve.SetMoveAmountBackward(MovingCurrent.RectTransform, shownContent.RectTransform, dist);
+                Curve.SetMoveAmountBackward(Current.RectTransform, shownContent.RectTransform, dist);
             else
-                Curve.SetMoveAmountForward(MovingCurrent.RectTransform, shownContent.RectTransform, dist);
+                Curve.SetMoveAmountForward(Current.RectTransform, shownContent.RectTransform, dist);
         }
 
         public void EndMove()

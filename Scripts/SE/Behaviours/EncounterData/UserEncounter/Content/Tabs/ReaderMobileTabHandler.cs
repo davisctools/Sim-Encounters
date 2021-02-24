@@ -9,6 +9,8 @@ namespace ClinicalTools.SimEncounters
 {
     public class ReaderMobileTabHandler : MonoBehaviour
     {
+        public RectTransform SwipeBounds { get => swipeBounds; set => swipeBounds = value; }
+        [SerializeField] private RectTransform swipeBounds;
         public ReaderTabContent TabDrawer1 { get => tabContent1; set => tabContent1 = value; }
         [SerializeField] private ReaderTabContent tabContent1;
         public ReaderTabContent TabDrawer2 { get => tabDrawer2; set => tabDrawer2 = value; }
@@ -225,7 +227,7 @@ namespace ClinicalTools.SimEncounters
         {
             SwipeParamater = new SwipeParameter();
             var corners = new Vector3[4];
-            ((RectTransform)transform.parent).GetWorldCorners(corners);
+            SwipeBounds.GetWorldCorners(corners);
             SwipeParamater.StartPositionRange = new Rect(corners[0], corners[2] - corners[0]);
             SwipeParamater.AngleRanges.Add(new AngleRange(-30, 30));
             SwipeParamater.AngleRanges.Add(new AngleRange(150, 210));
