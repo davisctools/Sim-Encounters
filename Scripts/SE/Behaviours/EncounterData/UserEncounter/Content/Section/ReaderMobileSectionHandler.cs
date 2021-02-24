@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using static ClinicalTools.SimEncounters.ISwipableSection;
+using static ClinicalTools.SimEncounters.ReaderGeneralSectionHandler;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -35,13 +36,11 @@ namespace ClinicalTools.SimEncounters
         protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
         protected ISelector<UserTabSelectedEventArgs> UserTabSelector { get; set; }
         protected AnimationMonitor AnimationMonitor { get; set; }
-        protected SwipeManager SwipeManager { get; set; }
         protected IShiftTransformsAnimator Curve { get; set; }
         [Inject]
         public virtual void Inject(
             AnimationMonitor animationMonitor,
             IShiftTransformsAnimator curve,
-            SwipeManager swipeManager,
             ISelectedListener<UserEncounterSelectedEventArgs> userEncounterSelector,
             ISelector<UserSectionSelectedEventArgs> userSectionSelector,
             ISelector<UserTabSelectedEventArgs> userTabSelector)
@@ -52,7 +51,6 @@ namespace ClinicalTools.SimEncounters
 
             AnimationMonitor = animationMonitor;
             Curve = curve;
-            SwipeManager = swipeManager;
         }
 
         protected virtual void Start()
@@ -163,22 +161,10 @@ namespace ClinicalTools.SimEncounters
             foreach (var sectionContent in Contents)
                 sectionContent.gameObject.SetActive(sectionContent == Current || sectionContent == Leaving);
 
-            if (currentCoroutine != null) {
-                AnimationMonitor.StopCoroutine(currentCoroutine);
-                AnimationMonitor.AnimationStopping(this);
-                SwipeManager.ReenableSwipe();
-            }
+            if (currentCoroutine != null)
+                StopCoroutine(currentCoroutine);
 
-            currentCoroutine = AnimationMonitor.StartCoroutine(GetTransition());
-        }
-
-        protected virtual IEnumerator GetTransition()
-        {
-            IEnumerator shiftSectionRoutine = GetShiftRoutine();
-            if (shiftSectionRoutine != null)
-                return AnimationTransition(shiftSectionRoutine);
-            else
-                return InstantTransition();
+            currentCoroutine = StartCoroutine(SetNextAndPrevious());
         }
 
         protected virtual IEnumerator SetNextAndPrevious()
@@ -198,84 +184,58 @@ namespace ClinicalTools.SimEncounters
             }
         }
 
-        protected virtual IEnumerator InstantTransition()
-        {
-            Curve.SetPosition(Current.RectTransform);
-            if (Leaving != null)
-                Leaving.gameObject.SetActive(false);
-
-            yield return SetNextAndPrevious();
-        }
-
-        protected IEnumerator GetShiftRoutine()
-        {
-            if (!gameObject.activeInHierarchy || Leaving == null)
-                return null;
-            else if (Sections.IndexOf(Leaving.Section) < Sections.IndexOf(Current.Section))
-                return ShiftForward(Leaving);
-            else
-                return ShiftBackward(Leaving);
-        }
-
-        protected IEnumerator ShiftForward(ReaderSectionContent leavingContent)
-            => AnimationTransition(Curve.ShiftForward(leavingContent.RectTransform, Current.RectTransform));
-        protected IEnumerator ShiftBackward(ReaderSectionContent leavingContent)
-            => AnimationTransition(Curve.ShiftBackward(leavingContent.RectTransform, Current.RectTransform));
-        protected IEnumerator AnimationTransition(IEnumerator enumerator)
-        {
-            AnimationMonitor.AnimationStarting(this);
-            SwipeManager.DisableSwipe();
-            yield return enumerator;
-
-            SwipeManager.ReenableSwipe();
-            AnimationMonitor.AnimationStopping(this);
-
-            yield return SetNextAndPrevious();
-        }
         #endregion
 
         #region Swipe
-        public void SwipeStart()
+        protected ReaderSectionContent MovingCurrent { get; set; }
+        protected ReaderSectionContent MovingNext { get; set; }
+        protected ReaderSectionContent MovingPrevious { get; set; }
+        public void StartMove()
         {
             CanvasGroup.blocksRaycasts = false;
+
+            MovingCurrent = Current;
+            MovingNext = Next;
+            MovingPrevious = Previous;
 
             if (currentCoroutine != null) {
                 StopCoroutine(currentCoroutine);
                 currentCoroutine = null;
             }
         }
-        public void SwipeUpdate(Direction dir, float dist)
+        public void Move(Direction dir, float dist)
         {
-            if (dir == Direction.NA) {
-                if (Next != null)
-                    Next.gameObject.SetActive(false);
-                if (Previous != null)
-                    Previous.gameObject.SetActive(false);
-                Curve.SetPosition(Current.RectTransform);
-                return;
-            }
+            if (dir == Direction.NA)
+                ResetMovement();
+            else
+                MoveDirection(dir == Direction.Right, dist);
+        }
 
-            ReaderSectionContent hiddenContent = (dir == Direction.Right) ? Next : Previous;
-            ReaderSectionContent shownContent = (dir == Direction.Right) ? Previous : Next;
+        protected virtual void ResetMovement()
+        {
+            if (Next != null)
+                Next.gameObject.SetActive(false);
+            if (Previous != null)
+                Previous.gameObject.SetActive(false);
+            Curve.SetPosition(Current.RectTransform);
+        }
+        protected virtual void MoveDirection(bool movingRight, float dist)
+        {
+            ReaderSectionContent hiddenContent = (movingRight) ? MovingNext : MovingPrevious;
+            ReaderSectionContent shownContent = (movingRight) ? MovingPrevious : MovingNext;
             if (hiddenContent != null)
                 hiddenContent.gameObject.SetActive(false);
             shownContent.gameObject.SetActive(true);
-            if (dir == Direction.Right)
-                Curve.SetMoveAmountBackward(Current.RectTransform, shownContent.RectTransform, dist);
+            if (movingRight)
+                Curve.SetMoveAmountBackward(MovingCurrent.RectTransform, shownContent.RectTransform, dist);
             else
-                Curve.SetMoveAmountForward(Current.RectTransform, shownContent.RectTransform, dist);
+                Curve.SetMoveAmountForward(MovingCurrent.RectTransform, shownContent.RectTransform, dist);
         }
 
-        public void SwipeEnd(Direction dir, float dist, bool changingSections)
+        public void EndMove()
         {
             CanvasGroup.blocksRaycasts = true;
-            if (changingSections)
-                return;
-
-            if (dir == Direction.Right && dist > 0)
-                currentCoroutine = StartCoroutine(ShiftForward(Previous));
-            else if (dir == Direction.Left && dist < 0)
-                currentCoroutine = StartCoroutine(ShiftBackward(Next));
+            ResetMovement();
         }
         #endregion
     }

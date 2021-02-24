@@ -1,4 +1,5 @@
-﻿using UnityEngine.EventSystems;
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace ClinicalTools.UI
 {
@@ -8,9 +9,9 @@ namespace ClinicalTools.UI
 
         protected override void Start()
         {
-#if MOBILE
-        inertia = true;
-        decelerationRate = .05f;
+#if true
+            inertia = true;
+            decelerationRate = .05f;
 #endif
 
             base.Start();
@@ -18,10 +19,9 @@ namespace ClinicalTools.UI
 
         protected virtual bool CanDrag()
         {
-#if MOBILE
-        return DragAllowed && (MouseInput.Instance == null || MouseInput.Instance.CanDrag) 
-            && content.rect.height > viewport.rect.height
-            && Input.touches.Length < 2;
+#if true
+        return DragAllowed && (MouseInput.Instance == null || MouseInput.Instance.CanDrag) && Input.touches.Length < 2
+                && ((vertical && content.rect.height > viewport.rect.height) || (horizontal && content.rect.width > viewport.rect.width));
 #else
             return false;
 #endif

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using static ClinicalTools.SimEncounters.ISwipableSection;
+using static ClinicalTools.SimEncounters.ReaderGeneralSectionHandler;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -11,9 +11,6 @@ namespace ClinicalTools.SimEncounters
         protected override void SectionSelected(object sender, UserSectionSelectedEventArgs e)
         {
             base.SectionSelected(sender, e);
-
-            UpdatePosition(e.SelectedSection);
-            shouldUpdate = true;
         }
 
         private bool shouldUpdate;
@@ -29,6 +26,14 @@ namespace ClinicalTools.SimEncounters
         protected virtual void UpdatePosition(UserSection section)
         {
             Canvas.ForceUpdateCanvases();
+            StartMove();
+            scrollRect.horizontalNormalizedPosition = GetSectionHorizontalNormalizedPosition(section);
+        }
+
+        protected virtual float GetSectionHorizontalNormalizedPosition(UserSection section)
+        {
+            if (section == null)
+                return 0;
 
             var contentCorners = new Vector3[4];
             scrollRect.content.GetWorldCorners(contentCorners);
@@ -37,11 +42,12 @@ namespace ClinicalTools.SimEncounters
             var viewportWidth = GetWidth(scrollRect.viewport);
             var divisor = contentWidth - viewportWidth;
             if (divisor <= 0)
-                return;
+                return 0;
 
             var buttonX = GetButtonX((RectTransform)SectionButtons[section].transform, contentCorners);
             var dividend = buttonX - viewportWidth / 2;
-            scrollRect.horizontalNormalizedPosition = Mathf.Clamp01(dividend / divisor);
+
+            return Mathf.Clamp01(dividend / divisor);
         }
 
         protected virtual float GetButtonX(RectTransform buttonTransform, Vector3[] contentCorners)
@@ -52,35 +58,64 @@ namespace ClinicalTools.SimEncounters
 
             return buttonCorners[0].x - contentCorners[0].x + buttonWidth / 2;
         }
+
         protected virtual float GetWidth(RectTransform rectTransform)
         {
             var corners = new Vector3[4];
             rectTransform.GetWorldCorners(corners);
             return GetWidth(corners);
         }
+
         protected virtual float GetWidth(Vector3[] corners) => corners[2].x - corners[0].x;
 
-        public void SwipeStart()
+
+        protected float CurrentSectionPosition { get; set; }
+        protected float NextSectionPosition { get; set; }
+        protected float PreviousSectionPosition { get; set; }
+        protected UserSection CurrentMoveSection { get; set; }
+        protected UserSection NextMoveSection { get; set; }
+        protected UserSection PreviousMoveSection { get; set; }
+        public void StartMove()
         {
-            throw new System.NotImplementedException();
+            var encounter = EncounterSelector.CurrentValue.Encounter;
+            var content = encounter.Data.Content.NonImageContent;
+            var sections = encounter.Sections;
+            var currentIndex = content.CurrentSectionIndex;
+            CurrentMoveSection = sections[currentIndex].Value;
+            NextMoveSection = (currentIndex + 1 < sections.Count) ? sections[currentIndex + 1].Value : null;
+            PreviousMoveSection = (currentIndex > 0) ? sections[currentIndex - 1].Value : null;
         }
 
-        public void SwipeUpdate(Direction dir, float dist)
+        protected virtual void UpdatePositionPoints()
         {
-            throw new System.NotImplementedException();
+            CurrentSectionPosition = GetSectionHorizontalNormalizedPosition(CurrentMoveSection);
+            NextSectionPosition = GetSectionHorizontalNormalizedPosition(NextMoveSection);
+            PreviousSectionPosition = GetSectionHorizontalNormalizedPosition(PreviousMoveSection);
         }
 
-        public void SwipeEnd(Direction dir, float dist, bool changingSections)
+        public void Move(Direction dir, float dist)
         {
-            throw new System.NotImplementedException();
+            UpdatePositionPoints();
+            if (dir == Direction.NA) {
+                scrollRect.horizontalNormalizedPosition = CurrentSectionPosition;
+                return;
+            }
+
+            var desiredPosition = dir == Direction.Left ? NextSectionPosition : PreviousSectionPosition;
+            
+            if (desiredPosition == CurrentSectionPosition) {
+                scrollRect.horizontalNormalizedPosition = CurrentSectionPosition;
+                return;
+            }
+
+            // We're given the distance from the start, but we want the distance from the goal
+            dist = 1 - dist;
+            scrollRect.horizontalNormalizedPosition = desiredPosition - (dist * (desiredPosition - CurrentSectionPosition));
         }
 
-        private float lastPosition;
-        private float currentPosition;
-        private float nextPosition;
-        protected virtual void Show()
+        public void EndMove()
         {
-
+            UpdatePosition(SectionSelector.CurrentValue.SelectedSection);
         }
     }
 }

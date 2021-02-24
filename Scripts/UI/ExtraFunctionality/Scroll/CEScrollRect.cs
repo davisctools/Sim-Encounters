@@ -66,71 +66,118 @@ namespace ClinicalTools.UI
 
         public override void OnScroll(PointerEventData data)
         {
-            if (content.rect.height > viewport.rect.height)
+            if (content.rect.height > viewport.rect.height || content.rect.width > viewport.rect.width)
                 base.OnScroll(data);
         }
 
-        private bool setNextPos;
-        private float nextY;
+        private bool setNextYPos, setNextXPos;
+        private float nextY, nextX;
         protected override void LateUpdate()
         {
-            if (setNextPos) {
-                SetPosition(nextY);
-                setNextPos = false;
+            if (setNextXPos) {
+                SetXPosition(nextX);
+                setNextXPos = false;
+            }
+            if (setNextYPos) {
+                SetYPosition(nextY);
+                setNextYPos = false;
             }
 
-            var yPos = content.anchoredPosition.y;
-            // It needs a buffer to prevent looping when getting to the end. The buffer needed seems to scale with the heights
-            // .9999f seems to work well without revealing that you can't scroll to the very end. .99999f is too small a buffer
-            // Unfortunately this doesn't work for very small ones, so a hard buffer of .02 is used
-            var heightDif = (content.rect.height - viewport.rect.height);
-            var buffer = heightDif * .0001f;
-            if (buffer < .02f)
-                buffer = .02f;
-            var maxY = heightDif - buffer;
-
-            if (content.anchorMin.y > .5f) {
-                if (yPos < 0)
-                    SetPositionAndVelocity(0);
-                else if (maxY > 1f && yPos > maxY)
-                    SetPosition(maxY);
-            } else {
-                if (maxY > 1f && yPos < -maxY)
-                    SetPositionAndVelocity(-maxY);
-                else if (yPos > 0)
-                    SetPosition(0);
-            }
+            var maxX = GetMaxValue(content.rect.width - viewport.rect.width);
+            var maxY = GetMaxValue(content.rect.height - viewport.rect.height);
+            if (horizontal)
+                InitialUpdateX(maxX);
+            if (vertical)
+                InitialUpdateY(maxY);
 
             base.LateUpdate();
 
-            // If the position isn't set at the beginning of the next update, 
-            // the content may be reset to the top after dragging to the bottom
-            yPos = content.anchoredPosition.y;
-            if (content.anchorMin.y > .5f) {
-                if (yPos < 0)
-                    SetNextPositionAndVelocity(0);
-                else if (maxY > 1f && yPos > maxY)
-                    SetNextPositionAndVelocity(maxY);
+            if (horizontal)
+                LateUpdateX(maxX);
+            if (vertical)
+                LateUpdateY(maxY);
+        }
+
+        protected virtual float GetMaxValue(float contentViewportSizeDifference)
+        {
+            // It needs a buffer to prevent looping when getting to the end. The buffer needed seems to scale with the heights
+            // A scale of .9999f seems to work well without revealing that you can't scroll to the very end. .99999f produces too small a buffer
+            // Unfortunately this doesn't work for very small ones, so a hard buffer of .02 is used
+            var buffer = contentViewportSizeDifference * .0001f;
+            if (buffer < .02f)
+                buffer = .02f;
+            return contentViewportSizeDifference - buffer;
+        }
+
+        protected virtual void InitialUpdateX(float maxX)
+            => InitialUpdatePosition(SetXPosition, content.anchoredPosition.x, maxX, content.anchorMin.x);
+        protected virtual void InitialUpdateY(float maxY)
+            => InitialUpdatePosition(SetYPosition, content.anchoredPosition.y, maxY, content.anchorMin.y);
+
+        protected virtual void InitialUpdatePosition(SetPosition setPosition, float position, float maxPosition, float anchorMin)
+        {
+            if (anchorMin > .5f) {
+                if (position < 0)
+                    setPosition(0, true);
+                else if (maxPosition > 1f && position > maxPosition)
+                    setPosition(maxPosition);
             } else {
-                if (maxY > 1f && yPos < -maxY)
-                    SetNextPositionAndVelocity(-maxY);
-                else if (yPos > 0)
-                    SetNextPositionAndVelocity(0);
+                if (maxPosition > 1f && position < -maxPosition)
+                    setPosition(-maxPosition, true);
+                else if (position > 0)
+                    setPosition(0);
             }
         }
 
-        protected virtual void SetNextPositionAndVelocity(float y)
+        protected virtual void LateUpdateX(float maxX)
+            => LateUpdatePosition(SetXPosition, content.anchoredPosition.x, maxX, content.anchorMin.x);
+        protected virtual void LateUpdateY(float maxY)
+            => LateUpdatePosition(SetYPosition, content.anchoredPosition.y, maxY, content.anchorMin.y);
+        protected virtual void LateUpdatePosition(SetPosition setPosition, float position, float maxPosition, float anchorMin)
         {
-            SetPositionAndVelocity(y);
-            setNextPos = true;
-            nextY = y;
+            float nextPosition;
+            if (anchorMin > .5f) {
+                if (position < 0)
+                    nextPosition = 0;
+                else if (maxPosition > 1f && position > maxPosition)
+                    nextPosition = maxPosition;
+                else
+                    return;
+            } else {
+                if (maxPosition > 1f && position < -maxPosition)
+                    nextPosition = -maxPosition;
+                else if (position > 0)
+                    nextPosition = 0;
+                else
+                    return;
+            }
+
+            setPosition(nextPosition, true, true);
         }
-        protected virtual void SetPositionAndVelocity(float y)
+
+        public delegate void SetPosition(float position, bool resetVelocity = false, bool setNextPosition = false);
+        protected virtual void SetXPosition(float x, bool resetVelocity = false, bool setNextPosition = false)
         {
-            SetPosition(y);
-            velocity = new Vector2();
+            if (resetVelocity)
+                velocity = new Vector2();
+            if (setNextPosition) { 
+                setNextXPos = true;
+                nextX = x;
+            }
+
+            content.anchoredPosition = new Vector2(x, content.anchoredPosition.y);
         }
-        protected virtual void SetPosition(float y)
-            => content.anchoredPosition = new Vector2(content.anchoredPosition.x, y);
+
+        protected virtual void SetYPosition(float y, bool resetVelocity = false, bool setNextPosition = false)
+        {
+            if (resetVelocity)
+                velocity = new Vector2();
+            if (setNextPosition) { 
+                setNextYPos = true;
+                nextY = y;
+            }
+
+            content.anchoredPosition = new Vector2(content.anchoredPosition.x, y);
+        }
     }
 }
