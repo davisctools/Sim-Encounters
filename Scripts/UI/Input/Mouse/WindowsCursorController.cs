@@ -23,7 +23,7 @@ public enum WindowsCursor
     VerticalArrow = 32516,
     Hourglass = 32514
 }
-public static class WindowsCursorConctroller
+public static class WindowsCursorController
 {
     public static void ChangeCursor(WindowsCursor cursor) => SetCursor(LoadCursor(IntPtr.Zero, (int)cursor));
 

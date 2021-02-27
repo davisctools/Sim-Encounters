@@ -61,9 +61,9 @@ namespace ClinicalTools.UI
         {
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
             if (cursorState == CursorState.Draggable) {
-                WindowsCursorConctroller.ChangeCursor(WindowsCursor.FourPointedArrowPointingNorthSouthEastAndWest);
+                WindowsCursorController.ChangeCursor(WindowsCursor.FourPointedArrowPointingNorthSouthEastAndWest);
             } else {
-                WindowsCursorConctroller.ChangeCursor(WindowsCursor.StandardArrow);
+                WindowsCursorController.ChangeCursor(WindowsCursor.StandardArrow);
             }
 #elif UNITY_WEBGL
             if (cursorState == CursorState.Draggable) {

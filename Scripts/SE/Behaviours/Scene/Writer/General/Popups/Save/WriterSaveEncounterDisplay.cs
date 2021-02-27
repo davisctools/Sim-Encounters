@@ -16,15 +16,18 @@ namespace ClinicalTools.SimEncounters
         public EncounterMetadataSelectedEventArgs CurrentValue { get; protected set; }
 
         protected SignalBus SignalBus { get; set; }
+        protected BaseMessageHandler MessageHandler { get; set; }
         protected IEncounterWriter LocalWriter { get; set; }
         protected IEncounterWriter ServerWriter { get; set; }
         [Inject]
         public void Inject(
             SignalBus signalBus,
+            BaseMessageHandler messageHandler,
             [Inject(Id = SaveType.Local)] IEncounterWriter localWriter,
             [Inject(Id = SaveType.Server)] IEncounterWriter serverWriter)
         {
             SignalBus = signalBus;
+            MessageHandler = messageHandler;
             LocalWriter = localWriter;
             ServerWriter = serverWriter;
         }
@@ -48,10 +51,8 @@ namespace ClinicalTools.SimEncounters
             Selected?.Invoke(this, CurrentValue);
         }
 
-        protected virtual void Serialize()
-        {
-            SignalBus.Fire<SerializeEncounterSignal>();
-        }
+        protected virtual void Serialize() => SignalBus.Fire<SerializeEncounterSignal>();
+
         protected virtual void Save()
         {
             Serialize();
@@ -69,7 +70,14 @@ namespace ClinicalTools.SimEncounters
             gameObject.SetActive(false);
         }
 
-        protected virtual void PublishingFinished(TaskResult result) => LocalWriter.Save(CurrentUser, CurrentEncounter);
+        protected virtual void PublishingFinished(TaskResult result)
+        {
+            LocalWriter.Save(CurrentUser, CurrentEncounter);
+            if (!result.IsError())
+                MessageHandler.ShowMessage("Successfully published case to the server.");
+            else
+                MessageHandler.ShowMessage($"Could not publish case to server.\n{result.Exception.Message}", MessageType.Error);
+        }
 
         public void Close(object sender)
         {
