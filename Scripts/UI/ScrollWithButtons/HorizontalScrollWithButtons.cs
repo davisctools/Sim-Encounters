@@ -3,14 +3,14 @@ using UnityEngine.UI;
 
 namespace ClinicalTools.UI
 {
-    public class TabScrollScript : MonoBehaviour
+    public class HorizontalScrollWithButtons : MonoBehaviour
     {
         public Scrollbar Scroll { get => scroll; set => scroll = value; }
         [SerializeField] private Scrollbar scroll;
-        public TabScrollButtonScript LeftButton { get => leftButton; set => leftButton = value; }
-        [SerializeField] private TabScrollButtonScript leftButton;
-        public TabScrollButtonScript RightButton { get => rightButton; set => rightButton = value; }
-        [SerializeField] private TabScrollButtonScript rightButton;
+        public HorizontalScrollButton LeftButton { get => leftButton; set => leftButton = value; }
+        [SerializeField] private HorizontalScrollButton leftButton;
+        public HorizontalScrollButton RightButton { get => rightButton; set => rightButton = value; }
+        [SerializeField] private HorizontalScrollButton rightButton;
 
         private const float SPEED = 1;
         private bool showingButtons = true;

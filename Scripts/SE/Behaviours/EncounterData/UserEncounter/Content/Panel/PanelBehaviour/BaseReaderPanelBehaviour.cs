@@ -23,14 +23,11 @@ namespace ClinicalTools.SimEncounters
             if (PinsDrawer != null)
                 PinsDrawer.Display(eventArgs.SelectedPanel.PinGroup);
 
-            if (eventArgs.Active)
-                eventArgs.SelectedPanel.SetRead(true);
-
             if (SetReadOnSelect && eventArgs.Active && !CurrentPanel.IsRead() && !CurrentPanel.HasChildren())
                 CurrentPanel.SetRead(true);
         }
 
-        public class Factory : PlaceholderFactory<UnityEngine.Object, BaseReaderPanelBehaviour> { }
+        public class Factory : PlaceholderFactory<Object, BaseReaderPanelBehaviour> { }
     }
 
 }

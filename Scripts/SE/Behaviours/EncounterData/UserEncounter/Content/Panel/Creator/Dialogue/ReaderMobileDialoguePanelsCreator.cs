@@ -30,11 +30,17 @@ namespace ClinicalTools.SimEncounters
 
 
         protected bool WasActive { get; set; }
+
+        protected List<BaseReaderPanelBehaviour> PanelBehaviours {get; } = new List<BaseReaderPanelBehaviour>();
         protected OrderedCollection<UserPanel> Panels { get; set; }
         public override void Display(OrderedCollection<UserPanel> panels, bool active)
         {
             if (!WasActive && active && Panels == panels) {
                 WasActive = active;
+
+                for (var i = 0; i < PanelBehaviours.Count; i++)
+                    PanelBehaviours[i].Select(this, new UserPanelSelectedEventArgs(Panels[i].Value, WasActive));
+
                 return;
             }
 
@@ -44,26 +50,26 @@ namespace ClinicalTools.SimEncounters
             foreach (Transform child in transform)
                 Destroy(child.gameObject);
 
-            var panelBehaviours = new List<BaseReaderPanelBehaviour>();
+            PanelBehaviours.Clear();
             var childList = new List<UserPanel>(panels.Values);
-            DeserializeChildren(panelBehaviours, childList, 0);
+            DeserializeChildren(childList, 0);
         }
 
-        protected virtual void DeserializeChildren(List<BaseReaderPanelBehaviour> readerPanels, List<UserPanel> panels, int startIndex)
+        protected virtual void DeserializeChildren(List<UserPanel> panels, int startIndex)
         {
             Background.color = Color.white;
 
-            if (startIndex < readerPanels.Count)
+            if (startIndex < PanelBehaviours.Count)
                 return;
 
             for (var i = startIndex; i < panels.Count; i++) {
                 var panel = panels[i];
                 if (IsDialogueChoice(panel.Data.Type)) {
-                    readerPanels.Add(CreateChoice(readerPanels, panels, i));
+                    PanelBehaviours.Add(CreateChoice(panels, i));
                     return;
                 }
 
-                readerPanels.Add(CreateEntry(panel));
+                PanelBehaviours.Add(CreateEntry(panel));
             }
         }
 
@@ -78,7 +84,7 @@ namespace ClinicalTools.SimEncounters
             panelDisplay.transform.SetParent(transform);
             panelDisplay.transform.localScale = Vector3.one;
             panelDisplay.transform.SetAsLastSibling();
-            panelDisplay.Select(this, new UserPanelSelectedEventArgs(panel, true));
+            panelDisplay.Select(this, new UserPanelSelectedEventArgs(panel, WasActive));
             return panelDisplay;
         }
 
@@ -98,7 +104,7 @@ namespace ClinicalTools.SimEncounters
             return (values.ContainsKey(CharacterNameKey) && values[CharacterNameKey] == ProviderName) ? DialogueEntryRight : DialogueEntryLeft;
         }
 
-        protected virtual CompletableReaderPanelBehaviour CreateChoice(List<BaseReaderPanelBehaviour> readerPanels, List<UserPanel> panels, int panelIndex)
+        protected virtual CompletableReaderPanelBehaviour CreateChoice(List<UserPanel> panels, int panelIndex)
         {
             Background.color = ColorManager.GetColor(ChoiceBackgroundColor);
 
@@ -106,9 +112,9 @@ namespace ClinicalTools.SimEncounters
             panelDisplay.transform.SetParent(transform);
             panelDisplay.transform.localScale = Vector3.one;
             panelDisplay.transform.SetAsLastSibling();
-            panelDisplay.Select(this, new UserPanelSelectedEventArgs(panels[panelIndex], true));
+            panelDisplay.Select(this, new UserPanelSelectedEventArgs(panels[panelIndex], WasActive));
 
-            panelDisplay.Completed += () => DeserializeChildren(readerPanels, panels, panelIndex + 1);
+            panelDisplay.Completed += () => DeserializeChildren(panels, panelIndex + 1);
             return panelDisplay;
         }
     }

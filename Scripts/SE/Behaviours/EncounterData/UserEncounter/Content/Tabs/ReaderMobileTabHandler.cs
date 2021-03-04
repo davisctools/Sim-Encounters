@@ -253,6 +253,12 @@ namespace ClinicalTools.SimEncounters
             if (Previous == null)
                 return;
             Previous.gameObject.SetActive(true);
+            if (Current == null)
+                Debug.LogError("Current");
+            if (Previous == null)
+                Debug.LogError("Previous");
+            if (Curve == null)
+                Debug.LogError("Curve");
             Curve.SetMoveAmountBackward(Current.RectTransform, Previous.RectTransform, dist);
         }
         private void LeftSwipeUpdate(float dist)

@@ -61,7 +61,11 @@ namespace ClinicalTools.SimEncounters
             LinearEncounterNavigator.EncounterTabPositionChanged += EncounterTabPositionChanged;
         }
 
-        protected virtual void EncounterTabPositionChanged(object sender, UserTabSelectedEventArgs e) => UpdateIsVisited();
+        protected virtual void EncounterTabPositionChanged(object sender, UserTabSelectedEventArgs e)
+        {
+            if (e.SelectedTab != Tab)
+                UpdateIsVisited();
+        }
 
         public override void SetToggleGroup(ToggleGroup group) => SelectToggle.SetToggleGroup(group);
 
