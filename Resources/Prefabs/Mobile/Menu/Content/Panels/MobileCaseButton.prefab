@@ -867,6 +867,7 @@ GameObject:
   - component: {fileID: 8416795509272279299}
   - component: {fileID: 7896996424193308520}
   - component: {fileID: 6894165249320765907}
+  - component: {fileID: 1390959087362675522}
   m_Layer: 5
   m_Name: AuthorData
   m_TagString: Untagged
@@ -888,8 +889,8 @@ RectTransform:
   m_Father: {fileID: 8522725717609534545}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.08, y: 0}
-  m_AnchorMax: {x: 0.92, y: 1}
+  m_AnchorMin: {x: 0.18, y: 0}
+  m_AnchorMax: {x: 0.82, y: 0.98}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -930,8 +931,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4289042309
+  m_fontColor: {r: 0.522, g: 0.592, b: 0.647, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -948,15 +949,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 38.174175
-  m_fontSizeBase: 38.174175
+  m_fontSize: 35.710205
+  m_fontSizeBase: 35.710205
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 2
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1035,7 +1036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e65430698d41c6e48bbad6011d3a3569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fontSizePerHeight: 0.22
+  fontSizePerHeight: 0.21
 --- !u!114 &6894165249320765907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1048,6 +1049,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25688ce32a5d41b4788b38a3fd1ab644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1390959087362675522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8456904179639024725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2335abc92733280448e06d990d4e3bd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorType: 8
 --- !u!1 &8456988539611862927
 GameObject:
   m_ObjectHideFlags: 0
@@ -1230,6 +1244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ce8f39f1d4c234b877d7ace5539147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  capitalizeAll: 0
 --- !u!1 &8457156015144452413
 GameObject:
   m_ObjectHideFlags: 0

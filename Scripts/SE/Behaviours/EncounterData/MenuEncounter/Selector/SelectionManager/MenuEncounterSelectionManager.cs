@@ -83,7 +83,7 @@ namespace ClinicalTools.SimEncounters
                 encounterView.DisplayForRead(SceneInfo, encounters);
             else
                 encounterView.DisplayForEdit(SceneInfo, encounters);
-            ScrollRect.content = (RectTransform)encounterView.transform;
+            //ScrollRect.content = (RectTransform)encounterView.transform;
             ScrollRect.verticalNormalizedPosition = 1;
         }
 
