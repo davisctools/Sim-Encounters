@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using ClinicalTools.UI;
+using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {

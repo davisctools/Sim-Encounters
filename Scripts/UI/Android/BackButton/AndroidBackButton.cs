@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ClinicalTools.SimEncounters
+namespace ClinicalTools.UI
 {
     public class AndroidBackButton : MonoBehaviour
     {

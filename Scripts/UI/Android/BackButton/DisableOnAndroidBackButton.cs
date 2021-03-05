@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace ClinicalTools.SimEncounters
+namespace ClinicalTools.UI
 {
-    public class DisableOnAndroidBackupButton : MonoBehaviour
+    public class DisableOnAndroidBackButton : MonoBehaviour
     {
         protected AndroidBackButton BackButton { get; set; }
 
