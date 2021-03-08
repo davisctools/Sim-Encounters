@@ -28,7 +28,7 @@ namespace ClinicalTools.SimEncounters
             MenuEncounterSelector.Pool optionPool,
             BaseAddEncounterPopup addEncounterPopup)
         {
-            OptionPool = optionPool; 
+            OptionPool = optionPool;
             AddEncounterPopup = addEncounterPopup;
         }
         protected virtual void Awake()
@@ -41,13 +41,35 @@ namespace ClinicalTools.SimEncounters
         public override void DisplayForRead(MenuSceneInfo sceneInfo, IEnumerable<MenuEncounter> encounters)
         {
             IsRead = true;
-            Display(sceneInfo, encounters);
+            TryToDisplay(sceneInfo, encounters);
         }
 
         public override void DisplayForEdit(MenuSceneInfo sceneInfo, IEnumerable<MenuEncounter> encounters)
         {
             IsRead = false;
-            Display(sceneInfo, encounters);
+            TryToDisplay(sceneInfo, encounters);
+        }
+
+        protected virtual void TryToDisplay(MenuSceneInfo sceneInfo, IEnumerable<MenuEncounter> encounters)
+        {
+            if (!CanvasUpdateRegistry.IsRebuildingLayout()) {
+                Display(sceneInfo, encounters);
+                return;
+            }
+            displayOnUpdate = true;
+            SceneInfo = sceneInfo;
+            CurrentEncounters = encounters;
+        }
+
+
+        private bool displayOnUpdate;
+        protected virtual void Update()
+        {
+            if (!displayOnUpdate)
+                return;
+            displayOnUpdate = false;
+
+            Display(SceneInfo, CurrentEncounters);
         }
 
         protected IEnumerable<MenuEncounter> CurrentEncounters { get; set; }
