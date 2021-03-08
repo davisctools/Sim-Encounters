@@ -51,9 +51,9 @@ namespace ClinicalTools.UI
             var aspectRatio = 1f * Texture.width / Texture.height;
 
             if (KeepHeight)
-                RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rect.height * aspectRatio / LossyScale.x);
+                RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rect.height * aspectRatio);
             else
-                RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, rect.width / aspectRatio / LossyScale.y);
+                RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, rect.width / aspectRatio);
         }
     }
 }

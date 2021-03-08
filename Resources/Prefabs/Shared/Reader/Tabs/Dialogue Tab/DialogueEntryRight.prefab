@@ -542,8 +542,9 @@ GameObject:
   - component: {fileID: 4614330438103191819}
   - component: {fileID: 7148703347142251134}
   - component: {fileID: 1199555948958828369}
+  - component: {fileID: 6927465243721771448}
   m_Layer: 5
-  m_Name: ProviderImage
+  m_Name: CharacterCircle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -640,6 +641,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   heightPerWidth: 1
   initialWidthProportionToParent: 0
+--- !u!114 &6927465243721771448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3754220286116609207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!1 &4396438428454171076
 GameObject:
   m_ObjectHideFlags: 0
@@ -744,8 +758,9 @@ GameObject:
   - component: {fileID: 2651500732654322009}
   - component: {fileID: 8665923860093725541}
   - component: {fileID: 8597928181800381402}
+  - component: {fileID: 3657834537753934598}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: CharacterImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -807,3 +822,16 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3657834537753934598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8667029596836350123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d288c722d336e98498aa2b32ed788a5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keepHeight: 1

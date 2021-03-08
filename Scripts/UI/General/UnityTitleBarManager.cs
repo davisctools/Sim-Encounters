@@ -2,13 +2,14 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
+#endif
 using UnityEngine;
 
 namespace ClinicalTools.UI
 {
     public class UnityTitleBarManager : MonoBehaviour
     {
+#if UNITY_STANDALONE_WIN
         // https://answers.unity.com/questions/148723/how-can-i-change-the-title-of-the-standalone-playe.html
         [DllImport("user32.dll", EntryPoint = "SetWindowText")]
         public static extern bool SetWindowText(IntPtr hwnd, string lpString);
@@ -48,6 +49,6 @@ namespace ClinicalTools.UI
             Array.Resize(ref apRet, iCount);
             return apRet;
         }
+#endif
     }
 }
-#endif

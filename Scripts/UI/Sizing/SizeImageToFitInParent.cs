@@ -52,15 +52,19 @@ namespace ClinicalTools.UI
                 return;
 
             var rect = ParentTransform.rect;
-            var textureScale = Texture.width / Texture.height;
+            var textureScale = ((float) Texture.width) / Texture.height;
             var rectScale = rect.width / rect.height;
 
             if (rectScale > textureScale) {
                 LayoutElement.flexibleWidth = -1;
                 LayoutElement.preferredWidth = rect.height * textureScale;
+                LayoutElement.preferredHeight = -1;
+                LayoutElement.flexibleHeight = 10000;
             } else if (rectScale < textureScale) {
                 LayoutElement.flexibleHeight = -1;
                 LayoutElement.preferredHeight = rect.width / textureScale;
+                LayoutElement.preferredWidth = -1;
+                LayoutElement.flexibleWidth = 10000;
             }
 
             SetDirty(ParentTransform);
