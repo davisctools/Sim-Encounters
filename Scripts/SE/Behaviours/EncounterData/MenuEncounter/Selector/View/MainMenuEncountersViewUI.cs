@@ -50,26 +50,25 @@ namespace ClinicalTools.SimEncounters
             TryToDisplay(sceneInfo, encounters);
         }
 
+        // This is a really messy solution, but othewise we hit an issue on mobile
         protected virtual void TryToDisplay(MenuSceneInfo sceneInfo, IEnumerable<MenuEncounter> encounters)
         {
-            if (!CanvasUpdateRegistry.IsRebuildingLayout()) {
-                Display(sceneInfo, encounters);
-                return;
-            }
+            gameObject.SetActive(true);
             displayOnUpdate = true;
             SceneInfo = sceneInfo;
-            CurrentEncounters = encounters;
+            UpdateEncounters = encounters;
         }
 
-
+        protected IEnumerable<MenuEncounter> UpdateEncounters { get; set; }
         private bool displayOnUpdate;
         protected virtual void Update()
         {
-            if (!displayOnUpdate)
+            if (!displayOnUpdate || CanvasUpdateRegistry.IsRebuildingLayout())
                 return;
+
             displayOnUpdate = false;
 
-            Display(SceneInfo, CurrentEncounters);
+            Display(SceneInfo, UpdateEncounters);
         }
 
         protected IEnumerable<MenuEncounter> CurrentEncounters { get; set; }
