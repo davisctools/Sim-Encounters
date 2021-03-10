@@ -186,7 +186,7 @@ namespace ClinicalTools.SimEncounters
 
         #endregion
 
-        #region Swipe}
+        #region Swipe
         public void StartMove()
         {
             CanvasGroup.blocksRaycasts = false;

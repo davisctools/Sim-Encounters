@@ -8,8 +8,6 @@ namespace ClinicalTools.SimEncounters
     {
         public BaseTooltip Tooltip { get => tooltip; set => tooltip = value; }
         [SerializeField] private BaseTooltip tooltip;
-        public ReaderSidebarController SidebarController { get => sidebarController; set => sidebarController = value; }
-        [SerializeField] private ReaderSidebarController sidebarController;
         public BaseInstructionsPopup InstructionsPopup { get => instructionsPopup; set => instructionsPopup = value; }
         [SerializeField] private BaseInstructionsPopup instructionsPopup;
         public BaseSettingsPopup SettingsPopup { get => settingsPopup; set => settingsPopup = value; }
@@ -39,7 +37,6 @@ namespace ClinicalTools.SimEncounters
         {
             Container.Bind<IIconSpriteRetriever>().To<IconSpriteRetriever>().AsSingle();
             Container.BindInstance(Tooltip);
-            Container.BindInstance<ISidebarController>(SidebarController);
             Container.BindInstance(InstructionsPopup);
             Container.BindInstance(SettingsPopup);
             Container.BindInstance(EncounterInfoPopup);

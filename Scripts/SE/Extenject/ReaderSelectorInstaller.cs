@@ -15,6 +15,10 @@ namespace ClinicalTools.SimEncounters
 
             Container.Bind<ILinearEncounterNavigator>().To<LinearUserEncounterNavigator>().AsSingle();
             Container.DeclareSignal<EncounterCompletedSignal>();
+
+#if MOBILE
+            Container.Bind<BackButtonEncounterNavigation>().To<BackButtonEncounterNavigation>().AsSingle().NonLazy();
+#endif
         }
     }
 }

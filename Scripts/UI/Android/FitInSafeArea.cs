@@ -5,14 +5,14 @@ namespace ClinicalTools.UI
     [RequireComponent(typeof(RectTransform))]
     public class FitInSafeArea : MonoBehaviour
     {
-        protected virtual void Start()
+        protected virtual void Update()
         {
             var rectTransform = (RectTransform)transform;
             var safeArea = Screen.safeArea;
-
+            
             var minAnchor = new Vector2 {
                 x = safeArea.x / Screen.width,
-                y = safeArea.y / Screen.height
+                y = (safeArea.y + AndroidStatusBarManager.NavigationBarHeight) / Screen.height
             };
 
             var maxAnchor = new Vector2 {
