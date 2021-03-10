@@ -9,8 +9,12 @@ namespace ClinicalTools.UI
     {
         void Update()
         {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            Screen.fullScreen = true;
             ApplicationChrome.dimmed = false;
             ApplicationChrome.statusBarState = ApplicationChrome.States.TranslucentOverContent;
+            ApplicationChrome.navigationBarState = ApplicationChrome.States.Hidden;
+#endif
         }
     }
 }
