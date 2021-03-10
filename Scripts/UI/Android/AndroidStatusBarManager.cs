@@ -14,8 +14,8 @@ namespace ClinicalTools.UI
                 return;
 
             if (Screen.fullScreen)
-                Debug.LogWarning("Game must be started in fullscreen mode to properly calculate the " +
-                    "navigation bar height.");
+                Debug.LogWarning("Game must not be started in fullscreen mode to properly calculate " +
+                    "the navigation bar height.");
 
             OriginalScreenHeight = Screen.height;
         }
