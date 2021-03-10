@@ -1,4 +1,4 @@
-﻿#if !STANDALONE_SCENE && MOBILE
+﻿#if DEEP_LINKING
 using ImaginationOverflow.UniversalDeepLinking;
 #endif
 using System.Collections.Generic;
@@ -35,7 +35,7 @@ namespace ClinicalTools.SimEncounters
 
         }
 
-#if !STANDALONE_SCENE && MOBILE
+#if DEEP_LINKING
         protected IEncounterQuickStarter EncounterQuickStarter { get; set; }
         protected QuickActionFactory LinkActionFactory { get; set; }
         [Inject]
@@ -106,7 +106,7 @@ namespace ClinicalTools.SimEncounters
         public void Display(LoadingReaderSceneInfo sceneInfo)
         {
             SceneInfo = sceneInfo;
-#if !STANDALONE_SCENE && MOBILE
+#if DEEP_LINKING
             DeepLinkManager.Instance.LinkActivated += Instance_LinkActivated;
 #endif
             if (started)
@@ -114,7 +114,7 @@ namespace ClinicalTools.SimEncounters
         }
 
 
-#if !STANDALONE_SCENE && MOBILE
+#if DEEP_LINKING
         protected virtual void OnDestroy() => DeepLinkManager.Instance.LinkActivated -= Instance_LinkActivated;
 
         public void TestLink()

@@ -41,34 +41,13 @@ namespace ClinicalTools.SimEncounters
         public override void DisplayForRead(MenuSceneInfo sceneInfo, IEnumerable<MenuEncounter> encounters)
         {
             IsRead = true;
-            TryToDisplay(sceneInfo, encounters);
+            Display(sceneInfo, encounters);
         }
 
         public override void DisplayForEdit(MenuSceneInfo sceneInfo, IEnumerable<MenuEncounter> encounters)
         {
             IsRead = false;
-            TryToDisplay(sceneInfo, encounters);
-        }
-
-        // This is a really messy solution, but othewise we hit an issue on mobile
-        protected virtual void TryToDisplay(MenuSceneInfo sceneInfo, IEnumerable<MenuEncounter> encounters)
-        {
-            gameObject.SetActive(true);
-            displayOnUpdate = true;
-            SceneInfo = sceneInfo;
-            UpdateEncounters = encounters;
-        }
-
-        protected IEnumerable<MenuEncounter> UpdateEncounters { get; set; }
-        private bool displayOnUpdate;
-        protected virtual void Update()
-        {
-            if (!displayOnUpdate || CanvasUpdateRegistry.IsRebuildingLayout())
-                return;
-
-            displayOnUpdate = false;
-
-            Display(SceneInfo, UpdateEncounters);
+            Display(sceneInfo, encounters);
         }
 
         protected IEnumerable<MenuEncounter> CurrentEncounters { get; set; }

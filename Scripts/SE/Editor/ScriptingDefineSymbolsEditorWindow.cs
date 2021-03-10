@@ -54,6 +54,9 @@ namespace ClinicalTools.SimEncounters
         private static readonly GUIContent LocalhostToggleContent
             = new GUIContent("Use Localhost",
                 "Whether to use localhost as the server");
+        private static readonly GUIContent DeepLinkingContent
+            = new GUIContent("Deep Linking",
+                "Whether to enable Deep Linking in the build");
 
 
         private static readonly GUIContent CONTENT_LABEL_DESCRIPTION
@@ -63,6 +66,7 @@ namespace ClinicalTools.SimEncounters
         private const string MobileSymbol = "MOBILE";
         private const string StandaloneSceneSymbol = "STANDALONE_SCENE";
         private const string LocalhostSymbol = "LOCALHOST";
+        private const string DeepLinkingSymbol = "DEEP_LINKING";
 
         private const string WindowTitle = "Scripting Define Symbols";
 
@@ -153,6 +157,7 @@ namespace ClinicalTools.SimEncounters
             ShowSymbolToggle(MobileSymbol, MobileToggleContent);
             ShowSymbolToggle(StandaloneSceneSymbol, StandaloneToggleContent);
             ShowSymbolToggle(LocalhostSymbol, LocalhostToggleContent);
+            ShowSymbolToggle(DeepLinkingSymbol, DeepLinkingContent);
             EditorGUI.indentLevel--;
         }
 

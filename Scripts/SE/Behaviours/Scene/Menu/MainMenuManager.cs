@@ -1,4 +1,4 @@
-﻿#if !STANDALONE_SCENE && MOBILE
+﻿#if DEEP_LINKING
 using ImaginationOverflow.UniversalDeepLinking;
 #endif
 using System.Collections.Generic;
@@ -64,17 +64,18 @@ namespace ClinicalTools.SimEncounters
 
         protected override void StartAsLaterScene()
         {
-            foreach (var welcomeScreen in WelcomeScreens)
-                welcomeScreen.SetActive(false);
-
             Destroy(LoadingScreen.gameObject);
         }
 
         protected LoadingMenuSceneInfo SceneInfo { get; set; }
         public void Display(LoadingMenuSceneInfo sceneInfo)
         {
+            if (sceneInfo.MenuArea == MenuArea.Cases)
+                foreach (var welcomeScreen in WelcomeScreens)
+                    welcomeScreen.SetActive(false);
+
             SceneInfo = sceneInfo;
-#if !STANDALONE_SCENE && MOBILE
+#if DEEP_LINKING
             DeepLinkManager.Instance.LinkActivated += Instance_LinkActivated;
 #endif
             sceneInfo.Result.AddOnCompletedListener(SceneInfoLoaded);
@@ -107,14 +108,14 @@ namespace ClinicalTools.SimEncounters
         protected virtual void Login(User user)
         {
             var menuEncounters = MenuInfoReader.GetMenuEncountersInfo(user);
-            var menuSceneInfo = new LoadingMenuSceneInfo(user, LoadingScreen, menuEncounters);
+            var menuSceneInfo = new LoadingMenuSceneInfo(user, LoadingScreen, MenuArea.InitialSelection, menuEncounters);
             if (started)
                 Display(menuSceneInfo);
             else
                 SceneInfo = menuSceneInfo;
         }
 
-#if !STANDALONE_SCENE && MOBILE
+#if DEEP_LINKING
         protected virtual void OnDestroy() => DeepLinkManager.Instance.LinkActivated -= Instance_LinkActivated;
 
         public void TestLink()

@@ -2,7 +2,7 @@
 {
     public interface IUserMenuSceneStarter
     {
-        void StartMenuScene(User user, ILoadingScreen loadingScreen);
-        void ConfirmStartingMenuScene(User user, ILoadingScreen loadingScreen);
+        void StartMenuScene(User user, ILoadingScreen loadingScreen, MenuArea menuArea);
+        void ConfirmStartingMenuScene(User user, ILoadingScreen loadingScreen, MenuArea menuArea);
     }
 }

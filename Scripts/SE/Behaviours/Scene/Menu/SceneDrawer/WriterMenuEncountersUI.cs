@@ -65,6 +65,17 @@ namespace ClinicalTools.SimEncounters
 
             SceneInfo = sceneInfo.Value;
 
+            // Waiting for the update to display fixes a mobile bug
+            DisplayOnUpdate = true;
+        }
+
+        protected virtual bool DisplayOnUpdate { get; set; }
+        protected virtual void Update()
+        {
+            if (!DisplayOnUpdate)
+                return;
+
+            DisplayOnUpdate = false;
             if (ShowEncountersToggle.IsOn())
                 DisplayEncounters();
             else
@@ -78,7 +89,7 @@ namespace ClinicalTools.SimEncounters
         }
         protected virtual void DisplayTemplates()
         {
-            if (SceneInfo != null) 
+            if (SceneInfo != null)
                 DisplayEncounters(SceneInfo.MenuEncountersInfo.GetTemplates());
         }
         protected virtual void DisplayEncounters(IEnumerable<MenuEncounter> encounters)

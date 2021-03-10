@@ -12,24 +12,25 @@ namespace ClinicalTools.SimEncounters
 
         protected override string ExitConfirmationTitle { get; } = "Exit to Main Menu";
 
-        public void StartMenuScene(UserEncounter userEncounter, ILoadingScreen loadingScreen)
+        public void StartMenuScene(UserEncounter userEncounter, ILoadingScreen loadingScreen, MenuArea menuArea)
         {
             var categories = GetMenuEncountersInfo(userEncounter);
-            var menuSceneInfo = new LoadingMenuSceneInfo(userEncounter.User, loadingScreen, categories);
+            var menuSceneInfo = new LoadingMenuSceneInfo(userEncounter.User, loadingScreen, menuArea, categories);
             MenuSceneStarter.StartScene(menuSceneInfo);
         }
 
         protected UserEncounter UserEncounter { get; set; }
 
-        public void ConfirmStartingMenuScene(UserEncounter userEncounter, ILoadingScreen loadingScreen)
+        public void ConfirmStartingMenuScene(UserEncounter userEncounter, ILoadingScreen loadingScreen, MenuArea menuArea)
         {
             UserEncounter = userEncounter;
             LoadingScreen = loadingScreen;
+            MenuArea = menuArea;
             ConfirmationPopup.ShowConfirmation(ExitSceneWithEncounter, ExitConfirmationTitle,
                 ExitConfirmationDescription, "EXIT", "CANCEL");
         }
 
-        protected virtual void ExitSceneWithEncounter() => StartMenuScene(UserEncounter, LoadingScreen);
+        protected virtual void ExitSceneWithEncounter() => StartMenuScene(UserEncounter, LoadingScreen, MenuArea);
 
         protected virtual WaitableTask<IMenuEncountersInfo> GetMenuEncountersInfo(
             UserEncounter userEncounter)

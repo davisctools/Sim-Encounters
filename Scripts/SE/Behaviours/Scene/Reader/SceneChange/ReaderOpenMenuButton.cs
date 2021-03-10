@@ -6,6 +6,8 @@ namespace ClinicalTools.SimEncounters
 {
     public class ReaderOpenMenuButton : MonoBehaviour
     {
+        public MenuArea MenuArea { get => menuArea; set => menuArea = value; }
+        [SerializeField] private MenuArea menuArea = MenuArea.InitialSelection;
         public Button Button { get => button; set => button = value; }
         [SerializeField] private Button button;
         public bool ShowConfirmation { get => showConfirmation; set => showConfirmation = value; }
@@ -45,15 +47,15 @@ namespace ClinicalTools.SimEncounters
             if (!SceneInfo.Result.IsCompleted() || !SceneInfo.Result.Result.HasValue()) {
                 var user = SceneInfo.User;
                 if (ShowConfirmation)
-                    MenuSceneStarter.ConfirmStartingMenuScene(user, loadingScreen);
+                    MenuSceneStarter.ConfirmStartingMenuScene(user, loadingScreen, MenuArea);
                 else
-                    MenuSceneStarter.StartMenuScene(user, loadingScreen);
+                    MenuSceneStarter.StartMenuScene(user, loadingScreen, MenuArea);
             } else {
                 var encounter = SceneInfo.Result.Result.Value.Encounter;
                 if (ShowConfirmation)
-                    MenuSceneStarter.ConfirmStartingMenuScene(encounter, loadingScreen);
+                    MenuSceneStarter.ConfirmStartingMenuScene(encounter, loadingScreen, MenuArea);
                 else
-                    MenuSceneStarter.StartMenuScene(encounter, loadingScreen);
+                    MenuSceneStarter.StartMenuScene(encounter, loadingScreen, MenuArea);
             }
         }
     }
