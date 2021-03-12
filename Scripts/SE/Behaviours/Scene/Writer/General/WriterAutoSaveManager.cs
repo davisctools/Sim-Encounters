@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ClinicalTools.UI;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -8,15 +9,18 @@ namespace ClinicalTools.SimEncounters
     public class WriterAutoSaveManager : MonoBehaviour
     {
         protected SignalBus SignalBus { get; set; }
+        protected BaseMessageHandler MessageHandler { get; set; }
         protected ISelector<WriterSceneInfoSelectedEventArgs> SceneInfoSelector { get; set; }
         protected IEncounterWriter EncounterWriter { get; set; }
         [Inject]
         public virtual void Inject(
             SignalBus signalBus,
+            BaseMessageHandler messageHandler,
             ISelector<WriterSceneInfoSelectedEventArgs> sceneInfoSelector,
             [Inject(Id = SaveType.Autosave)] IEncounterWriter encounterWriter)
         {
             SignalBus = signalBus;
+            MessageHandler = messageHandler;
             SceneInfoSelector = sceneInfoSelector;
             EncounterWriter = encounterWriter;
         }
@@ -46,7 +50,14 @@ namespace ClinicalTools.SimEncounters
         {
             SignalBus.Fire<SerializeEncounterSignal>();
             var sceneInfo = SceneInfoSelector.CurrentValue.SceneInfo;
-            EncounterWriter.Save(sceneInfo.User, sceneInfo.Encounter);
+            var writerTask = EncounterWriter.Save(sceneInfo.User, sceneInfo.Encounter);
+            writerTask.AddOnCompletedListener(AutosaveCompleted);
+        }
+
+        protected virtual void AutosaveCompleted(TaskResult result)
+        {
+            if (!result.IsError())
+                MessageHandler.ShowMessage("Encounter autosaved.");
         }
     }
 }

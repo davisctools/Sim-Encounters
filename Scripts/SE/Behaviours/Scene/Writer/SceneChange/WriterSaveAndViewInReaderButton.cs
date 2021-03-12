@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ClinicalTools.UI;
+using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
@@ -8,17 +9,20 @@ namespace ClinicalTools.SimEncounters
     public class WriterSaveAndViewInReaderButton : MonoBehaviour
     {
         protected SignalBus SignalBus { get; set; }
+        protected BaseConfirmationPopup ConfirmationPopup { get; set; }
         protected ISelector<WriterSceneInfoSelectedEventArgs> SceneInfoSelector { get; set; }
         protected IReaderSceneStarter ReaderSceneStarter { get; set; }
         protected IEncounterWriter EncounterWriter { get; set; }
         [Inject]
         public virtual void Inject(
             SignalBus signalBus,
+            BaseConfirmationPopup confirmationPopup,
             ISelector<WriterSceneInfoSelectedEventArgs> sceneInfoSelector,
             IReaderSceneStarter sceneStarter,
             [Inject(Id = SaveType.Local)] IEncounterWriter encounterWriter)
         {
             SignalBus = signalBus;
+            ConfirmationPopup = confirmationPopup;
             SceneInfoSelector = sceneInfoSelector;
             ReaderSceneStarter = sceneStarter;
             EncounterWriter = encounterWriter;
@@ -38,20 +42,31 @@ namespace ClinicalTools.SimEncounters
         private void SceneLoaded(object sender, WriterSceneInfoSelectedEventArgs e)
         {
             Button.interactable = true;
-            Button.onClick.AddListener(ShowInReader);
+            Button.onClick.AddListener(OnButtonClicked);
         }
 
-        protected virtual void ShowInReader()
+        protected virtual void OnButtonClicked()
+            => ConfirmationPopup.ShowConfirmation(SaveCase, StartReader, 
+                "Save Changes", "Would you look to save your changes?", "Yes", "No");
+        
+
+        protected virtual void SaveCase()
         {
             SignalBus.Fire<SerializeEncounterSignal>();
             var sceneInfo = SceneInfoSelector.CurrentValue.SceneInfo;
             EncounterWriter.Save(sceneInfo.User, sceneInfo.Encounter);
+            StartReader();
+        }
 
+        protected virtual void StartReader()
+        {
+            var sceneInfo = SceneInfoSelector.CurrentValue.SceneInfo;
             var encounterStatus = new EncounterStatus(new EncounterBasicStatus(), new EncounterContentStatus());
             var encounter = new UserEncounter(sceneInfo.User, sceneInfo.Encounter, encounterStatus);
             var encounterResult = new WaitableTask<UserEncounter>(encounter);
             var loadingInfo = new LoadingReaderSceneInfo(sceneInfo.User, sceneInfo.LoadingScreen, encounterResult);
             ReaderSceneStarter.StartScene(loadingInfo);
         }
+
     }
 }

@@ -83,8 +83,10 @@ namespace ClinicalTools.SimEncounters
                 encounterView.DisplayForRead(SceneInfo, encounters);
             else
                 encounterView.DisplayForEdit(SceneInfo, encounters);
+
             //ScrollRect.content = (RectTransform)encounterView.transform;
-            ScrollRect.verticalNormalizedPosition = 1;
+            if (ScrollRect.content != null)
+                ScrollRect.verticalNormalizedPosition = 1;
         }
 
         protected void ChangeView()
@@ -110,8 +112,8 @@ namespace ClinicalTools.SimEncounters
         {
             EncounterViews[currentViewIndex].Hide();
             if (ToggleViewButton != null)
-                ToggleViewButton.Hide(); 
-            
+                ToggleViewButton.Hide();
+
             if (Sidebar != null)
                 Sidebar.Hide();
         }
