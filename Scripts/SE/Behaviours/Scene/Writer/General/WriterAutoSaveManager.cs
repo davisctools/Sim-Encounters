@@ -33,8 +33,13 @@ namespace ClinicalTools.SimEncounters
                 SceneLoaded(this, SceneInfoSelector.CurrentValue);
         }
 
+        protected Coroutine CurrentCoroutine { get; set; }
         private void SceneLoaded(object sender, WriterSceneInfoSelectedEventArgs e)
-            => StartCoroutine(AutosaveCoroutine());
+        {
+            if (CurrentCoroutine != null)
+                StopCoroutine(CurrentCoroutine);
+            CurrentCoroutine = StartCoroutine(AutosaveCoroutine());
+        }
 
         private const float AutosaveIntervalSeconds = 3 * 60; // In seconds
         protected virtual IEnumerator AutosaveCoroutine()

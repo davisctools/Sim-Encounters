@@ -26,6 +26,10 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs e)
         {
+            foreach (var sectionButton in SectionButtons.Values)
+                Destroy(sectionButton.gameObject);
+            SectionButtons.Clear();
+
             foreach (var section in e.Encounter.Sections.Values)
                 DrawSection(section);
         }

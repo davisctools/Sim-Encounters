@@ -31,7 +31,8 @@
 
         public override void Select(object sender, UserTabSelectedEventArgs eventArgs)
         {
-            SectionValue.SelectedSection.SetCurrentTab(eventArgs.SelectedTab.Data);
+            if (eventArgs.ChangeType != ChangeType.Inactive)
+                SectionValue.SelectedSection.SetCurrentTab(eventArgs.SelectedTab.Data);
             base.Select(sender, eventArgs);
         }
     }

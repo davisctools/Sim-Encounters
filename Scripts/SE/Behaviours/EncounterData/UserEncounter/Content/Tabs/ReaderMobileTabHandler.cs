@@ -239,7 +239,7 @@ namespace ClinicalTools.SimEncounters
         private void SwipeStart(Swipe obj) => SwipeUpdate(obj);
         private void SwipeUpdate(Swipe obj)
         {
-            var dist = (obj.LastPosition.x - obj.StartPosition.x) / Screen.width;
+            var dist = (obj.LastPosition.x - obj.StartPosition.x) / SwipeParamater.StartPositionRange.Value.width;
             if (dist > 0)
                 RightSwipeUpdate(Mathf.Clamp01(dist));
             else
@@ -274,7 +274,7 @@ namespace ClinicalTools.SimEncounters
         {
             SwipeUpdate(obj);
 
-            var dist = (obj.LastPosition.x - obj.StartPosition.x) / Screen.width;
+            var dist = (obj.LastPosition.x - obj.StartPosition.x) / SwipeParamater.StartPositionRange.Value.width;
             if (dist > 0 && Previous != null) {
                 if (dist > .5f || obj.Velocity.x / Screen.dpi > 1.5f)
                     UserTabSelector.Select(this, new UserTabSelectedEventArgs(Previous.Tab, ChangeType.Previous));

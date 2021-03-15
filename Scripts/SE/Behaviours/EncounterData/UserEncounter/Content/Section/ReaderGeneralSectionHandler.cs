@@ -131,7 +131,8 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected Coroutine CurrentCoroutine { get; set; }
-        protected virtual float GetDistance(Swipe obj) => (obj.LastPosition.x - obj.StartPosition.x) / Screen.width;
+        protected virtual float GetDistance(Swipe obj) 
+            => (obj.LastPosition.x - obj.StartPosition.x) / SwipeParamater.StartPositionRange.Value.width;
 
         protected bool CanSwipeRight { get; set; }
         protected bool CanSwipeLeft { get; set; }

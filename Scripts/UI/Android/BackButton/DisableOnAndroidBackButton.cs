@@ -11,8 +11,18 @@ namespace ClinicalTools.UI
         public virtual void Inject(AndroidBackButton backButton)
             => BackButton = backButton;
 
-        protected virtual void OnEnable() => BackButton.Register(Disable);
-        protected virtual void OnDisable() => BackButton.Deregister(Disable);
+        protected virtual void OnEnable()
+        {
+            if (BackButton != null)
+                BackButton.Register(Disable);
+        }
+
+        protected virtual void OnDisable()
+        {
+            if (BackButton != null)
+                BackButton.Deregister(Disable);
+        }
+
         protected virtual void Disable() => gameObject.SetActive(false);
     }
 }

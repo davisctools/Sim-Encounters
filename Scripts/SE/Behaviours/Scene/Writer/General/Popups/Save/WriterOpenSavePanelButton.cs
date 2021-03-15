@@ -8,9 +8,9 @@ namespace ClinicalTools.SimEncounters
     public class WriterOpenSavePanelButton : MonoBehaviour
     {
         protected BaseSaveEncounterDisplay SavePopup { get; set; }
-        protected ISelector<WriterSceneInfoSelectedEventArgs> SceneInfoSelector { get; set; }
+        protected ISelectedListener<WriterSceneInfoSelectedEventArgs> SceneInfoSelector { get; set; }
         [Inject]
-        public virtual void Inject(BaseSaveEncounterDisplay savePopup, ISelector<WriterSceneInfoSelectedEventArgs> sceneInfoSelector)
+        public virtual void Inject(BaseSaveEncounterDisplay savePopup, ISelectedListener<WriterSceneInfoSelectedEventArgs> sceneInfoSelector)
         {
             SavePopup = savePopup;
             SceneInfoSelector = sceneInfoSelector;
