@@ -29,22 +29,35 @@ namespace ClinicalTools.UI
             showFrame = true;
             if (HideEnumerator != null)
                 StopCoroutine(HideEnumerator);
-            HideEnumerator = Hide();
-            StartCoroutine(HideEnumerator);
+            HideEnumerator = StartCoroutine(HideAfterTime());
         }
 
         private const float MAX_ALPHA = .95f;
-        private const float WAIT_SECONDS = 2;
+        private const float WAIT_SECONDS = 5;
         private const float HIDE_SECONDS = 1;
         private const float ALPHA_SCALER = MAX_ALPHA / HIDE_SECONDS;
-        protected virtual IEnumerator HideEnumerator { get; set; }
-        public virtual IEnumerator Hide()
+        protected virtual Coroutine HideEnumerator { get; set; }
+        
+        public override void Hide()
+        {
+            if (HideEnumerator == null)
+                return;
+            StopCoroutine(HideEnumerator);
+            HideEnumerator = StartCoroutine(HideCoroutine());
+        }
+
+        protected virtual IEnumerator HideAfterTime()
         {
             Group.alpha = MAX_ALPHA;
             Group.interactable = true;
             Group.blocksRaycasts = true;
 
             yield return new WaitForSeconds(WAIT_SECONDS);
+            yield return HideCoroutine();
+        }
+
+        protected virtual IEnumerator HideCoroutine()
+        {
             while (Group.alpha > 0) {
                 Group.alpha -= Time.deltaTime * ALPHA_SCALER;
                 yield return null;

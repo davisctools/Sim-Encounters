@@ -29,7 +29,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string ModeVariable { get; } = "mode";
         protected virtual string ModeValue { get; } = "unlock";
         protected virtual string AccountVariable { get; } = "accountId";
-        protected virtual string UsernameVariable { get; } = "username";
+        protected virtual string UsernameVariable { get; } = "editor";
         protected virtual string RecordNumberVariable { get; } = "recordNumber";
         protected virtual UnityWebRequest GetWebRequest(User user, EncounterMetadata metadata)
         {

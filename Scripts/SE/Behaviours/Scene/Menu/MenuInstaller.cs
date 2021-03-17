@@ -50,6 +50,8 @@ namespace ClinicalTools.SimEncounters
             Container.BindMemoryPool<MainMenuEncounterUI, MenuEncounterSelector.Pool>()
                 .FromComponentInNewPrefab(EncounterSelectorPrefab)
                 .UnderTransform(PoolParent);
+
+            Container.DeclareSignal<EncounterLocksUpdatedSignal>().OptionalSubscriber();
         }
     }
 }

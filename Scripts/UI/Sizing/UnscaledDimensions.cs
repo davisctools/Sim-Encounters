@@ -89,7 +89,8 @@ namespace ClinicalTools.UI
             if (Width > Tolerance)
                 LayoutElement.preferredWidth = GetActualWidth();
 
-            SetDirty((RectTransform)transform.parent);
+            if (transform.parent is RectTransform parentRectTransform)
+                SetDirty(parentRectTransform);
         }
 
         protected float GetActualWidth() => Width * heightProportion;

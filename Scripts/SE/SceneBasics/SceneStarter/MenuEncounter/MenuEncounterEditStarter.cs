@@ -13,8 +13,8 @@ namespace ClinicalTools.SimEncounters
         public MenuEncounterEditStarter(
             BaseMessageHandler messageHandler,
             IEncounterLocker encounterLocker,
-            IWriterSceneStarter sceneStarter, 
-            IEncounterReader encounterReader, 
+            IWriterSceneStarter sceneStarter,
+            IEncounterReader encounterReader,
             BaseMenuEncounterMetadataSelector metadataSelector)
         {
             MessageHandler = messageHandler;
@@ -29,8 +29,12 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void EnsureEncounterUnlocked(MenuSceneInfo sceneInfo, MenuEncounter menuEncounter)
         {
-            var task = EncounterLocker.LockEncounter(sceneInfo.User, menuEncounter.GetLatestMetadata());
-            task.AddOnCompletedListener((result) => EncounterLocked(result, sceneInfo, menuEncounter));
+            if (menuEncounter.Metadata.ContainsKey(SaveType.Server)) {
+                var task = EncounterLocker.LockEncounter(sceneInfo.User, menuEncounter.GetLatestMetadata());
+                task.AddOnCompletedListener((result) => EncounterLocked(result, sceneInfo, menuEncounter));
+            } else {
+                SelectMetadata(sceneInfo, menuEncounter);
+            }
         }
 
         protected virtual void EncounterLocked(TaskResult result, MenuSceneInfo sceneInfo, MenuEncounter menuEncounter)
@@ -40,7 +44,7 @@ namespace ClinicalTools.SimEncounters
                 return;
             }
 
-            MessageHandler.ShowMessage("Cannot set lock on encounter.", MessageType.Error);
+            MessageHandler.ShowMessage($"Cannot set lock on encounter: {result.Exception.Message}", MessageType.Error);
         }
 
 
@@ -57,7 +61,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void MetadataSelected(MenuSceneInfo sceneInfo, TaskResult<KeyValuePair<SaveType, EncounterMetadata>> metadata)
             => MetadataSelected(sceneInfo, metadata.Value);
-        protected virtual void MetadataSelected(MenuSceneInfo sceneInfo,  KeyValuePair<SaveType, EncounterMetadata> metadata)
+        protected virtual void MetadataSelected(MenuSceneInfo sceneInfo, KeyValuePair<SaveType, EncounterMetadata> metadata)
         {
             if (metadata.Value == null)
                 return;

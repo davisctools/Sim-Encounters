@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine.Networking;
+using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -8,7 +9,7 @@ namespace ClinicalTools.SimEncounters
         private readonly IUrlBuilder urlBuilder;
         private readonly IServerReader serverReader;
         private readonly IStringDeserializer<EncounterEditLock> parser;
-        public EncounterLocker(IUrlBuilder urlBuilder, IServerReader serverReader, IStringDeserializer<EncounterEditLock> parser)
+        public EncounterLocker(SignalBus signalBus, IUrlBuilder urlBuilder, IServerReader serverReader, IStringDeserializer<EncounterEditLock> parser)
         {
             this.urlBuilder = urlBuilder;
             this.serverReader = serverReader;
@@ -29,7 +30,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string ModeVariable { get; } = "mode";
         protected virtual string ModeValue { get; } = "lock";
         protected virtual string AccountVariable { get; } = "accountId";
-        protected virtual string UsernameVariable { get; } = "username";
+        protected virtual string UsernameVariable { get; } = "editor";
         protected virtual string RecordNumberVariable { get; } = "recordNumber";
 
         protected virtual UnityWebRequest GetWebRequest(User user, EncounterMetadata metadata)
@@ -53,7 +54,7 @@ namespace ClinicalTools.SimEncounters
             }
 
             var output = serverOutput.Value.Trim();
-            if (output.StartsWith("1")) {
+            if (string.IsNullOrWhiteSpace(output) || output.StartsWith("1")) {
                 result.SetCompleted();
                 return;
             }
@@ -71,7 +72,7 @@ namespace ClinicalTools.SimEncounters
 
     public class EncounterAlreadyLockedException : Exception
     {
-        public EncounterEditLock Lock {get;}
+        public EncounterEditLock Lock { get; }
         public EncounterAlreadyLockedException(EncounterEditLock editLock) : base("Encounter already locked.")
             => Lock = editLock;
     }
