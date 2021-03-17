@@ -20,6 +20,8 @@ namespace ClinicalTools.SimEncounters
             subcontainer.Bind<IMenuEncountersReader>().To<MenuEncountersReader>().AsTransient();
             InstallMetadataReaderBindings(subcontainer);
 
+            Container.Bind<IEncounterLocksReader>().To<EncounterLocksReader>().AsTransient();
+
             subcontainer.Bind<IBasicStatusesReader>().To<BasicStatusesReader>().AsTransient().WhenNotInjectedInto<BasicStatusesReader>();
             subcontainer.Bind<IBasicStatusesReader>().To<LocalBasicStatusesReader>().AsTransient().WhenInjectedInto<BasicStatusesReader>();
             FileManagerInstaller.BindFileManager(subcontainer, SaveType.Local);

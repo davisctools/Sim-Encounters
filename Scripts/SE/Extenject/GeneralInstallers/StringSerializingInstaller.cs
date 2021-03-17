@@ -14,6 +14,8 @@ namespace ClinicalTools.SimEncounters
             BindStringSplitter(subcontainer);
             BindMetadataListDeserializer(subcontainer);
             BindMetadataDeserializer(subcontainer);
+            BindEncounterLockListDeserializer(subcontainer);
+            BindEncounterLockDeserializer(subcontainer);
             BindSpriteDeserializer(subcontainer);
 
             BindBasicStatusDictionaryDeserializer(subcontainer);
@@ -43,8 +45,12 @@ namespace ClinicalTools.SimEncounters
             => subcontainer.Bind<IStringSplitter>().To<DoubleColonStringSplitter>().AsTransient();
         protected virtual void BindMetadataListDeserializer(DiContainer subcontainer)
             => subcontainer.Bind<IStringDeserializer<List<EncounterMetadata>>>().To<ListDeserializer<EncounterMetadata>>().AsTransient();
+        protected virtual void BindEncounterLockListDeserializer(DiContainer subcontainer)
+            => subcontainer.Bind<IStringDeserializer<List<EncounterEditLock>>>().To<ListDeserializer<EncounterEditLock>> ().AsTransient();
         protected virtual void BindMetadataDeserializer(DiContainer subcontainer)
-            => subcontainer.Bind<IStringDeserializer<EncounterMetadata>>().To<EncounterMetadataDeserializer>().AsTransient();
+            => subcontainer.Bind<IStringDeserializer<EncounterMetadata>>().To<EncounterMetadataDeserializer>().AsTransient(); 
+        protected virtual void BindEncounterLockDeserializer(DiContainer subcontainer)
+             => subcontainer.Bind<IStringDeserializer<EncounterEditLock>>().To<EncounterEditLockDeserializer>().AsTransient();
         protected virtual void BindSpriteDeserializer(DiContainer subcontainer)
             => subcontainer.Bind<ISpriteDeserializer>().To<SpriteDeserializer>().AsTransient();
         protected virtual void BindBasicStatusDictionaryDeserializer(DiContainer subcontainer)
@@ -120,6 +126,7 @@ namespace ClinicalTools.SimEncounters
         {
             new DictionaryDeserializer<int, EncounterBasicStatus>(null, null);
             new ListDeserializer<EncounterMetadata>(null, null);
+            new ListDeserializer<EncounterEditLock>(null, null);
             new XmlStringDeserializer<EncounterNonImageContent>(null, null);
             new XmlStringDeserializer<EncounterImageContent>(null, null);
         }

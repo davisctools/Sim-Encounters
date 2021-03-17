@@ -36,7 +36,6 @@ namespace ClinicalTools.SimEncounters
         public virtual string EditorVersion { get; set; } = "0";
         public virtual bool IsTemplate { get; set; }
         public virtual bool IsPublic { get; set; }
-        public virtual EncounterEditLock Lock { get; set; }
         public virtual Sprite Sprite { get; set; }
         public virtual string GetDesiredFilename()
         {

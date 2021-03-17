@@ -54,7 +54,7 @@ namespace ClinicalTools.SimEncounters
             gameObject.SetActive(true);
 
             if (EditButton != null)
-                EditButton.gameObject.SetActive(metadata.AuthorAccountId == SceneInfo.User.AccountId);
+                EditButton.gameObject.SetActive(metadata.AuthorAccountId == SceneInfo.User.AccountId && eventArgs.Encounter.Lock == null);
             if (CopyButton != null)
                 CopyButton.gameObject.SetActive(true);
         }

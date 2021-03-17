@@ -8,6 +8,9 @@ namespace ClinicalTools.SimEncounters
     {
         public override void Install(DiContainer container)
         {
+            Container.Bind<IEncounterLocker>().To<EncounterLocker>().AsTransient();
+            Container.Bind<IEncounterUnlocker>().To<EncounterUnlocker>().AsTransient();
+
             SignalBusInstaller.Install(container);
             container.DeclareSignal<SceneChangedSignal>().OptionalSubscriber();
 
