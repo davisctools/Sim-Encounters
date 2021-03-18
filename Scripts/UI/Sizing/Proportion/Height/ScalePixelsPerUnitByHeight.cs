@@ -25,8 +25,13 @@ namespace ClinicalTools.UI
         {
             base.OnRectTransformDimensionsChange();
 
+
+            if (name == "OpenWriter") {
+                var abcde = 1;
+            }
+
             var currentHeight = RectTransform.rect.height;
-            var currentScale = RectTransform.lossyScale.y;
+            var currentScale = RectTransform.lossyScale.y / RectTransform.lossyScale.x;
             if (Mathf.Abs(currentHeight - height) < Tolerance
                 && Mathf.Abs(currentScale - scale) < Tolerance) {
                 return;
@@ -58,10 +63,10 @@ namespace ClinicalTools.UI
 
             if (height == 0)
                 height = RectTransform.rect.height;
-            scale = RectTransform.lossyScale.y;
+            scale = RectTransform.lossyScale.y / RectTransform.lossyScale.x;
 
             var imageheight = Texture.height;
-            Image.pixelsPerUnitMultiplier =  imageheight / height / scale;
+            Image.pixelsPerUnitMultiplier = imageheight / height / scale;
         }
     }
 }
