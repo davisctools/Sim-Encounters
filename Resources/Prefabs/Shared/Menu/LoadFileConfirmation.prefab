@@ -607,6 +607,7 @@ GameObject:
   - component: {fileID: 114854918678955676}
   - component: {fileID: 114525325102200368}
   - component: {fileID: 114772592981590514}
+  - component: {fileID: 6550319315014320975}
   m_Layer: 5
   m_Name: Exit
   m_TagString: Untagged
@@ -733,6 +734,18 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &6550319315014320975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436100147897752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a586b4dc65e9d744a990fce75982b98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1484557209458566
 GameObject:
   m_ObjectHideFlags: 0
@@ -1178,6 +1191,8 @@ GameObject:
   - component: {fileID: 222720620186847552}
   - component: {fileID: 114620281234893070}
   - component: {fileID: 1255427738328457610}
+  - component: {fileID: 2054283722105505081}
+  - component: {fileID: 3928712950329091715}
   m_Layer: 5
   m_Name: LoadFileConfirmation
   m_TagString: Untagged
@@ -1258,8 +1273,38 @@ MonoBehaviour:
   localButton: {fileID: 114470011991311580}
   serverButton: {fileID: 114841621648731746}
   autosaveButton: {fileID: 114183078878479904}
-  closeButtons:
-  - {fileID: 114525325102200368}
+--- !u!114 &2054283722105505081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729266201599824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21ccc177d44becc4da7398ed3530450d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviours:
+  - {fileID: 1255427738328457610}
+--- !u!114 &3928712950329091715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729266201599824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 2054283722105505081}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
 --- !u!1 &1742210130217282
 GameObject:
   m_ObjectHideFlags: 0

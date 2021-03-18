@@ -25,43 +25,55 @@ namespace ClinicalTools.SimEncounters
         }
 
         public virtual void StartEncounter(MenuSceneInfo sceneInfo, MenuEncounter menuEncounter)
-            => EnsureEncounterUnlocked(sceneInfo, menuEncounter);
+            => SelectMetadata(sceneInfo, menuEncounter);
 
-        protected virtual void EnsureEncounterUnlocked(MenuSceneInfo sceneInfo, MenuEncounter menuEncounter)
+        protected virtual void SelectMetadata(MenuSceneInfo sceneInfo, MenuEncounter menuEncounter)
+        {
+            if (MetadataSelector == null) {
+                EnsureEncounterUnlocked(sceneInfo, menuEncounter, menuEncounter.GetLatestTypedMetada());
+                return;
+            }
+
+            var result = MetadataSelector.GetMetadata(menuEncounter);
+            result.AddOnCompletedListener((value) => MetadataSelected(sceneInfo, menuEncounter, value));
+        }
+
+        protected virtual void MetadataSelected(
+            MenuSceneInfo sceneInfo,
+            MenuEncounter menuEncounter,
+            TaskResult<KeyValuePair<SaveType, EncounterMetadata>> metadata)
+        {
+            if (metadata.HasValue())
+                EnsureEncounterUnlocked(sceneInfo, menuEncounter, metadata.Value);
+        }
+
+        protected virtual void EnsureEncounterUnlocked(
+            MenuSceneInfo sceneInfo,
+            MenuEncounter menuEncounter,
+            KeyValuePair<SaveType, EncounterMetadata> metadata)
         {
             if (menuEncounter.Metadata.ContainsKey(SaveType.Server)) {
-                var task = EncounterLocker.LockEncounter(sceneInfo.User, menuEncounter.GetLatestMetadata());
-                task.AddOnCompletedListener((result) => EncounterLocked(result, sceneInfo, menuEncounter));
+                var task = EncounterLocker.LockEncounter(sceneInfo.User, metadata.Value);
+                task.AddOnCompletedListener((result) => EncounterLocked(result, sceneInfo, metadata));
             } else {
-                SelectMetadata(sceneInfo, menuEncounter);
+                StartWriter(sceneInfo, metadata);
             }
         }
 
-        protected virtual void EncounterLocked(TaskResult result, MenuSceneInfo sceneInfo, MenuEncounter menuEncounter)
+        protected virtual void EncounterLocked(
+            TaskResult result,
+            MenuSceneInfo sceneInfo,
+            KeyValuePair<SaveType, EncounterMetadata> metadata)
         {
             if (!result.IsError()) {
-                SelectMetadata(sceneInfo, menuEncounter);
+                StartWriter(sceneInfo, metadata);
                 return;
             }
 
             MessageHandler.ShowMessage($"Cannot set lock on encounter: {result.Exception.Message}", MessageType.Error);
         }
 
-
-        protected virtual void SelectMetadata(MenuSceneInfo sceneInfo, MenuEncounter menuEncounter)
-        {
-            if (MetadataSelector == null) {
-                MetadataSelected(sceneInfo, menuEncounter.GetLatestTypedMetada());
-                return;
-            }
-
-            var result = MetadataSelector.GetMetadata(menuEncounter);
-            result.AddOnCompletedListener((value) => MetadataSelected(sceneInfo, value));
-        }
-
-        protected virtual void MetadataSelected(MenuSceneInfo sceneInfo, TaskResult<KeyValuePair<SaveType, EncounterMetadata>> metadata)
-            => MetadataSelected(sceneInfo, metadata.Value);
-        protected virtual void MetadataSelected(MenuSceneInfo sceneInfo, KeyValuePair<SaveType, EncounterMetadata> metadata)
+        protected virtual void StartWriter(MenuSceneInfo sceneInfo, KeyValuePair<SaveType, EncounterMetadata> metadata)
         {
             if (metadata.Value == null)
                 return;

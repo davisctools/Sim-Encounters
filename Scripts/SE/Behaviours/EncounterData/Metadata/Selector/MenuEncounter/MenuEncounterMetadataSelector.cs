@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClinicalTools.UI;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class MenuEncounterMetadataSelector : BaseMenuEncounterMetadataSelector
+    public class MenuEncounterMetadataSelector : BaseMenuEncounterMetadataSelector, ICloseHandler
     { 
         public TextMeshProUGUI Label { get => label; set => label = value; }
         [SerializeField] private TextMeshProUGUI label;
@@ -16,16 +17,12 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private Button serverButton;
         public Button AutosaveButton { get => autosaveButton; set => autosaveButton = value; }
         [SerializeField] private Button autosaveButton;
-        public List<Button> CloseButtons { get => closeButtons; set => closeButtons = value; }
-        [SerializeField] private List<Button> closeButtons;
 
         protected virtual void Awake()
         {
             LocalButton.onClick.AddListener(SelectLocal);
             ServerButton.onClick.AddListener(SelectServer);
             AutosaveButton.onClick.AddListener(SelectAutosave);
-            foreach (var closeButton in CloseButtons)
-                closeButton.onClick.AddListener(Close);
         }
 
         protected virtual MenuEncounter CurrentEncounter { get; set; }
@@ -89,5 +86,7 @@ namespace ClinicalTools.SimEncounters
 
             gameObject.SetActive(false);
         }
+
+        public void Close(object sender) => Close();
     }
 }
