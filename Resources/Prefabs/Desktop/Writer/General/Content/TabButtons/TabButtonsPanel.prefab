@@ -297,6 +297,7 @@ GameObject:
   - component: {fileID: 2952353394965848650}
   - component: {fileID: 2952681801555541300}
   - component: {fileID: 2952928689609195974}
+  - component: {fileID: 3018715859504288665}
   m_Layer: 5
   m_Name: TabScrollLeft
   m_TagString: Untagged
@@ -436,6 +437,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 480869fddf97bd24da9bb169f9ad9db4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 3018715859504288665}
+--- !u!225 &3018715859504288665
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2983882252265620400}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2983998837731786402
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,7 +516,7 @@ MonoBehaviour:
   m_MovementType: 0
   m_Elasticity: 0.1
   m_Inertia: 1
-  m_DecelerationRate: 0.135
+  m_DecelerationRate: 0.05
   m_ScrollSensitivity: 1
   m_Viewport: {fileID: 3058893559678058566}
   m_HorizontalScrollbar: {fileID: 2952768372697314998}
@@ -742,6 +756,7 @@ GameObject:
   - component: {fileID: 2953016149111402450}
   - component: {fileID: 2952167726003210628}
   - component: {fileID: 2952881335854820066}
+  - component: {fileID: 8867207862099538790}
   m_Layer: 5
   m_Name: TabScrollRight
   m_TagString: Untagged
@@ -881,6 +896,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 480869fddf97bd24da9bb169f9ad9db4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 8867207862099538790}
+--- !u!225 &8867207862099538790
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2984099995024399972}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2984224465730190000
 GameObject:
   m_ObjectHideFlags: 0

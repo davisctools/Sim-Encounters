@@ -27,7 +27,7 @@ namespace ClinicalTools.UI
             var spriteDpiProportion = dpi / m_DefaultSpriteDPI;
 
             SetScaleFactor(dpi / targetDPI);
-            SetReferencePixelsPerUnit(m_ReferencePixelsPerUnit * targetDPI / m_DefaultSpriteDPI / spriteDpiProportion);
+            SetReferencePixelsPerUnit(m_ReferencePixelsPerUnit * targetDPI / m_DefaultSpriteDPI);
         }
     }
 }
