@@ -6,20 +6,23 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class WriterReaderSideController : MonoBehaviour, IReaderSceneStarter
+    public class WriterReaderSideController : MonoBehaviour, IReaderSceneStarter, IMenuSceneStarter
     {
         [SerializeField] private Button button;
         [SerializeField] private AnchorsToMatchAspectRatio aspectRatioHandler;
 
+        protected AnimationMonitor AnimationMonitor { get; set; }
         protected ISelector<LoadingReaderSceneInfoSelectedEventArgs> LoadingReaderSceneInfoSelector { get; set; }
         protected ISelectedListener<WriterSceneInfoSelectedEventArgs> WriterSceneInfoSelector { get; set; }
         protected ICurve Curve { get; set; }
         [Inject]
         public virtual void Inject(
+            AnimationMonitor animationMonitor,
             ISelector<LoadingReaderSceneInfoSelectedEventArgs> loadingReaderSceneInfoSelector,
             ISelectedListener<WriterSceneInfoSelectedEventArgs> writerSceneInfoSelector,
             ICurve curve)
         {
+            AnimationMonitor = animationMonitor;
             LoadingReaderSceneInfoSelector = loadingReaderSceneInfoSelector;
             WriterSceneInfoSelector = writerSceneInfoSelector;
             Curve = curve;
@@ -53,7 +56,7 @@ namespace ClinicalTools.SimEncounters
             aspectRatioHandler.Offset = aspectRatioHandler.Width;
         }
 
-        private void Initialize(object sender, WriterSceneInfoSelectedEventArgs e)
+        protected virtual void Initialize(object sender, WriterSceneInfoSelectedEventArgs e)
         {
             var sceneInfo = e.SceneInfo;
             var encounterStatus = new EncounterStatus(new EncounterBasicStatus(), new EncounterContentStatus());
@@ -89,6 +92,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual float AnimationTime { get; } = .5f;
         protected virtual IEnumerator Close()
         {
+            AnimationMonitor.AnimationStarting(this);
             var curveX = Curve.GetCurveX(aspectRatioHandler.Offset / aspectRatioHandler.Width);
             while (aspectRatioHandler.Offset < aspectRatioHandler.Width) {
                 yield return null;
@@ -96,9 +100,11 @@ namespace ClinicalTools.SimEncounters
                 aspectRatioHandler.Offset = Curve.GetCurveY(curveX) * aspectRatioHandler.Width;
             }
             aspectRatioHandler.Offset = aspectRatioHandler.Width;
+            AnimationMonitor.AnimationStopping(this);
         }
         protected virtual IEnumerator Open()
         {
+            AnimationMonitor.AnimationStarting(this);
             var curveX = Curve.GetCurveX(1 - aspectRatioHandler.Offset / aspectRatioHandler.Width);
             while (aspectRatioHandler.Offset > 0) {
                 yield return null;
@@ -106,6 +112,13 @@ namespace ClinicalTools.SimEncounters
                 aspectRatioHandler.Offset = aspectRatioHandler.Width - Curve.GetCurveY(curveX) * aspectRatioHandler.Width;
             }
             aspectRatioHandler.Offset = 0;
+            AnimationMonitor.AnimationStopping(this);
+        }
+
+        public virtual void StartScene(LoadingMenuSceneInfo loadingSceneInfo)
+        {
+            if (opened)
+                OnButtonClicked();
         }
     }
 }
