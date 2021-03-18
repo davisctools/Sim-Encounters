@@ -25,11 +25,6 @@ namespace ClinicalTools.UI
         {
             base.OnRectTransformDimensionsChange();
 
-
-            if (name == "OpenWriter") {
-                var abcde = 1;
-            }
-
             var currentHeight = RectTransform.rect.height;
             var currentScale = RectTransform.lossyScale.y / RectTransform.lossyScale.x;
             if (Mathf.Abs(currentHeight - height) < Tolerance
