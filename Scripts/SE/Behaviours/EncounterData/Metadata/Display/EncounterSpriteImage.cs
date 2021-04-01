@@ -10,6 +10,6 @@ namespace ClinicalTools.SimEncounters
         private Image image;
 
         protected override void OnMetadataSelected(object sender, EncounterMetadataSelectedEventArgs eventArgs) 
-            => Image.sprite = eventArgs.Metadata.Sprite;
+            => Image.sprite = eventArgs.Metadata.Image.Sprite;
     }
 }

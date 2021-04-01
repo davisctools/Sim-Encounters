@@ -11,8 +11,8 @@ namespace ClinicalTools.SimEncounters
         public virtual string Serialize(EncounterMetadata metadata)
         {
             var str = metadata.RecordNumber.ToString();
-            str += AppendValue(metadata.AuthorAccountId.ToString());
-            str += AppendValue(metadata.AuthorName);
+            str += AppendValue(metadata.Author.Id.ToString());
+            str += AppendValue(metadata.Author.Name);
 
             if (metadata is INamed named)
                 str += AppendValue(named.Name);
@@ -33,10 +33,10 @@ namespace ClinicalTools.SimEncounters
                 str += AppendValue(webCompletion.Url);
                 str += AppendValue(webCompletion.CompletionCode);
             }
-            if (metadata.Sprite != null) {
-                str += AppendValue(metadata.Sprite.texture.width.ToString());
-                str += AppendValue(metadata.Sprite.texture.height.ToString());
-                str += AppendValue(SpriteSerializer.Serialize(metadata.Sprite));
+            if (metadata.Image?.Sprite != null) {
+                str += AppendValue(metadata.Image.Sprite.texture.width.ToString());
+                str += AppendValue(metadata.Image.Sprite.texture.height.ToString());
+                str += AppendValue(SpriteSerializer.Serialize(metadata.Image.Sprite));
             }
 
             return str;

@@ -7,13 +7,13 @@ namespace ClinicalTools.SimEncounters
     public class KeyedSpriteUploader : BaseSpriteUploader, IKeyedSpriteSelector
     {
         protected WaitableTask<string> CurrentWaitableSpriteKey { get; set; }
-        protected KeyedCollection<Sprite> SpriteCollection { get; set; }
+        protected KeyedCollection<EncounterImage> SpriteCollection { get; set; }
         protected string CurrentKey { get; set; }
 
         protected string LegacyEncounterImageKey = "patientImage";
         protected string EncounterImageKey => "encounterImage";
 
-        public virtual WaitableTask<string> SelectSprite(KeyedCollection<Sprite> sprites, string spriteKey)
+        public virtual WaitableTask<string> SelectSprite(KeyedCollection<EncounterImage> sprites, string spriteKey)
         {
             if (CurrentWaitableSpriteKey?.IsCompleted() == false)
                 CurrentWaitableSpriteKey.SetError(new Exception("New popup opened"));
@@ -24,7 +24,7 @@ namespace ClinicalTools.SimEncounters
             CurrentWaitableSpriteKey = new WaitableTask<string>();
 
             if (spriteKey != null && SpriteCollection.ContainsKey(spriteKey))
-                SetImage(SpriteCollection[spriteKey]);
+                SetImage(SpriteCollection[spriteKey].Sprite);
             else
                 SetImage(null);
 
@@ -35,11 +35,11 @@ namespace ClinicalTools.SimEncounters
         {
             if (CurrentImage != null) {
                 if (CurrentKey != null && SpriteCollection.ContainsKey(CurrentKey))
-                    SpriteCollection[CurrentKey] = CurrentImage;
+                    SpriteCollection[CurrentKey].Sprite = CurrentImage;
                 else if (CurrentKey != null)
-                    SpriteCollection.Add(CurrentKey, CurrentImage);
+                    SpriteCollection.Add(CurrentKey, new EncounterImage()); //CurrentImage !!!!TODO
                 else
-                    CurrentKey = SpriteCollection.Add(CurrentImage);
+                    CurrentKey = SpriteCollection.Add(new EncounterImage()); //CurrentImage !!!!TODO
             }
 
             CurrentWaitableSpriteKey.SetResult(CurrentKey);

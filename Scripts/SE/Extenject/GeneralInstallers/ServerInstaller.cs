@@ -7,7 +7,7 @@ namespace ClinicalTools.SimEncounters
         public override void InstallBindings()
         {
             Container.Bind<IUrlBuilder>().To<UrlBuilder>().AsTransient();
-            Container.Bind<IServerReader>().To<ServerReader>().AsTransient();
+            Container.Bind<IServerStringReader>().To<ServerStringReader>().AsTransient();
         }
     }
 }

@@ -7,8 +7,8 @@ namespace ClinicalTools.SimEncounters
     public class RegisterUser
     {
         protected IUrlBuilder WebAddress { get; }
-        protected IServerReader ServerReader { get; }
-        public RegisterUser(IUrlBuilder webAddress, IServerReader serverReader)
+        protected IServerStringReader ServerReader { get; }
+        public RegisterUser(IUrlBuilder webAddress, IServerStringReader serverReader)
         {
             WebAddress = webAddress;
             ServerReader = serverReader;

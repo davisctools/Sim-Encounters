@@ -6,11 +6,11 @@ namespace ClinicalTools.SimEncounters
 {
     public class AutoLogin : ILoginHandler
     {
-        protected IServerReader ServerReader { get; }
+        protected IServerStringReader ServerReader { get; }
         protected IUrlBuilder WebAddress { get; }
         protected UserDeserializer UserDeserializer { get; }
 
-        public AutoLogin(IServerReader serverReader, IUrlBuilder webAddress, UserDeserializer userDeserializer)
+        public AutoLogin(IServerStringReader serverReader, IUrlBuilder webAddress, UserDeserializer userDeserializer)
         {
             ServerReader = serverReader;
             WebAddress = webAddress;

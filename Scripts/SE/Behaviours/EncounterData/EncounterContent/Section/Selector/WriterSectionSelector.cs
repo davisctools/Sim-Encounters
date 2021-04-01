@@ -58,7 +58,7 @@ namespace ClinicalTools.SimEncounters
             SectionButtons.Clear();
 
             CurrentEncounter = e.Encounter;
-            foreach (var section in CurrentEncounter.Content.NonImageContent.Sections)
+            foreach (var section in CurrentEncounter.Content.Sections)
                 AddSectionButton(CurrentEncounter, section.Value);
         }
 
@@ -83,7 +83,7 @@ namespace ClinicalTools.SimEncounters
             if (section.IsError() || section.Value == null)
                 return;
 
-            CurrentEncounter.Content.NonImageContent.Sections.Add(section.Value);
+            CurrentEncounter.Content.Sections.Add(section.Value);
             AddSectionButton(CurrentEncounter, section.Value);
 
             var sectionSelectedArgs = new SectionSelectedEventArgs(section.Value);
@@ -129,9 +129,9 @@ namespace ClinicalTools.SimEncounters
         }
         protected void OnDeleted(Section section)
         {
-            var nonImageContent = CurrentEncounter.Content.NonImageContent;
-            var sections = nonImageContent.Sections;
-            var sectionIndex = nonImageContent.CurrentSectionIndex;
+            var content = CurrentEncounter.Content;
+            var sections = content.Sections;
+            var sectionIndex = content.CurrentSectionIndex;
             var button = SectionButtons[section];
 
             RearrangeableGroup.Remove(button);
@@ -156,6 +156,6 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void SectionsRearranged(object sender, RearrangedEventArgs2 e)
-            => CurrentEncounter.Content.NonImageContent.Sections.MoveValue(e.NewIndex, e.OldIndex);
+            => CurrentEncounter.Content.Sections.MoveValue(e.NewIndex, e.OldIndex);
     }
 }

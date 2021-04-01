@@ -6,8 +6,8 @@ namespace ClinicalTools.SimEncounters
     public class ResendEmail
     {
         protected IUrlBuilder WebAddress { get; }
-        protected IServerReader ServerReader { get; }
-        public ResendEmail(IUrlBuilder webAddress, IServerReader serverReader)
+        protected IServerStringReader ServerReader { get; }
+        public ResendEmail(IUrlBuilder webAddress, IServerStringReader serverReader)
         {
             WebAddress = webAddress;
             ServerReader = serverReader;

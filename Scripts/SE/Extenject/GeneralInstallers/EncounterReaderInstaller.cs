@@ -75,11 +75,12 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void BindEncounterDataReaderInstaller(DiContainer subcontainer, SaveType saveType)
         {
-            subcontainer.Bind<IEncounterDataReader>().To<EncounterDataReader>().AsTransient();
             if (saveType == SaveType.Server) {
-                subcontainer.Bind<INonImageContentReader>().To<ServerNonImageContentReader>().AsTransient();
-                subcontainer.Bind<IImageContentReader>().To<ServerImageContentReader>().AsTransient();
+                subcontainer.Bind<IEncounterDataReader>().To<ServerEncounterContentReader>().AsTransient();
+                //subcontainer.Bind<INonImageContentReader>().To<ServerNonImageContentReader>().AsTransient();
+                //subcontainer.Bind<IImageContentReader>().To<ServerImageContentReader>().AsTransient();
             } else {
+                subcontainer.Bind<IEncounterDataReader>().To<LegacyEncounterDataReader>().AsTransient();
                 subcontainer.Bind<INonImageContentReader>().To<LocalNonImageContentReader>().AsTransient();
                 subcontainer.Bind<IImageContentReader>().To<LocalImageContentReader>().AsTransient();
                 FileManagerInstaller.BindFileManager(subcontainer, saveType);

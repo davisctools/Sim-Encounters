@@ -70,7 +70,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void StartReader()
         {
-            SceneInfoSelector.CurrentValue.SceneInfo.Encounter.Content.NonImageContent.SetCurrentSection(SectionSelector.CurrentValue.SelectedSection);
+            SceneInfoSelector.CurrentValue.SceneInfo.Encounter.Content.SetCurrentSection(SectionSelector.CurrentValue.SelectedSection);
             SectionSelector.CurrentValue.SelectedSection.SetCurrentTab(TabSelector.CurrentValue.SelectedTab);
 
             SignalBus.Fire<SerializeEncounterSignal>();

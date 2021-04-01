@@ -7,6 +7,6 @@ namespace ClinicalTools.SimEncounters
     public class EncounterAuthorLabel : EncounterMetadataLabel
     {
         protected override void OnMetadataSelected(object sender, EncounterMetadataSelectedEventArgs eventArgs)
-            => Label.text = eventArgs.Metadata.AuthorName.ToString();
+            => Label.text = eventArgs.Metadata.Author.Name.ToString();
     }
 }

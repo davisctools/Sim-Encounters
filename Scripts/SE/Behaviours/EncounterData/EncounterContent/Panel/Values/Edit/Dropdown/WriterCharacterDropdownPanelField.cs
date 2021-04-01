@@ -44,7 +44,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void OnEncounterSelected(object sender, EncounterSelectedEventArgs e)
         {
-            Characters = e.Encounter.Content.NonImageContent.Characters;
+            Characters = e.Encounter.Content.Characters;
             Dropdown.ClearOptions();
             CharacterKeys = new string[Characters.Count];
             var options = new List<TMP_Dropdown.OptionData>();

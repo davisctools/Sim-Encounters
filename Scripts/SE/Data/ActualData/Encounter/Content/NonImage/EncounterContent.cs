@@ -1,11 +1,14 @@
 ﻿using ClinicalTools.Collections;
 using System;
+using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class EncounterNonImageContent
+    public class EncounterContent
     {
         public OrderedCollection<Character> Characters { get; } = new OrderedCollection<Character>();
+        public KeyedCollection<EncounterImage> Images { get; } = new KeyedCollection<EncounterImage>();
+        public virtual KeyedCollection<Sprite> Icons { get; } = new KeyedCollection<Sprite>();
 
         public virtual int CurrentSectionIndex { get; set; }
         public virtual Section GetCurrentSection() => Sections[CurrentSectionIndex].Value;
@@ -18,30 +21,6 @@ namespace ClinicalTools.SimEncounters
         }
 
         public virtual OrderedCollection<Section> Sections { get; } = new OrderedCollection<Section>();
-
-
-        public int MoveToNextSection()
-        {
-            if (CurrentSectionIndex >= Sections.Count - 1)
-                return CurrentSectionIndex;
-
-            CurrentSectionIndex++;
-            var section = Sections[CurrentSectionIndex].Value;
-            section.CurrentTabIndex = 0;
-
-            return CurrentSectionIndex;
-        }
-        public int MoveToPreviousSection()
-        {
-            if (CurrentSectionIndex <= 0)
-                return CurrentSectionIndex;
-
-            CurrentSectionIndex--;
-            var section = Sections[CurrentSectionIndex].Value;
-            section.CurrentTabIndex = section.Tabs.Count - 1;
-
-            return CurrentSectionIndex;
-        }
 
         public int GetCurrentTabNumber()
         {

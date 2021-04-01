@@ -43,8 +43,9 @@ namespace ClinicalTools.SimEncounters
 
                 var metadata = new EncounterMetadata() {
                     RecordNumber = int.Parse(parsedItem[RecordNumberIndex]),
-                    AuthorAccountId = int.Parse(parsedItem[AuthorAccountIdIndex]),
-                    AuthorName = GetName(parsedItem[AuthorNameIndex]),
+                    Author = new Author(int.Parse(parsedItem[AuthorAccountIdIndex])) {
+                        Name = GetName(parsedItem[AuthorNameIndex])
+                    },
                     Title = parsedItem[TitleIndex],
                     Difficulty = GetDifficulty(parsedItem[DifficultyIndex]),
                     Subtitle = UnityWebRequest.UnEscapeURL(parsedItem[SubtitleIndex]),
@@ -67,8 +68,10 @@ namespace ClinicalTools.SimEncounters
                 metadata.Filename = metadata.GetDesiredFilename();
 
                 if (parsedItem.Length + 1 >= ImageDataIndex) {
-                    metadata.Sprite = GetSprite(parsedItem[ImageWidthIndex], parsedItem[ImageHeightIndex],
-                        UnityWebRequest.UnEscapeURL(parsedItem[ImageDataIndex]));
+                    metadata.Image = new EncounterImage() {
+                        Sprite = GetSprite(parsedItem[ImageWidthIndex], parsedItem[ImageHeightIndex],
+                            UnityWebRequest.UnEscapeURL(parsedItem[ImageDataIndex]))
+                    };
                 }
 
                 return metadata;

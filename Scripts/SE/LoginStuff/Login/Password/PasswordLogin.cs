@@ -6,11 +6,11 @@ namespace ClinicalTools.SimEncounters
 {
     public class PasswordLogin : IPasswordLoginHandler
     {
-        protected IServerReader ServerReader { get; }
+        protected IServerStringReader ServerReader { get; }
         protected IUrlBuilder WebAddress { get; }
         protected UserDeserializer UserDeserializer { get; }
 
-        public PasswordLogin(IServerReader serverReader, IUrlBuilder webAddress, UserDeserializer userParser)
+        public PasswordLogin(IServerStringReader serverReader, IUrlBuilder webAddress, UserDeserializer userParser)
         {
             ServerReader = serverReader;
             WebAddress = webAddress;

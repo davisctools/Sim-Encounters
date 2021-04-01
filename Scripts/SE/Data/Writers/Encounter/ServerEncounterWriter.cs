@@ -10,17 +10,17 @@ namespace ClinicalTools.SimEncounters
 {
     public class ServerEncounterWriter : IEncounterWriter
     {
-        protected IServerReader ServerReader { get; }
+        protected IServerStringReader ServerReader { get; }
         protected IUrlBuilder UrlBuilder { get; }
         protected IStringSerializer<Sprite> SpriteSerializer { get; }
-        protected IXmlSerializer<EncounterImageContent> ImageDataSerializer { get; }
-        protected IXmlSerializer<EncounterNonImageContent> EncounterContentSerializer { get; }
+        protected IXmlSerializer<LegacyEncounterImageContent> ImageDataSerializer { get; }
+        protected IXmlSerializer<EncounterContent> EncounterContentSerializer { get; }
         public ServerEncounterWriter(
-            IServerReader serverReader,
+            IServerStringReader serverReader,
             IUrlBuilder urlBuilder,
             IStringSerializer<Sprite> spriteSerializer,
-            IXmlSerializer<EncounterImageContent> imageDataSerializer,
-            IXmlSerializer<EncounterNonImageContent> encounterContentSerializer)
+            IXmlSerializer<LegacyEncounterImageContent> imageDataSerializer,
+            IXmlSerializer<EncounterContent> encounterContentSerializer)
         {
             ServerReader = serverReader;
             UrlBuilder = urlBuilder;
@@ -54,8 +54,8 @@ namespace ClinicalTools.SimEncounters
 
             form.AddField(AccountIdVariable, user.AccountId);
             AddFormModeFields(form, encounter.Metadata);
-            AddFormContentFields(form, encounter.Content.NonImageContent);
-            AddFormImageDataFields(form, encounter.Content.ImageContent);
+            AddFormContentFields(form, encounter.Content);
+            //AddFormImageDataFields(form, encounter.Content.ImageContent);
             AddMetadataFields(form, encounter.Metadata);
 
             return form;
@@ -81,7 +81,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string XmlMimeType { get; } = "text/xml";
         protected virtual string NonImageContentVariable { get; } = "xmlData";
         protected virtual string NonImageContentFilename { get; } = "xmlData";
-        protected virtual void AddFormContentFields(WWWForm form, EncounterNonImageContent content)
+        protected virtual void AddFormContentFields(WWWForm form, EncounterContent content)
         {
             var contentDoc = new XmlDocument();
             var contentSerializer = new XmlSerializer(contentDoc);
@@ -92,7 +92,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string ImageContentVariable { get; } = "imgData";
         protected virtual string ImageContentFilename { get; } = "imgData";
         protected virtual int MaxAllowedPacketSize { get; } = 10000000;
-        protected virtual void AddFormImageDataFields(WWWForm form, EncounterImageContent imageData)
+        protected virtual void AddFormImageDataFields(WWWForm form, LegacyEncounterImageContent imageData)
         {
             var imagesDoc = new XmlDocument();
             var imagesSerializer = new XmlSerializer(imagesDoc);
@@ -148,12 +148,12 @@ namespace ClinicalTools.SimEncounters
             
             form.AddField(PublicVariable, metadata.IsPublic);
             form.AddField(TemplateVariable, metadata.IsTemplate);
-            if (metadata.Sprite == null)
+            if (metadata.Image?.Sprite == null)
                 return;
 
-            AddEscapedField(form, SpriteDataVariable, SpriteSerializer.Serialize(metadata.Sprite));
-            form.AddField(SpriteWidthVariable, metadata.Sprite.texture.width);
-            form.AddField(SpriteHeightVariable, metadata.Sprite.texture.height);
+            AddEscapedField(form, SpriteDataVariable, SpriteSerializer.Serialize(metadata.Image.Sprite));
+            form.AddField(SpriteWidthVariable, metadata.Image.Sprite.texture.width);
+            form.AddField(SpriteHeightVariable, metadata.Image.Sprite.texture.height);
         }
 
         protected virtual void AddEscapedField(WWWForm form, string variable, string value)

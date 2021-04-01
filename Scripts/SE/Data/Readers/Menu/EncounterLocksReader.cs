@@ -6,11 +6,11 @@ namespace ClinicalTools.SimEncounters
     public class EncounterLocksReader : IEncounterLocksReader
     {
         private readonly IUrlBuilder urlBuilder;
-        private readonly IServerReader serverReader;
+        private readonly IServerStringReader serverReader;
         private readonly IStringDeserializer<List<EncounterEditLock>> parser;
         public EncounterLocksReader(
             IUrlBuilder urlBuilder, 
-            IServerReader serverReader, 
+            IServerStringReader serverReader, 
             IStringDeserializer<List<EncounterEditLock>> parser)
         {
             this.urlBuilder = urlBuilder;

@@ -57,7 +57,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void OnSectionSelected(object sender, UserSectionSelectedEventArgs e)
         {
             var encounter = EncounterSelector.CurrentValue.Encounter;
-            var nonImageContent = encounter.Data.Content.NonImageContent;
+            var nonImageContent = encounter.Data.Content;
             var sectionIndex = nonImageContent.CurrentSectionIndex;
             PreviousSection = (sectionIndex > 0) ? encounter.Sections[sectionIndex - 1].Value : null;
             NextSection = (sectionIndex + 1 < encounter.Sections.Count) ? encounter.Sections[sectionIndex + 1].Value : null;

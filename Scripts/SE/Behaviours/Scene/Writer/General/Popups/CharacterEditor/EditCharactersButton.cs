@@ -34,6 +34,7 @@ namespace ClinicalTools.SimEncounters
             Button.onClick.AddListener(EditCharacters);
         }
 
-        protected virtual void EditCharacters() => CharactersEditor.EditCharacters(EncounterSelectedListener.CurrentValue.Encounter.Content.NonImageContent.Characters);
+        protected virtual void EditCharacters() 
+            => CharactersEditor.EditCharacters(EncounterSelectedListener.CurrentValue.Encounter.Content.Characters);
     }
 }

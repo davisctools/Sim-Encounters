@@ -15,7 +15,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void BindImageContentSerializer(DiContainer subcontainer)
         {
-            subcontainer.Bind<IXmlSerializer<EncounterImageContent>>().To<ImageContentXmlSerializer>().AsTransient();
+            subcontainer.Bind<IXmlSerializer<LegacyEncounterImageContent>>().To<ImageContentXmlSerializer>().AsTransient();
             BindSpriteSerializer(subcontainer);
         }
         protected virtual void BindSpriteSerializer(DiContainer subcontainer)
@@ -27,7 +27,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void BindNonImageSerializer(DiContainer subcontainer)
         {
-            subcontainer.Bind<IXmlSerializer<EncounterNonImageContent>>().To<LegacyNonImageContentXmlSerializer>().AsTransient();
+            subcontainer.Bind<IXmlSerializer<EncounterContent>>().To<LegacyNonImageContentXmlSerializer>().AsTransient();
             BindSectionSerializer(subcontainer);
         }
         protected virtual void BindSectionSerializer(DiContainer subcontainer)

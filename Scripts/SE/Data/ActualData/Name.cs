@@ -3,6 +3,15 @@ using System.Collections.Generic;
 
 namespace ClinicalTools.SimEncounters
 {
+    public class Author
+    {
+        public virtual int Id { get; set; }
+        public virtual Name Name { get; set; } = new Name();
+
+        public Author(int id) {
+            Id = id;
+        }
+    }
     public class Name : IComparable<Name>
     {
         public virtual string Honorific { get; set; } = "";

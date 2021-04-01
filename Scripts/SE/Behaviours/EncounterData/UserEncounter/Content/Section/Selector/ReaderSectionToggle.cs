@@ -57,7 +57,7 @@ namespace ClinicalTools.SimEncounters
             if (Icon == null)
                 return;
 
-            var icons = userSection.Encounter.Data.Content.ImageContent.Icons;
+            var icons = userSection.Encounter.Data.Content.Icons;
             if (section.IconKey != null && icons.ContainsKey(section.IconKey))
                 Icon.sprite = icons[section.IconKey];
         }

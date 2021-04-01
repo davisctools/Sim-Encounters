@@ -11,7 +11,7 @@ namespace ClinicalTools.SimEncounters
 
         protected WaitableTask<string> CurrentWaitableSpriteKey { get; set; }
         protected Encounter Encounter { get; set; }
-        protected KeyedCollection<Sprite> SpriteCollection => Encounter?.Content.ImageContent.Sprites;
+        protected KeyedCollection<EncounterImage> ImageCollection => Encounter?.Content.Images;
         protected string CurrentKey { get; set; }
 
         protected virtual string LegacyEncounterImageKey => "patientImage";
@@ -50,9 +50,9 @@ namespace ClinicalTools.SimEncounters
         protected virtual void SetImage()
         {
             if (useEncounterImageToggle.isOn)
-                SetImage(Encounter.Metadata.Sprite);
-            else if (CurrentKey != null && SpriteCollection.ContainsKey(CurrentKey))
-                SetImage(SpriteCollection[CurrentKey]);
+                SetImage(Encounter.Metadata.Image.Sprite);
+            else if (CurrentKey != null && ImageCollection.ContainsKey(CurrentKey))
+                SetImage(ImageCollection[CurrentKey].Sprite);
             else
                 SetImage(null);
 
@@ -72,8 +72,8 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void ApplyEncounterImage()
         {
-            if (CurrentKey != null && SpriteCollection.ContainsKey(CurrentKey))
-                SpriteCollection.Remove(CurrentKey);
+            if (CurrentKey != null && ImageCollection.ContainsKey(CurrentKey))
+                ImageCollection.Remove(CurrentKey);
 
             CurrentWaitableSpriteKey.SetResult(EncounterImageKey);
         }
@@ -81,12 +81,12 @@ namespace ClinicalTools.SimEncounters
         protected virtual void ApplyContentImage()
         {
             if (CurrentImage != null) {
-                if (CurrentKey != null && SpriteCollection.ContainsKey(CurrentKey))
-                    SpriteCollection[CurrentKey] = CurrentImage;
+                if (CurrentKey != null && ImageCollection.ContainsKey(CurrentKey))
+                    ImageCollection[CurrentKey].Sprite = CurrentImage;
                 else if (CurrentKey != null)
-                    SpriteCollection.Add(CurrentKey, CurrentImage);
+                    ImageCollection.Add(CurrentKey, new EncounterImage());// CurrentImage); !!!!TODO
                 else
-                    CurrentKey = SpriteCollection.Add(CurrentImage);
+                    CurrentKey = ImageCollection.Add(new EncounterImage());// CurrentImage); !!!!TODO
             }
 
             CurrentWaitableSpriteKey.SetResult(CurrentKey);
@@ -95,8 +95,8 @@ namespace ClinicalTools.SimEncounters
 
         protected override void Remove()
         {
-            if (CurrentKey != null && SpriteCollection.ContainsKey(CurrentKey))
-                SpriteCollection.Remove(CurrentKey);
+            if (CurrentKey != null && ImageCollection.ContainsKey(CurrentKey))
+                ImageCollection.Remove(CurrentKey);
 
             CurrentWaitableSpriteKey.SetResult(null);
 

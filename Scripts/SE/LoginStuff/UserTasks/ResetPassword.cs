@@ -8,8 +8,8 @@ namespace ClinicalTools.SimEncounters
     {
         protected IUrlBuilder WebAddress { get; }
         
-        protected IServerReader ServerReader { get; }
-        public ResetPassword(IUrlBuilder webAddress, IServerReader serverReader)
+        protected IServerStringReader ServerReader { get; }
+        public ResetPassword(IUrlBuilder webAddress, IServerStringReader serverReader)
         {
             WebAddress = webAddress;
             ServerReader = serverReader;

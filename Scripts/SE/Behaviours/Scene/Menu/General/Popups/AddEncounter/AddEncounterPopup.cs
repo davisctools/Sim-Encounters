@@ -64,8 +64,9 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void StartCase()
         {
-            CurrentMetadata.AuthorAccountId = SceneInfo.User.AccountId;
-            CurrentMetadata.AuthorName = SceneInfo.User.Name;
+            CurrentMetadata.Author = new Author(SceneInfo.User.AccountId) {
+                Name = SceneInfo.User.Name
+            };
             CurrentMetadata.Title = TitleField.text;
             CurrentMetadata.Description = DescriptionField.text;
             var rand = new System.Random((int)DateTime.UtcNow.Ticks);
@@ -73,11 +74,11 @@ namespace ClinicalTools.SimEncounters
             CurrentMetadata.Filename = $"{CurrentMetadata.RecordNumber}{CurrentMetadata.Title}";
             var encounter = new WaitableTask<Encounter>();
             var writerInfo = new LoadingWriterSceneInfo(SceneInfo.User, SceneInfo.LoadingScreen, encounter);
-            EncounterData.AddOnCompletedListener((result) => Something(encounter, result));
+            EncounterData.AddOnCompletedListener((result) => CreateEncounter(encounter, result));
             SceneStarter.StartScene(writerInfo);
         }
 
-        protected virtual void Something(WaitableTask<Encounter> encounter, TaskResult<EncounterContent> encounterData)
+        protected virtual void CreateEncounter(WaitableTask<Encounter> encounter, TaskResult<EncounterContent> encounterData)
         {
             var result = new Encounter(CurrentMetadata, encounterData.Value);
             encounter.SetResult(result);

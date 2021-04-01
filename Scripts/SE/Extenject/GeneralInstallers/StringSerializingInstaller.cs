@@ -67,12 +67,12 @@ namespace ClinicalTools.SimEncounters
                            .AsTransient();
 
         protected virtual void BindNonImageContentDeserializer(DiContainer subcontainer)
-            => subcontainer.Bind<IStringDeserializer<EncounterNonImageContent>>()
-                           .To<XmlStringDeserializer<EncounterNonImageContent>>()
+            => subcontainer.Bind<IStringDeserializer<EncounterContent>>()
+                           .To<XmlStringDeserializer<EncounterContent>>()
                            .AsTransient();
         protected virtual void BindImageContentDeserializer(DiContainer subcontainer)
-            => subcontainer.Bind<IStringDeserializer<EncounterImageContent>>()
-                           .To<XmlStringDeserializer<EncounterImageContent>>()
+            => subcontainer.Bind<IStringDeserializer<LegacyEncounterImageContent>>()
+                           .To<XmlStringDeserializer<LegacyEncounterImageContent>>()
                            .AsTransient();
         protected virtual void BindXmlDocumentDeserializer(DiContainer subcontainer)
             => subcontainer.Bind<IStringDeserializer<XmlDocument>>().To<XmlDocumentDeserializer>().AsTransient();
@@ -127,8 +127,8 @@ namespace ClinicalTools.SimEncounters
             new DictionaryDeserializer<int, EncounterBasicStatus>(null, null);
             new ListDeserializer<EncounterMetadata>(null, null);
             new ListDeserializer<EncounterEditLock>(null, null);
-            new XmlStringDeserializer<EncounterNonImageContent>(null, null);
-            new XmlStringDeserializer<EncounterImageContent>(null, null);
+            new XmlStringDeserializer<EncounterContent>(null, null);
+            new XmlStringDeserializer<LegacyEncounterImageContent>(null, null);
         }
     }
 }

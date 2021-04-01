@@ -18,14 +18,27 @@ namespace ClinicalTools.SimEncounters
         Beginner, Intermediate, Advanced
     }
 
+    public class EncounterImage
+    {
+        public long DateModified { get; set; } = 0;
+        public long Id { get; set; } = 0;
+        public string Key { get; set; }
+        public string FileName { get; set; }
+
+        public Sprite Sprite { get; set; }
+        public event Action Updated;
+         
+        public EncounterImage() { }
+        public EncounterImage(string key) => Key = key;
+    }
+
     [Serializable]
     public class EncounterMetadata
     {
         public virtual float Rating { get; set; } = -1;
         public virtual int RecordNumber { get; set; }
         public virtual string Filename { get; set; }
-        public virtual Name AuthorName { get; set; }
-        public virtual int AuthorAccountId { get; set; }
+        public virtual Author Author { get; set; }
         public virtual string Title { get; set; }
         public virtual long DateModified { get; set; }
         public virtual string Subtitle { get; set; }
@@ -36,7 +49,7 @@ namespace ClinicalTools.SimEncounters
         public virtual string EditorVersion { get; set; } = "0";
         public virtual bool IsTemplate { get; set; }
         public virtual bool IsPublic { get; set; }
-        public virtual Sprite Sprite { get; set; }
+        public virtual EncounterImage Image { get; set; } = new EncounterImage();
         public virtual string GetDesiredFilename()
         {
             var desiredFilename = $"{RecordNumber}_{Title}";

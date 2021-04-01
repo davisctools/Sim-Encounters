@@ -42,7 +42,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void EncounterSelected(object sender, MenuEncounterSelectedEventArgs e)
         {
             MenuEncounter = e.Encounter;
-            var authorAccountId = MenuEncounter.GetLatestMetadata().AuthorAccountId;
+            var authorAccountId = MenuEncounter.GetLatestMetadata().Author.Id;
             CanDelete = MenuEncounter.Metadata.ContainsKey(SaveType.Local) || MenuEncounter.Metadata.ContainsKey(SaveType.Autosave) ||
                 (MenuEncounter.Metadata.ContainsKey(SaveType.Server) && authorAccountId == User.AccountId);
             gameObject.SetActive(CanDelete);

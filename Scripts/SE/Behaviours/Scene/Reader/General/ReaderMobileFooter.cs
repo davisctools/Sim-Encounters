@@ -54,8 +54,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected UserEncounter UserEncounter { get; set; }
-        protected EncounterNonImageContent NonImageContent
-            => UserEncounter.Data.Content.NonImageContent;
+        protected EncounterContent Content => UserEncounter.Data.Content;
         protected virtual void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs eventArgs)
         {
             UserEncounter = eventArgs.Encounter;

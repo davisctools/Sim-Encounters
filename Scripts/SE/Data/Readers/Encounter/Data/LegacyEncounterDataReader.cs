@@ -1,10 +1,10 @@
 ﻿namespace ClinicalTools.SimEncounters
 {
-    public class EncounterDataReader : IEncounterDataReader
+    public class LegacyEncounterDataReader : IEncounterDataReader
     {
         protected INonImageContentReader ContentReader { get; }
         protected IImageContentReader ImageDataReader { get; }
-        public EncounterDataReader(INonImageContentReader contentReader, IImageContentReader imageDataReader)
+        public LegacyEncounterDataReader(INonImageContentReader contentReader, IImageContentReader imageDataReader)
         {
             ContentReader = contentReader;
             ImageDataReader = imageDataReader;
@@ -23,14 +23,15 @@
         }
 
         protected virtual void ProcessResults(WaitableTask<EncounterContent> result,
-            WaitableTask<EncounterNonImageContent> content,
-            WaitableTask<EncounterImageContent> imageData)
+            WaitableTask<EncounterContent> content,
+            WaitableTask<LegacyEncounterImageContent> imageData)
         {
             if (result.IsCompleted() || !content.IsCompleted() || !imageData.IsCompleted())
                 return;
 
-            var encounterData = new EncounterContent(content.Result.Value, imageData.Result.Value);
-            result.SetResult(encounterData);
+            // TODO: add images
+            //var encounterData = new OldEncounterContent(content.Result.Value, imageData.Result.Value);
+            result.SetResult(content.Result.Value);
         }
     }
 }

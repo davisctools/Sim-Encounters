@@ -6,13 +6,13 @@ namespace ClinicalTools.SimEncounters
     {
         protected IMetadataWriter MetadataWriter { get; }
         protected IFileManager FileManager { get; }
-        protected IXmlSerializer<EncounterImageContent> ImageDataSerializer { get; }
-        protected IXmlSerializer<EncounterNonImageContent> EncounterContentSerializer { get; }
+        protected IXmlSerializer<LegacyEncounterImageContent> ImageDataSerializer { get; }
+        protected IXmlSerializer<EncounterContent> EncounterContentSerializer { get; }
         public EncounterFileWriter(
             IMetadataWriter metadataWriter,
             IFileManager fileManager, 
-            IXmlSerializer<EncounterImageContent> imageDataSerializer, 
-            IXmlSerializer<EncounterNonImageContent> encounterContentSerializer)
+            IXmlSerializer<LegacyEncounterImageContent> imageDataSerializer, 
+            IXmlSerializer<EncounterContent> encounterContentSerializer)
         {
             MetadataWriter = metadataWriter;
             FileManager = fileManager;
@@ -26,13 +26,13 @@ namespace ClinicalTools.SimEncounters
 
             var contentDoc = new XmlDocument();
             var contentSerializer = new XmlSerializer(contentDoc);
-            EncounterContentSerializer.Serialize(contentSerializer, encounter.Content.NonImageContent);
+            EncounterContentSerializer.Serialize(contentSerializer, encounter.Content);
             FileManager.SetFileText(user, FileType.Data, encounter.Metadata, contentDoc.OuterXml);
 
             var imagesDoc = new XmlDocument();
             var imagesSerializer = new XmlSerializer(imagesDoc);
-            ImageDataSerializer.Serialize(imagesSerializer, encounter.Content.ImageContent);
-            FileManager.SetFileText(user, FileType.Image, encounter.Metadata, imagesDoc.OuterXml);
+            //ImageDataSerializer.Serialize(imagesSerializer, encounter.Content.ImageContent);
+            //FileManager.SetFileText(user, FileType.Image, encounter.Metadata, imagesDoc.OuterXml);
 
             return WaitableTask.CompletedTask;
         }

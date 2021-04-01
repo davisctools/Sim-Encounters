@@ -17,10 +17,10 @@ namespace ClinicalTools.SimEncounters
 
             switch (icon.Type) {
                 case Icon.IconType.EncounterImage:
-                    return encounter.Metadata.Sprite;
+                    return encounter.Metadata.Image.Sprite;
                 case Icon.IconType.Upload:
-                    var sprites = encounter.Content.ImageContent.Sprites;
-                    return sprites.ContainsKey(icon.Reference) ? sprites[icon.Reference] : null;
+                    var sprites = encounter.Content.Images;
+                    return sprites.ContainsKey(icon.Reference) ? sprites[icon.Reference].Sprite : null;
                 case Icon.IconType.Resource:
                     if (icon.Reference == null)
                         return null;

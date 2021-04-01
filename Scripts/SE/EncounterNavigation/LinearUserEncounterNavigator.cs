@@ -33,10 +33,8 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected UserEncounter UserEncounter { get; set; }
-        protected EncounterNonImageContent NonImageContent
-            => UserEncounter.Data.Content.NonImageContent;
-        protected Section CurrentSection
-            => NonImageContent.Sections[NonImageContent.CurrentSectionIndex].Value;
+        protected EncounterContent Content => UserEncounter.Data.Content;
+        protected Section CurrentSection => Content.Sections[Content.CurrentSectionIndex].Value;
         protected virtual void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs eventArgs)
             => UserEncounter = eventArgs.Encounter;
 
@@ -48,7 +46,7 @@ namespace ClinicalTools.SimEncounters
             => EncounterTabPositionChanged?.Invoke(sender, eventArgs);
 
         public virtual bool HasNext() => HasNextSection() || HasNextTab();
-        protected virtual bool HasNextSection() => NonImageContent.CurrentSectionIndex + 1 < NonImageContent.Sections.Count;
+        protected virtual bool HasNextSection() => Content.CurrentSectionIndex + 1 < Content.Sections.Count;
         protected virtual bool HasNextTab() => CurrentSection.CurrentTabIndex + 1 < CurrentSection.Tabs.Count;
         public virtual void GoToNext()
         {
@@ -59,7 +57,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         public virtual bool HasPrevious() => HasPreviousSection() || HasPreviousTab();
-        protected virtual bool HasPreviousSection() => NonImageContent.CurrentSectionIndex != 0;
+        protected virtual bool HasPreviousSection() => Content.CurrentSectionIndex != 0;
         protected virtual bool HasPreviousTab() => CurrentSection.CurrentTabIndex != 0;
         public virtual void GoToPrevious()
         {
@@ -71,21 +69,21 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void GoToNextSection()
         {
-            var nextSectionIndex = NonImageContent.CurrentSectionIndex + 1;
-            var section = NonImageContent.Sections[nextSectionIndex].Value;
+            var nextSectionIndex = Content.CurrentSectionIndex + 1;
+            var section = Content.Sections[nextSectionIndex].Value;
             section.CurrentTabIndex = 0;
             GoToSection(nextSectionIndex, ChangeType.Next);
         }
         protected virtual void GoToPreviousSection()
         {
-            var previousSectionIndex = NonImageContent.CurrentSectionIndex - 1;
-            var section = NonImageContent.Sections[previousSectionIndex].Value;
+            var previousSectionIndex = Content.CurrentSectionIndex - 1;
+            var section = Content.Sections[previousSectionIndex].Value;
             section.CurrentTabIndex = section.Tabs.Count - 1;
             GoToSection(previousSectionIndex, ChangeType.Previous);
         }
         protected virtual void GoToSection(int sectionIndex, ChangeType changeType)
         {
-            var nextSectionKey = NonImageContent.Sections[sectionIndex].Key;
+            var nextSectionKey = Content.Sections[sectionIndex].Key;
             var nextSection = UserEncounter.GetSection(nextSectionKey);
             var selectedArgs = new UserSectionSelectedEventArgs(nextSection, changeType);
             UserSectionSelector.Select(this, selectedArgs);

@@ -35,7 +35,7 @@ namespace ClinicalTools.SimEncounters
             PanelSelectedListener = panelSelectedListener;
         }
 
-        protected virtual OrderedCollection<Character> Characters => EncounterSelectedListener.CurrentValue.Encounter.Content.NonImageContent.Characters;
+        protected virtual OrderedCollection<Character> Characters => EncounterSelectedListener.CurrentValue.Encounter.Content.Characters;
 
         protected virtual void Start()
         {

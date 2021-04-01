@@ -48,7 +48,7 @@ namespace ClinicalTools.SimEncounters
             CurrentSection = section;
 
             Image.color = section.Color;
-            var icons = encounter.Content.ImageContent.Icons;
+            var icons = encounter.Content.Icons;
             if (section.IconKey != null && icons.ContainsKey(section.IconKey))
                 Icon.sprite = icons[section.IconKey];
 

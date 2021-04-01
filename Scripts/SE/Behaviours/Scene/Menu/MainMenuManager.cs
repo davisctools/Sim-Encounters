@@ -59,7 +59,8 @@ namespace ClinicalTools.SimEncounters
             if (LoginHandler != null)
                 ShowInitialLogin();
             else
-                Login(User.Guest);
+                //Login(User.Guest);
+                Login(new User(25));
         }
 
         protected override void StartAsLaterScene()

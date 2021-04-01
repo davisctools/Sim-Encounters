@@ -6,9 +6,9 @@ namespace ClinicalTools.SimEncounters
 {
     public class ServerEncounterRemover : IEncounterRemover
     {
-        protected IServerReader ServerReader { get; }
+        protected IServerStringReader ServerReader { get; }
         protected IUrlBuilder UrlBuilder { get; }
-        public ServerEncounterRemover(IServerReader serverReader, IUrlBuilder urlBuilder)
+        public ServerEncounterRemover(IServerStringReader serverReader, IUrlBuilder urlBuilder)
         {
             ServerReader = serverReader;
             UrlBuilder = urlBuilder;

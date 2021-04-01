@@ -22,7 +22,7 @@ namespace ClinicalTools.SimEncounters
                 return;
 
             var encounter = EncounterSelector.CurrentValue.Encounter;
-            var content = encounter.Data.Content.NonImageContent;
+            var content = encounter.Data.Content;
             var sections = encounter.Sections;
             var currentIndex = content.CurrentSectionIndex;
             CurrentSection = e.SelectedSection;

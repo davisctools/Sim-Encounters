@@ -2,7 +2,7 @@
 
 namespace ClinicalTools.SimEncounters
 {
-    public class ServerReader : IServerReader
+    public class ServerStringReader : IServerStringReader
     {
         /**
          * Downloads all available and applicable menu files to display on the main manu.
@@ -18,7 +18,7 @@ namespace ClinicalTools.SimEncounters
 
         protected void ProcessWebrequest(UnityWebRequest webRequest, WaitableTask<string> result)
         {
-            try { 
+            try {
                 var serverResult = GetResults(webRequest);
                 webRequest.Dispose();
                 result.SetResult(serverResult);

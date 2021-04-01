@@ -90,7 +90,7 @@
             var userSection = eventArgs.SelectedSection;
 
             UserSectionValue = eventArgs;
-            EncounterValue.Encounter.Content.NonImageContent.SetCurrentSection(userSection.Data);
+            EncounterValue.Encounter.Content.SetCurrentSection(userSection.Data);
             UserSectionSelected?.Invoke(sender, UserSectionValue);
 
             SectionValue = new SectionSelectedEventArgs(userSection.Data);

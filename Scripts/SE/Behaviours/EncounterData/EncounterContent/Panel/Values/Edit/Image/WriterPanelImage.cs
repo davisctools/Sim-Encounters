@@ -70,11 +70,11 @@ namespace ClinicalTools.SimEncounters
                 return null;
 
             if (KeyIsEncounterImage(imageKey))
-                return Encounter.Metadata.Sprite;
+                return Encounter.Metadata.Image.Sprite;
 
-            var sprites = Encounter.Content.ImageContent.Sprites;
-            if (sprites.ContainsKey(imageKey))
-                return sprites[imageKey];
+            var images = Encounter.Content.Images;
+            if (images.ContainsKey(imageKey))
+                return images[imageKey].Sprite;
 
             return null;
         }

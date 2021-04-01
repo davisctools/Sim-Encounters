@@ -4,19 +4,19 @@ namespace ClinicalTools.SimEncounters
 {
     public class ServerImageContentReader : IImageContentReader
     {
-        private readonly IServerReader serverReader;
+        private readonly IServerStringReader serverReader;
         private readonly IUrlBuilder urlBuilder;
-        private readonly IStringDeserializer<EncounterImageContent> parser;
-        public ServerImageContentReader(IServerReader serverReader, IUrlBuilder urlBuilder, IStringDeserializer<EncounterImageContent> parser)
+        private readonly IStringDeserializer<LegacyEncounterImageContent> parser;
+        public ServerImageContentReader(IServerStringReader serverReader, IUrlBuilder urlBuilder, IStringDeserializer<LegacyEncounterImageContent> parser)
         {
             this.serverReader = serverReader;
             this.urlBuilder = urlBuilder;
             this.parser = parser;
         }
 
-        public WaitableTask<EncounterImageContent> GetImageData(User user, EncounterMetadata metadata)
+        public WaitableTask<LegacyEncounterImageContent> GetImageData(User user, EncounterMetadata metadata)
         {
-            var imageData = new WaitableTask<EncounterImageContent>();
+            var imageData = new WaitableTask<LegacyEncounterImageContent>();
 
             var webRequest = GetWebRequest(user, metadata);
             var serverResult = serverReader.Begin(webRequest);
@@ -44,7 +44,7 @@ namespace ClinicalTools.SimEncounters
             return UnityWebRequest.Get(url);
         }
 
-        private void ProcessResults(WaitableTask<EncounterImageContent> result, TaskResult<string> serverResult)
+        private void ProcessResults(WaitableTask<LegacyEncounterImageContent> result, TaskResult<string> serverResult)
         {
             result.SetResult(parser.Deserialize(serverResult.Value));
         }

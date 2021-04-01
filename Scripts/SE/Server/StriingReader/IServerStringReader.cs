@@ -2,7 +2,7 @@
 
 namespace ClinicalTools.SimEncounters
 {
-    public interface IServerReader
+    public interface IServerStringReader
     {
         WaitableTask<string> Begin(UnityWebRequest webRequest);
     }

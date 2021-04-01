@@ -31,7 +31,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs e)
-            => gameObject.SetActive(e.Encounter.Data.Metadata.AuthorAccountId == e.Encounter.User.AccountId);
+            => gameObject.SetActive(e.Encounter.Data.Metadata.Author.Id == e.Encounter.User.AccountId);
 
         protected virtual void Awake() => Button.onClick.AddListener(ShowInstructions);
         public virtual void ShowInstructions()

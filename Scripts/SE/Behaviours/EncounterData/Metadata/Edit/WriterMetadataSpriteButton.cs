@@ -24,7 +24,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void SelectSprite()
         {
-            var spriteTask = SpriteSelector.SelectSprite(MetadataSelector.CurrentValue.Metadata.Sprite);
+            var spriteTask = SpriteSelector.SelectSprite(MetadataSelector.CurrentValue.Metadata.Image.Sprite);
             spriteTask.AddOnCompletedListener(SpriteSelected);
         }
         protected virtual void SpriteSelected(TaskResult<Sprite> spriteResult)
@@ -35,9 +35,9 @@ namespace ClinicalTools.SimEncounters
             Serialize(MetadataSelector.CurrentValue.Metadata);
         }
         protected override void Serialize(EncounterMetadata metadata)
-            => metadata.Sprite = Image.sprite;
+            => metadata.Image.Sprite = Image.sprite;
 
         protected override void OnMetadataSelected(object sender, EncounterMetadataSelectedEventArgs eventArgs)
-            => Image.sprite = eventArgs.Metadata.Sprite;
+            => Image.sprite = eventArgs.Metadata.Image.Sprite;
     }
 }

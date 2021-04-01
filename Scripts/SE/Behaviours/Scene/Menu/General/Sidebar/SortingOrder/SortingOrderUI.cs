@@ -57,9 +57,9 @@ namespace ClinicalTools.SimEncounters
         protected static int CompareDatePublishedDescending(MenuEncounter x, MenuEncounter y)
             => y.GetLatestMetadata().DateModified.CompareTo(x.GetLatestMetadata().DateModified);
         protected static int CompareAuthorAscending(MenuEncounter x, MenuEncounter y)
-            => x.GetLatestMetadata().AuthorName.CompareTo(y.GetLatestMetadata().AuthorName);
+            => x.GetLatestMetadata().Author.Name.CompareTo(y.GetLatestMetadata().Author.Name);
         protected static int CompareAuthorDescending(MenuEncounter x, MenuEncounter y)
-            => y.GetLatestMetadata().AuthorName.CompareTo(x.GetLatestMetadata().AuthorName);
+            => y.GetLatestMetadata().Author.Name.CompareTo(x.GetLatestMetadata().Author.Name);
         protected static int CompareDifficultyAscending(MenuEncounter x, MenuEncounter y)
             => x.GetLatestMetadata().Difficulty.CompareTo(y.GetLatestMetadata().Difficulty);
         protected static int CompareDifficultyDescending(MenuEncounter x, MenuEncounter y)

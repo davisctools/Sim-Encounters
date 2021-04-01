@@ -28,7 +28,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected Encounter Encounter => EncounterSelectedListener.CurrentValue.Encounter;
-        protected KeyedCollection<Sprite> Sprites => Encounter.Content.ImageContent.Sprites;
+        protected KeyedCollection<EncounterImage> Images => Encounter.Content.Images;
 
         protected Dictionary<string, IconSelectorToggle> ResourceToggles { get; } = new Dictionary<string, IconSelectorToggle>();
         protected virtual void Awake()
@@ -95,7 +95,7 @@ namespace ClinicalTools.SimEncounters
         {
             useEncounterImageToggle.SetIsOnWithoutNotify(true);
             CurrentIcon = new Icon();
-            customIconToggle.SetIcon(CurrentIcon, Encounter.Metadata.Sprite);
+            customIconToggle.SetIcon(CurrentIcon, Encounter.Metadata.Image.Sprite);
             customIconToggle.Select();
         }
         protected virtual void SetCurrentToLastUploadedIcon()
@@ -104,14 +104,14 @@ namespace ClinicalTools.SimEncounters
             CurrentIcon = LastUploadedIcon;
             Sprite sprite;
             var reference = LastUploadedIcon?.Reference;
-            sprite = reference != null && Sprites.ContainsKey(reference) ? Sprites[reference] : null;
+            sprite = reference != null && Images.ContainsKey(reference) ? Images[reference].Sprite : null;
             customIconToggle.SetIcon(CurrentIcon, sprite);
             customIconToggle.Select();
         }
 
         protected virtual void OnSelectCustomImageButtonPressed()
         {
-            var spriteSelectedTask = SpriteSelector.SelectSprite(Sprites, LastUploadedIcon?.Reference);
+            var spriteSelectedTask = SpriteSelector.SelectSprite(Images, LastUploadedIcon?.Reference);
             spriteSelectedTask.AddOnCompletedListener(OnCustomSpriteSelected);
         }
 
@@ -127,7 +127,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void Apply()
         {
             if (LastUploadedIcon?.Reference != null && LastUploadedIcon != CurrentIcon)
-                Sprites.Remove(LastUploadedIcon.Reference);
+                Images.Remove(LastUploadedIcon.Reference);
 
             CurrentIconTask.SetResult(CurrentIcon);
             CurrentIconTask = null;

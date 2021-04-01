@@ -35,14 +35,14 @@ namespace ClinicalTools.SimEncounters
                 OnTabSelected(TabSelector, TabSelector.CurrentValue);
         }
 
-        protected EncounterNonImageContent NonImageContent { get; set; }
+        protected EncounterContent Content { get; set; }
         private int tabCount;
         public virtual void OnEncounterSelected(object sender, EncounterSelectedEventArgs eventArgs)
         {
-            NonImageContent = eventArgs.Encounter.Content.NonImageContent;
-            var sections = NonImageContent.Sections;
+            Content = eventArgs.Encounter.Content;
+            var sections = Content.Sections;
 
-            tabCount = NonImageContent.GetTabCount();
+            tabCount = Content.GetTabCount();
             var tabs = 0;
 
             var rect = ((RectTransform)transform).rect;
@@ -68,7 +68,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void OnTabSelected(object sender, TabSelectedEventArgs eventArgs)
-            => FillImage.fillAmount = NonImageContent.GetCurrentTabNumber() / tabCount;
+            => FillImage.fillAmount = Content.GetCurrentTabNumber() / tabCount;
 
         protected virtual void OnDestroy()
         {

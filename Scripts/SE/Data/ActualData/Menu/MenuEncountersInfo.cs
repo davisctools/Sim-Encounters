@@ -27,7 +27,7 @@ namespace ClinicalTools.SimEncounters
             }
 
             Encounters.Add(encounter);
-            if (metadata.AuthorAccountId == User.AccountId)
+            if (metadata.Author.Id == User.AccountId)
                 UserEncounters.Add(encounter);
             foreach (var categoryName in metadata.Categories)
                 AddToCategory(encounter, categoryName);

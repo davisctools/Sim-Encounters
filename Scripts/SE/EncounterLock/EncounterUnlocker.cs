@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace ClinicalTools.SimEncounters
@@ -6,9 +7,9 @@ namespace ClinicalTools.SimEncounters
     public class EncounterUnlocker : IEncounterUnlocker
     {
         private readonly IUrlBuilder urlBuilder;
-        private readonly IServerReader serverReader;
+        private readonly IServerStringReader serverReader;
         private readonly IStringDeserializer<EncounterEditLock> parser;
-        public EncounterUnlocker(IUrlBuilder urlBuilder, IServerReader serverReader, IStringDeserializer<EncounterEditLock> parser)
+        public EncounterUnlocker(IUrlBuilder urlBuilder, IServerStringReader serverReader, IStringDeserializer<EncounterEditLock> parser)
         {
             this.urlBuilder = urlBuilder;
             this.serverReader = serverReader;
@@ -25,23 +26,35 @@ namespace ClinicalTools.SimEncounters
             return task;
         }
 
-        protected virtual string LockPhp { get; } = "Lock.php";
+        protected virtual string Php { get; } = "Main.php";
         protected virtual string ModeVariable { get; } = "mode";
-        protected virtual string ModeValue { get; } = "unlock";
-        protected virtual string AccountVariable { get; } = "accountId";
+        protected virtual string ModeValue { get; } = "encounter";
+        protected virtual string ActionVariable { get; } = "mode";
+        protected virtual string ActionValue { get; } = "unlock";
+        protected virtual string SubactionVariable { get; } = "subaction";
+        protected virtual string SubactionValue { get; } = "lock";
+        protected virtual string AccountVariable { get; } = "account";
         protected virtual string UsernameVariable { get; } = "editor";
-        protected virtual string RecordNumberVariable { get; } = "recordNumber";
+        protected virtual string EncounterVariable { get; } = "encounter";
         protected virtual UnityWebRequest GetWebRequest(User user, EncounterMetadata metadata)
         {
-            var arguments = new UrlArgument[] {
-                new UrlArgument(ModeVariable, ModeValue),
-                new UrlArgument(AccountVariable, user.AccountId.ToString()),
-                new UrlArgument(UsernameVariable, Environment.UserName),
-                new UrlArgument(RecordNumberVariable, metadata.RecordNumber.ToString())
-            };
+            var url = urlBuilder.BuildUrl(Php);
+            var form = CreateForm(user, metadata);
+            return UnityWebRequest.Post(url, form);
+        }
 
-            var url = urlBuilder.BuildUrl(LockPhp, arguments);
-            return UnityWebRequest.Get(url);
+        protected virtual WWWForm CreateForm(User user, EncounterMetadata metadata)
+        {
+            var form = new WWWForm();
+
+            form.AddField(ModeVariable, ModeValue);
+            form.AddField(ActionVariable, ActionValue);
+            form.AddField(SubactionVariable, SubactionValue);
+            form.AddField(AccountVariable, user.AccountId.ToString());
+            form.AddField(UsernameVariable, Environment.UserName);
+            form.AddField(EncounterVariable, metadata.RecordNumber.ToString());
+
+            return form;
         }
 
         protected virtual void ProcessResults(WaitableTask result, TaskResult<string> serverOutput)

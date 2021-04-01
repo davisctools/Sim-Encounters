@@ -26,8 +26,7 @@ namespace ClinicalTools.SimEncounters
 
         protected int TabCount { get; set; } = -1;
         protected UserTab CurrentTab { get; set; }
-        protected EncounterNonImageContent NonImageContent
-            => CurrentTab.Encounter.Data.Content.NonImageContent;
+        protected EncounterContent Content => CurrentTab.Encounter.Data.Content;
         protected virtual void OnTabSelected(object sender, UserTabSelectedEventArgs eventArgs)
         {
             if (CurrentTab == eventArgs.SelectedTab)
@@ -35,9 +34,9 @@ namespace ClinicalTools.SimEncounters
             CurrentTab = eventArgs.SelectedTab;
 
             if (TabCount == -1)
-                TabCount = NonImageContent.GetTabCount();
+                TabCount = Content.GetTabCount();
 
-            Label.text = $"Page: {NonImageContent.GetCurrentTabNumber()}/{TabCount}";
+            Label.text = $"Page: {Content.GetCurrentTabNumber()}/{TabCount}";
         }
 
         protected virtual void OnDestroy() => UserTabSelector.Selected -= OnTabSelected;

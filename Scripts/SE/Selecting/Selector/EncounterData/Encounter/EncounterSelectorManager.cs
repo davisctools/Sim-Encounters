@@ -50,8 +50,8 @@
             MetadataValue = new EncounterMetadataSelectedEventArgs(encounter.Metadata);
             MetadataSelected?.Invoke(sender, MetadataValue);
 
-            if (encounter.Content.NonImageContent.Sections.Count > 0)
-                Select(sender, new SectionSelectedEventArgs(encounter.Content.NonImageContent.GetCurrentSection()));
+            if (encounter.Content.Sections.Count > 0)
+                Select(sender, new SectionSelectedEventArgs(encounter.Content.GetCurrentSection()));
         }
 
         public virtual void Select(object sender, SectionSelectedEventArgs eventArgs)
@@ -61,7 +61,7 @@
                         
             SectionValue = eventArgs;
             var section = eventArgs.SelectedSection;
-            EncounterValue.Encounter.Content.NonImageContent.SetCurrentSection(section);
+            EncounterValue.Encounter.Content.SetCurrentSection(section);
             SectionSelected?.Invoke(sender, SectionValue);
             
             if (eventArgs.SelectedSection.Tabs.Count > 0)

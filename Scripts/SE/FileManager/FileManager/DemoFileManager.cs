@@ -12,8 +12,8 @@ namespace ClinicalTools.SimEncounters
         protected string EncountersListFilename => "list.txt";
 
         private readonly IFileExtensionGetter fileExtensionManager;
-        private readonly IServerReader serverReader;
-        public DemoFileManager(IFileExtensionGetter fileExtensionManager, IServerReader serverReader)
+        private readonly IServerStringReader serverReader;
+        public DemoFileManager(IFileExtensionGetter fileExtensionManager, IServerStringReader serverReader)
         {
             this.fileExtensionManager = fileExtensionManager;
             this.serverReader = serverReader;
