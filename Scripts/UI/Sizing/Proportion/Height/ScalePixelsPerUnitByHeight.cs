@@ -78,7 +78,11 @@ namespace ClinicalTools.UI
             var imageheight = Texture.height;
             // TODO: This is updated when the image scale is changed, but it doesn't always update how the image looks
             // Updating on later frames also doesn't fix the issue
-            Image.pixelsPerUnitMultiplier = imageheight / height / scale * canvas.referencePixelsPerUnit / 100;
+            if (height == 0)
+                return;
+
+            var referencePixelsPerUnit = canvas ? canvas.referencePixelsPerUnit : 100;
+            Image.pixelsPerUnitMultiplier = imageheight / height / scale * referencePixelsPerUnit / 100;
         }
     }
 }
