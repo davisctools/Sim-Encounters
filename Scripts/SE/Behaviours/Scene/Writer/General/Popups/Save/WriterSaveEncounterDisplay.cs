@@ -56,7 +56,13 @@ namespace ClinicalTools.SimEncounters
         protected virtual void Save()
         {
             Serialize();
-            LocalWriter.Save(CurrentUser, CurrentEncounter);
+
+            var parameters = new SaveEncounterParameters() {
+                Encounter = CurrentEncounter,
+                User = CurrentUser,
+                SaveVersion = SaveVersion.Private
+            };
+            LocalWriter.Save(parameters);
 
             gameObject.SetActive(false);
         }
@@ -64,7 +70,13 @@ namespace ClinicalTools.SimEncounters
         protected virtual void Publish()
         {
             Serialize();
-            var savingResult = ServerWriter.Save(CurrentUser, CurrentEncounter);
+
+            var parameters = new SaveEncounterParameters() {
+                Encounter = CurrentEncounter,
+                User = CurrentUser,
+                SaveVersion = SaveVersion.Public
+            };
+            var savingResult = ServerWriter.Save(parameters);
             savingResult.AddOnCompletedListener(PublishingFinished);
 
             gameObject.SetActive(false);
@@ -72,7 +84,12 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void PublishingFinished(TaskResult result)
         {
-            LocalWriter.Save(CurrentUser, CurrentEncounter);
+            var parameters = new SaveEncounterParameters() {
+                Encounter = CurrentEncounter,
+                User = CurrentUser,
+                SaveVersion = SaveVersion.Public
+            };
+            LocalWriter.Save(parameters);
             if (!result.IsError())
                 MessageHandler.ShowMessage("Successfully published case to the server.");
             else

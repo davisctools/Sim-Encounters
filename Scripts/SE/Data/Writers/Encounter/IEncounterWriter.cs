@@ -2,6 +2,6 @@
 {
     public interface IEncounterWriter
     {
-        WaitableTask Save(User user, Encounter encounter);
+        WaitableTask Save(SaveEncounterParameters parameters);
     }
 }

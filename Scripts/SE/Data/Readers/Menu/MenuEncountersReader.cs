@@ -2,11 +2,6 @@
 
 namespace ClinicalTools.SimEncounters
 {
-    public interface IEncounterLocksReader
-    {
-        WaitableTask<Dictionary<int, EncounterEditLock>> GetEncounterLocks(User user);
-    }
-
     public class MenuEncountersReader : IMenuEncountersReader
     {
         private readonly IEncounterLocksReader locksReader;

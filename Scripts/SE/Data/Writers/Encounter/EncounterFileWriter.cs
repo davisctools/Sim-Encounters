@@ -20,14 +20,14 @@ namespace ClinicalTools.SimEncounters
             EncounterContentSerializer = encounterContentSerializer;
         }
 
-        public WaitableTask Save(User user, Encounter encounter)
+        public WaitableTask Save(SaveEncounterParameters parameters)
         {
-            MetadataWriter.Save(user, encounter.Metadata);
+            MetadataWriter.Save(parameters.User, parameters.Encounter.Metadata);
 
             var contentDoc = new XmlDocument();
             var contentSerializer = new XmlSerializer(contentDoc);
-            EncounterContentSerializer.Serialize(contentSerializer, encounter.Content);
-            FileManager.SetFileText(user, FileType.Data, encounter.Metadata, contentDoc.OuterXml);
+            EncounterContentSerializer.Serialize(contentSerializer, parameters.Encounter.Content);
+            FileManager.SetFileText(parameters.User, FileType.Data, parameters.Encounter.Metadata, contentDoc.OuterXml);
 
             var imagesDoc = new XmlDocument();
             var imagesSerializer = new XmlSerializer(imagesDoc);

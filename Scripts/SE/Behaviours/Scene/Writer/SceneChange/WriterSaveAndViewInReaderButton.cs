@@ -64,7 +64,12 @@ namespace ClinicalTools.SimEncounters
         {
             SignalBus.Fire<SerializeEncounterSignal>();
             var sceneInfo = SceneInfoSelector.CurrentValue.SceneInfo;
-            EncounterWriter.Save(sceneInfo.User, sceneInfo.Encounter);
+            var parameters = new SaveEncounterParameters() {
+                Encounter = sceneInfo.Encounter,
+                User = sceneInfo.User,
+                SaveVersion = SaveVersion.Private
+            };
+            EncounterWriter.Save(parameters);
             StartReader();
         }
 

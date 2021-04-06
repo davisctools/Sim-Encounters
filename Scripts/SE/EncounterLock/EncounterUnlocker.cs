@@ -21,7 +21,7 @@ namespace ClinicalTools.SimEncounters
             var webRequest = GetWebRequest(user, metadata);
             var serverOutput = serverReader.Begin(webRequest);
             var task = new WaitableTask();
-            serverOutput.AddOnCompletedListener((result) => ProcessResults(task, result));
+            serverOutput.AddOnCompletedListener((result) => OnServerResult(task, result));
 
             return task;
         }
@@ -29,10 +29,10 @@ namespace ClinicalTools.SimEncounters
         protected virtual string Php { get; } = "Main.php";
         protected virtual string ModeVariable { get; } = "mode";
         protected virtual string ModeValue { get; } = "encounter";
-        protected virtual string ActionVariable { get; } = "mode";
-        protected virtual string ActionValue { get; } = "unlock";
+        protected virtual string ActionVariable { get; } = "action";
+        protected virtual string ActionValue { get; } = "lock";
         protected virtual string SubactionVariable { get; } = "subaction";
-        protected virtual string SubactionValue { get; } = "lock";
+        protected virtual string SubactionValue { get; } = "unlock";
         protected virtual string AccountVariable { get; } = "account";
         protected virtual string UsernameVariable { get; } = "editor";
         protected virtual string EncounterVariable { get; } = "encounter";
@@ -57,27 +57,32 @@ namespace ClinicalTools.SimEncounters
             return form;
         }
 
-        protected virtual void ProcessResults(WaitableTask result, TaskResult<string> serverOutput)
+        protected virtual void OnServerResult(WaitableTask result, TaskResult<string> serverOutput)
         {
-            if (serverOutput == null || serverOutput.IsError()) {
-                result.SetError(serverOutput.Exception);
-                return;
+            try {
+                ProcessResults(serverOutput);
+                result.SetCompleted();
+            } catch (Exception ex) {
+                result.SetError(ex);
             }
+        }
+        protected virtual void ProcessResults(TaskResult<string> serverOutput)
+        {
+            if (serverOutput == null || serverOutput.IsError())
+                throw serverOutput.Exception;
 
             var output = serverOutput.Value.Trim();
-            if (output.StartsWith("1")) {
-                result.SetCompleted();
+            if (output.StartsWith("1"))
                 return;
-            }
 
+            // TODO: use server errors
             string errorStart = "-1|";
             if (output.StartsWith(errorStart, StringComparison.InvariantCultureIgnoreCase)) {
                 var encounterLock = parser.Deserialize(output.Substring(errorStart.Length));
-                result.SetError(new EncounterAlreadyLockedException(encounterLock));
-                return;
+                throw new EncounterAlreadyLockedException(encounterLock);
             }
 
-            result.SetError(new Exception("Could not unlock the encounter."));
+            throw new Exception("Could not unlock the encounter.");
         }
     }
 }

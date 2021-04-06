@@ -12,6 +12,8 @@ namespace ClinicalTools.SimEncounters
     {
         public RectTransform OptionParent { get => optionParent; set => optionParent = value; }
         [SerializeField] private RectTransform optionParent;
+        public ToggleGroup OptionGroup { get => optionGroup; set => optionGroup = value; }
+        [SerializeField] private ToggleGroup optionGroup;
         public Image PreviewImage { get => previewImage; set => previewImage = value; }
         [SerializeField] private Image previewImage;
         public GameObject PreviewObject { get => previewObject; set => previewObject = value; }
@@ -24,21 +26,30 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private Button updateButton;
         public Button ApplyButton { get => applyButton; set => applyButton = value; }
         [SerializeField] private Button applyButton;
+        public CanvasGroup CanvasGroup { get => canvasGroup; set => canvasGroup = value; }
+        [SerializeField] private CanvasGroup canvasGroup;
+        public GameObject MustSaveFirstObject { get => mustSaveFirstObject; set => mustSaveFirstObject = value; }
+        [SerializeField] private GameObject mustSaveFirstObject;
 
         protected BaseEncounterImageOption.Pool OptionFactory { get; set; }
         protected IEncounterImageUploader ImageUploader { get; set; }
         protected IEncounterImageUpdater ImageUpdater { get; set; }
         protected BaseConfirmationPopup ConfirmationPopup { get; set; }
-        [Inject] public virtual void Inject(
+        protected BaseMessageHandler MessageHandler { get; set; }
+        [Inject]
+        public virtual void Inject(
             BaseEncounterImageOption.Pool optionFactory,
-            IEncounterImageUploader imageUploader, 
+            IEncounterImageUploader imageUploader,
             IEncounterImageUpdater imageUpdater,
-            BaseConfirmationPopup confirmationPopup) {
+            BaseConfirmationPopup confirmationPopup,
+            BaseMessageHandler messageHandler)
+        {
 
             OptionFactory = optionFactory;
             ImageUploader = imageUploader;
             ImageUpdater = imageUpdater;
             ConfirmationPopup = confirmationPopup;
+            MessageHandler = messageHandler;
         }
 
 
@@ -55,13 +66,18 @@ namespace ClinicalTools.SimEncounters
         protected Encounter Encounter { get; set; }
         protected KeyedCollection<EncounterImage> Images { get; set; }
         protected EncounterImage SelectedImage { get; set; }
-        protected WaitableTask<string> CurrentTask { get; set; }
+        protected WaitableTask<EncounterImage> CurrentTask { get; set; }
         protected Dictionary<string, BaseEncounterImageOption> ImageOptions { get; } = new Dictionary<string, BaseEncounterImageOption>();
 
-        public virtual WaitableTask<string> SelectImage(User user, Encounter encounter, string key)
+        public virtual WaitableTask<EncounterImage> SelectImage(User user, Encounter encounter, string key)
         {
+            if (encounter.Metadata.RecordNumber <= 0) {
+                MessageHandler.ShowMessage("Save encounter before adding image.");
+                return new WaitableTask<EncounterImage>(new Exception("Encounter must be saved before selecting images."));
+            } 
+
             gameObject.SetActive(true);
-            if (CurrentTask?.IsCompleted() == true)
+            if (CurrentTask?.IsCompleted() == false)
                 CurrentTask.SetError(new Exception());
 
             User = user;
@@ -69,7 +85,16 @@ namespace ClinicalTools.SimEncounters
             if (Images != encounter.Content.Images)
                 ResetImages(encounter.Content.Images);
 
-            CurrentTask = new WaitableTask<string>();
+            CurrentTask = new WaitableTask<EncounterImage>();
+
+            if (key != null && Images.ContainsKey(key)) {
+                SelectedImage = Images[key];
+                ImageOptions[key].Select();
+            } else {
+                if (SelectedImage != null && ImageOptions.ContainsKey(SelectedImage.Key))
+                    ImageOptions[SelectedImage.Key].Deselect();
+                SelectedImage = null;
+            }
 
             return CurrentTask;
         }
@@ -84,20 +109,25 @@ namespace ClinicalTools.SimEncounters
                 AddImageOption(image);
         }
 
-        protected virtual void AddImageOption(EncounterImage image)
+        protected virtual BaseEncounterImageOption AddImageOption(EncounterImage image)
         {
             var option = OptionFactory.Spawn();
+
+            option.transform.SetParent(optionParent);
+            option.SetGroup(optionGroup);
+            optionParent.transform.localScale = Vector3.one;
+
             option.ImageSelected += OnImageSelected;
             option.ImageDeselected += OnImageDeselected;
             option.Initialize(image);
             ImageOptions.Add(image.Key, option);
             UpdateButton.interactable = DeleteButton.interactable = true;
+
+            return option;
         }
 
         protected virtual void RemoveEncounterImage(string key)
         {
-            Images.Remove(key);
-
             var option = ImageOptions[key];
             ImageOptions.Remove(key);
             DespawnOption(option);
@@ -120,7 +150,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void Apply()
         {
             if (CurrentTask?.IsCompleted() == false)
-                CurrentTask.SetResult(SelectedImage?.Key);
+                CurrentTask.SetResult(SelectedImage);
             gameObject.SetActive(false);
         }
 
@@ -151,8 +181,7 @@ namespace ClinicalTools.SimEncounters
                 return;
 
             var value = image.Value;
-            Images.AddKeyedValue(value.Key, value);
-            AddImageOption(value);
+            AddImageOption(value).Select();
         }
 
         protected virtual void ReplaceImage()
@@ -167,13 +196,16 @@ namespace ClinicalTools.SimEncounters
 
             var value = image.Value;
             RemoveEncounterImage(value.Key);
-            Images.AddKeyedValue(value.Key, value);
-            AddImageOption(value);
+            AddImageOption(value).Select();
         }
 
         protected virtual void DeleteImage()
             => ConfirmationPopup.ShowConfirmation(OnDeleteImage, "Delete Image", "Are you sure you want to delete the image?");
-        protected virtual void OnDeleteImage() => RemoveEncounterImage(SelectedImage.Key);
+        protected virtual void OnDeleteImage()
+        {
+            Images.Remove(SelectedImage.Key);
+            RemoveEncounterImage(SelectedImage.Key);
+        }
 
         public virtual void Close(object sender) => Cancel();
     }

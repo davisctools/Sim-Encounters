@@ -17,11 +17,11 @@ namespace ClinicalTools.SimEncounters
             AutosaveFileManager = autosaveFileManager;
         }
 
-        public WaitableTask Save(User user, Encounter encounter)
+        public WaitableTask Save(SaveEncounterParameters parameters)
         {
-            AutosaveFileManager.DeleteFiles(user, encounter.Metadata);
-            LocalFileManager.UpdateFilename(user, encounter.Metadata);
-            return MainDataWriter.Save(user, encounter);
+            AutosaveFileManager.DeleteFiles(parameters.User, parameters.Encounter.Metadata);
+            LocalFileManager.UpdateFilename(parameters.User, parameters.Encounter.Metadata);
+            return MainDataWriter.Save(parameters);
         }
     }
 }

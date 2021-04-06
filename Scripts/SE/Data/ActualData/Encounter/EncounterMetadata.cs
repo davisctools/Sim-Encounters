@@ -21,15 +21,21 @@ namespace ClinicalTools.SimEncounters
     public class EncounterImage
     {
         public long DateModified { get; set; } = 0;
-        public long Id { get; set; } = 0;
+        public int Id { get; set; } = 0;
         public string Key { get; set; }
         public string FileName { get; set; }
 
         public Sprite Sprite { get; set; }
-        public event Action Updated;
+        public event Action<EncounterImage> Updated;
          
         public EncounterImage() { }
         public EncounterImage(string key) => Key = key;
+
+        public virtual void SetUpdated(EncounterImage image)
+        {
+            if (image.Key == image.Key)
+                Updated?.Invoke(image);
+        }
     }
 
     [Serializable]

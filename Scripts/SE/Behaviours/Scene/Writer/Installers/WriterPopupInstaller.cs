@@ -45,6 +45,9 @@ namespace ClinicalTools.SimEncounters
         public GameObject TextEditorHelpPopup { get => textEditorHelpPopup; set => textEditorHelpPopup = value; }
         [SerializeField] private GameObject textEditorHelpPopup;
 
+        public EncounterImageSelector ImageSelector { get => imageSelector; set => imageSelector = value; }
+        [SerializeField] private EncounterImageSelector imageSelector;
+
         public override void InstallBindings()
         {
             Container.BindInstance(TextEditorHelpPopup).WhenInjectedInto<ShowTextEditorHelpButton>();
@@ -66,6 +69,8 @@ namespace ClinicalTools.SimEncounters
             Container.BindInstance<IEncounterSpriteSelector>(EncounterSpriteSelector);
             Container.BindInstance<IKeyedSpriteSelector>(KeyedSpriteSelector);
             Container.BindInstance<ISpriteSelector>(SpriteSelector);
+
+            Container.BindInstance<IEncounterImageSelector>(ImageSelector);
 
             Container.BindInstance(SwipeManager);
 

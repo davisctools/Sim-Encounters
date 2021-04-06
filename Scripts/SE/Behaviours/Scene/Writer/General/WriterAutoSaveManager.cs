@@ -45,7 +45,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual IEnumerator AutosaveCoroutine()
         {
             yield return new WaitForSeconds(AutosaveIntervalSeconds);
-            AutosaveEncounter();
+            //AutosaveEncounter();
 
             yield return AutosaveCoroutine();
         }
@@ -55,7 +55,13 @@ namespace ClinicalTools.SimEncounters
         {
             SignalBus.Fire<SerializeEncounterSignal>();
             var sceneInfo = SceneInfoSelector.CurrentValue.SceneInfo;
-            var writerTask = EncounterWriter.Save(sceneInfo.User, sceneInfo.Encounter);
+
+            var parameters = new SaveEncounterParameters() {
+                Encounter = sceneInfo.Encounter,
+                User = sceneInfo.User,
+                SaveVersion = SaveVersion.AutoSave
+            };
+            var writerTask = EncounterWriter.Save(parameters);
             writerTask.AddOnCompletedListener(AutosaveCompleted);
         }
 

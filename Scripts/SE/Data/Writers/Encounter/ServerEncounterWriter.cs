@@ -1,4 +1,5 @@
-﻿using ClinicalTools.SimEncounters.Extensions;
+﻿using ClinicalTools.Collections;
+using ClinicalTools.SimEncounters.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,35 @@ using UnityEngine.Networking;
 
 namespace ClinicalTools.SimEncounters
 {
+    public enum SaveVersion { AutoSave, Public, Private }
+    public class SaveEncounterParameters
+    {
+        public User User { get; set; }
+        public Encounter Encounter { get; set; }
+        public SaveVersion SaveVersion { get; set; }
+        public string Description { get; set; }
+
+        public string GetDescription()
+        {
+            if (Description != null)
+                return Description;
+
+            if (Encounter.Metadata.RecordNumber <= 0)
+                return "Encounter created";
+
+            switch (SaveVersion) {
+                case SaveVersion.AutoSave:
+                    return "Autosave";
+                case SaveVersion.Public:
+                    return "Update to public";
+                case SaveVersion.Private:
+                    return "Encounter update";
+                default:
+                    return "";
+            }
+        }
+    }
+
     public class ServerEncounterWriter : IEncounterWriter
     {
         protected IServerStringReader ServerReader { get; }
@@ -29,139 +59,145 @@ namespace ClinicalTools.SimEncounters
             EncounterContentSerializer = encounterContentSerializer;
         }
 
-        protected virtual string PhpFile { get; } = "UploadEncounter.php";
-        public WaitableTask Save(User user, Encounter encounter)
+        protected virtual string PhpFile { get; } = "Main.php";
+        public WaitableTask Save(SaveEncounterParameters parameters)
         {
-            if (user.IsGuest)
+            if (parameters.User.IsGuest)
                 return WaitableTask.CompletedTask;
 
             var url = UrlBuilder.BuildUrl(PhpFile);
-            var form = CreateForm(user, encounter);
+            var form = CreateForm(parameters);
 
             var webRequest = UnityWebRequest.Post(url, form);
             var serverResults = ServerReader.Begin(webRequest);
 
             var result = new WaitableTask();
-            serverResults.AddOnCompletedListener((serverResult) => ProcessResults(result, serverResult, encounter.Metadata));
+            serverResults.AddOnCompletedListener((serverResult) => ProcessResults(result, serverResult, parameters.Encounter.Metadata));
             return result;
         }
 
 
-        protected virtual string AccountIdVariable { get; } = "accountId";
-        protected virtual WWWForm CreateForm(User user, Encounter encounter)
+        protected virtual string AccountVariable { get; } = "account";
+        protected virtual WWWForm CreateForm(SaveEncounterParameters parameters)
         {
             var form = new WWWForm();
 
-            form.AddField(AccountIdVariable, user.AccountId);
-            AddFormModeFields(form, encounter.Metadata);
-            AddFormContentFields(form, encounter.Content);
-            //AddFormImageDataFields(form, encounter.Content.ImageContent);
-            AddMetadataFields(form, encounter.Metadata);
+            form.AddField(AccountVariable, parameters.User.AccountId);
+            AddFormModeFields(form, parameters);
+            AddFormContentFields(form, parameters.Encounter.Content);
+            AddMetadataFields(form, parameters.Encounter.Metadata);
+            AddImagesField(form, parameters.Encounter.Content.Images);
 
             return form;
         }
 
         protected virtual string ModeVariable { get; } = "mode";
-        protected virtual string UploadModeValue { get; } = "upload";
-        protected virtual string UpdateModeValue { get; } = "update";
-        protected virtual string RecordNumberVariable { get; } = "recordNumber";
-        protected virtual void AddFormModeFields(WWWForm form, EncounterMetadata metadata)
+        protected virtual string ModeValue { get; } = "encounter";
+        protected virtual string ActionVariable { get; } = "action";
+        protected virtual string ActionValue { get; } = "save";
+        protected virtual string SubactionVariable { get; } = "subaction";
+        protected virtual string SubactionUploadValue { get; } = "new";
+        protected virtual string SubactionUpdateValue { get; } = "full";
+        protected virtual string EncounterVariable { get; } = "encounter";
+        protected virtual string VersionVariable { get; } = "version";
+        protected virtual string VersionPublicValue { get; } = "public";
+        protected virtual string VersionAutosaveValue { get; } = "public";
+        protected virtual string ClientVersionVariable { get; } = "client_version";
+        protected virtual string ClientVersionValue { get; } = "0.1.0";
+        protected virtual string SaveDescriptionVariable { get; } = "save_description";
+        protected virtual void AddFormModeFields(WWWForm form, SaveEncounterParameters parameters)
         {
-            string mode;
-            if (metadata.RecordNumber >= 0 && metadata.RecordNumber < 1000) {
-                form.AddField(RecordNumberVariable, metadata.RecordNumber);
-                mode = UpdateModeValue;
+            string subaction;
+            var recordNumber = parameters.Encounter.Metadata.RecordNumber;
+            if (recordNumber > 0) {
+                form.AddField(EncounterVariable, recordNumber);
+                subaction = SubactionUpdateValue;
             } else {
-                mode = UploadModeValue;
+                subaction = SubactionUploadValue;
+                switch (parameters.SaveVersion) {
+                    case SaveVersion.AutoSave:
+                        form.AddField(VersionVariable, VersionAutosaveValue);
+                        break;
+                    case SaveVersion.Public:
+                        form.AddField(VersionVariable, VersionPublicValue);
+                        break;
+                }
             }
 
-            form.AddField(ModeVariable, mode);
+            form.AddField(ModeVariable, ModeValue);
+            form.AddField(ActionVariable, ActionValue);
+            form.AddField(SubactionVariable, subaction);
+            form.AddField(ClientVersionVariable, ClientVersionValue);
+            form.AddField(SaveDescriptionVariable, parameters.Description);
         }
 
         protected virtual string XmlMimeType { get; } = "text/xml";
-        protected virtual string NonImageContentVariable { get; } = "xmlData";
-        protected virtual string NonImageContentFilename { get; } = "xmlData";
+        protected virtual string ContentVariable { get; } = "file";
+        protected virtual string ContentFilename { get; } = "data";
         protected virtual void AddFormContentFields(WWWForm form, EncounterContent content)
         {
             var contentDoc = new XmlDocument();
             var contentSerializer = new XmlSerializer(contentDoc);
             EncounterContentSerializer.Serialize(contentSerializer, content);
             var fileBytes = GetFileAsByteArray(contentDoc.OuterXml);
-            form.AddBinaryData(NonImageContentVariable, fileBytes, NonImageContentFilename, XmlMimeType);
-        }
-        protected virtual string ImageContentVariable { get; } = "imgData";
-        protected virtual string ImageContentFilename { get; } = "imgData";
-        protected virtual int MaxAllowedPacketSize { get; } = 10000000;
-        protected virtual void AddFormImageDataFields(WWWForm form, LegacyEncounterImageContent imageData)
-        {
-            var imagesDoc = new XmlDocument();
-            var imagesSerializer = new XmlSerializer(imagesDoc);
-            ImageDataSerializer.Serialize(imagesSerializer, imageData);
-            byte[] fileBytesImg = GetFileAsByteArray(imagesDoc.OuterXml);
-            Debug.Log("Image file size (in bytes): " + fileBytesImg.Length);
-            // Eventually an approach to get around the size limit may be needed
-            if (fileBytesImg.Length <= MaxAllowedPacketSize)
-                form.AddBinaryData(ImageContentVariable, fileBytesImg, ImageContentFilename, XmlMimeType);
-            else
-                Debug.LogError("Error: Images exceed upload size limit");
+            form.AddBinaryData(ContentVariable, fileBytes, ContentFilename, XmlMimeType);
         }
 
-        protected virtual string FirstNameVariable { get; } = "firstName";
-        protected virtual string LastNameVariable { get; } = "lastName";
+
+        protected virtual string FirstNameVariable { get; } = "first_name";
+        protected virtual string LastNameVariable { get; } = "last_name";
         protected virtual string TitleVariable { get; } = "title";
-        protected virtual string DifficultyVariable { get; } = "difficulty";
         protected virtual string SubtitleVariable { get; } = "subtitle";
         protected virtual string DescriptionVariable { get; } = "description";
-        protected virtual string DateModifiedVariable { get; } = "modified";
         protected virtual string AudienceVariable { get; } = "audience";
-        protected virtual string VersionVariable { get; } = "version";
-        protected virtual string VersionValue { get; } = "0.1";
-        protected virtual string UrlVariable { get; } = "url";
-        protected virtual string CompletionCodeVariable { get; } = "urlkey";
-        protected virtual string PublicVariable { get; } = "public";
+        protected virtual string DifficultyVariable { get; } = "difficulty";
         protected virtual string TemplateVariable { get; } = "template";
-        protected virtual string SpriteDataVariable { get; } = "imageData";
-        protected virtual string SpriteWidthVariable { get; } = "imageWidth";
-        protected virtual string SpriteHeightVariable { get; } = "imageHeight";
+        protected virtual string ImageVariable { get; } = "image";
+        protected virtual string UrlVariable { get; } = "url";
+        protected virtual string CompletionCodeVariable { get; } = "url_key";
         protected virtual void AddMetadataFields(WWWForm form, EncounterMetadata metadata)
         {
             if (metadata is INamed named) {
-                AddEscapedField(form, FirstNameVariable, named.Name.FirstName);
-                AddEscapedField(form, LastNameVariable, named.Name.LastName);
+                form.AddField(FirstNameVariable, named.Name.FirstName);
+                form.AddField(LastNameVariable, named.Name.LastName);
             } else {
-                AddEscapedField(form, TitleVariable, metadata.Title);
+                form.AddField(TitleVariable, metadata.Title);
             }
 
-            AddEscapedField(form, DifficultyVariable, metadata.Difficulty.ToString());
-            AddEscapedField(form, SubtitleVariable, metadata.Subtitle);
-            AddEscapedField(form, DescriptionVariable, metadata.Description);
+            form.AddField(SubtitleVariable, metadata.Subtitle);
+            form.AddField(DescriptionVariable, metadata.Description);
+
             AddCategoryField(form, metadata.Categories);
-            metadata.ResetDateModified();
-            form.AddField(DateModifiedVariable, metadata.DateModified.ToString());
-            AddEscapedField(form, AudienceVariable, metadata.Audience);
-            AddEscapedField(form, VersionVariable, VersionValue);
-            
-            if (metadata is IWebCompletion webCompletion) {
-                AddEscapedField(form, UrlVariable, webCompletion.Url);
-                AddEscapedField(form, CompletionCodeVariable, webCompletion.CompletionCode);
-            }
-            
-            form.AddField(PublicVariable, metadata.IsPublic);
+
+            form.AddField(AudienceVariable, metadata.Audience);
+            form.AddField(DifficultyVariable, metadata.Difficulty.ToString());
+
             form.AddField(TemplateVariable, metadata.IsTemplate);
-            if (metadata.Image?.Sprite == null)
+
+            form.AddField(ImageVariable, metadata.Image.Id);
+
+            if (metadata is IWebCompletion webCompletion) {
+                form.AddField(UrlVariable, webCompletion.Url);
+                form.AddField(CompletionCodeVariable, webCompletion.CompletionCode);
+            }
+        }
+
+        protected virtual string ImagesVariable { get; } = "images";
+        protected virtual void AddImagesField(WWWForm form, KeyedCollection<EncounterImage> images)
+        {
+            if (images.Count == 0)
                 return;
 
-            AddEscapedField(form, SpriteDataVariable, SpriteSerializer.Serialize(metadata.Image.Sprite));
-            form.AddField(SpriteWidthVariable, metadata.Image.Sprite.texture.width);
-            form.AddField(SpriteHeightVariable, metadata.Image.Sprite.texture.height);
+            var imagesStr = "";
+            foreach (var image in images.Values) {
+                if (imagesStr.Length > 0)
+                    imagesStr += ',';
+                imagesStr += image.Id;
+            }
+            form.AddField(ImagesVariable, imagesStr);
         }
 
-        protected virtual void AddEscapedField(WWWForm form, string variable, string value)
-        {
-            if (value == null)
-                value = "";
-            form.AddField(variable, UnityWebRequest.EscapeURL(value));
-        }
+
 
         protected virtual string TagsVariable { get; } = "tags";
         protected virtual void AddCategoryField(WWWForm form, IEnumerable<string> categories)
@@ -191,7 +227,7 @@ namespace ClinicalTools.SimEncounters
             }
 
             var splitStr = serverResult.Value.Split('|');
-            if (int.TryParse(splitStr[0], out var recordNumber))
+            if (metadata.RecordNumber <= 0 && int.TryParse(splitStr[0], out var recordNumber))
                 metadata.RecordNumber = recordNumber;
 
             actionResult.SetCompleted();

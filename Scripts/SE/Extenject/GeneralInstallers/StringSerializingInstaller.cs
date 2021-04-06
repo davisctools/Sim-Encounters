@@ -46,11 +46,14 @@ namespace ClinicalTools.SimEncounters
         protected virtual void BindMetadataListDeserializer(DiContainer subcontainer)
             => subcontainer.Bind<IStringDeserializer<List<EncounterMetadata>>>().To<ListDeserializer<EncounterMetadata>>().AsTransient();
         protected virtual void BindEncounterLockListDeserializer(DiContainer subcontainer)
-            => subcontainer.Bind<IStringDeserializer<List<EncounterEditLock>>>().To<ListDeserializer<EncounterEditLock>> ().AsTransient();
+            => subcontainer.Bind<IStringDeserializer<List<EncounterEditLock>>>().To<EncounterEditLockListDeserializer>().AsTransient();
         protected virtual void BindMetadataDeserializer(DiContainer subcontainer)
             => subcontainer.Bind<IStringDeserializer<EncounterMetadata>>().To<EncounterMetadataDeserializer>().AsTransient(); 
         protected virtual void BindEncounterLockDeserializer(DiContainer subcontainer)
-             => subcontainer.Bind<IStringDeserializer<EncounterEditLock>>().To<EncounterEditLockDeserializer>().AsTransient();
+        {
+            subcontainer.Bind<IStringDeserializer<EncounterEditLock>>().To<EncounterEditLockDeserializer>().AsTransient();
+            subcontainer.Bind<IJsonDeserializer<EncounterEditLock>>().To<EncounterEditLockDeserializer>().AsTransient();
+        }
         protected virtual void BindSpriteDeserializer(DiContainer subcontainer)
             => subcontainer.Bind<ISpriteDeserializer>().To<SpriteDeserializer>().AsTransient();
         protected virtual void BindBasicStatusDictionaryDeserializer(DiContainer subcontainer)
