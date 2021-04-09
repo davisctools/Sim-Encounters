@@ -95,7 +95,7 @@ namespace ClinicalTools.SimEncounters
         {
             useEncounterImageToggle.SetIsOnWithoutNotify(true);
             CurrentIcon = new Icon();
-            customIconToggle.SetIcon(CurrentIcon, Encounter.Metadata.Image.Sprite);
+            customIconToggle.SetIcon(CurrentIcon, Encounter.Metadata.Image?.Sprite);
             customIconToggle.Select();
         }
         protected virtual void SetCurrentToLastUploadedIcon()

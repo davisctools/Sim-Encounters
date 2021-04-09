@@ -55,7 +55,7 @@ namespace ClinicalTools.SimEncounters
         public virtual string EditorVersion { get; set; } = "0";
         public virtual bool IsTemplate { get; set; }
         public virtual bool IsPublic { get; set; }
-        public virtual EncounterImage Image { get; set; } = new EncounterImage();
+        public virtual EncounterImage Image { get; set; }
         public virtual string GetDesiredFilename()
         {
             var desiredFilename = $"{RecordNumber}_{Title}";

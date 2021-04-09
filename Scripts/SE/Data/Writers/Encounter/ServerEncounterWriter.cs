@@ -14,7 +14,7 @@ namespace ClinicalTools.SimEncounters
     {
         public User User { get; set; }
         public Encounter Encounter { get; set; }
-        public SaveVersion SaveVersion { get; set; }
+        public SaveVersion SaveVersion { get; set; } = SaveVersion.Private;
         public string Description { get; set; }
 
         public string GetDescription()
@@ -112,8 +112,6 @@ namespace ClinicalTools.SimEncounters
             if (recordNumber > 0) {
                 form.AddField(EncounterVariable, recordNumber);
                 subaction = SubactionUpdateValue;
-            } else {
-                subaction = SubactionUploadValue;
                 switch (parameters.SaveVersion) {
                     case SaveVersion.AutoSave:
                         form.AddField(VersionVariable, VersionAutosaveValue);
@@ -122,18 +120,20 @@ namespace ClinicalTools.SimEncounters
                         form.AddField(VersionVariable, VersionPublicValue);
                         break;
                 }
+            } else {
+                subaction = SubactionUploadValue;
             }
 
             form.AddField(ModeVariable, ModeValue);
             form.AddField(ActionVariable, ActionValue);
             form.AddField(SubactionVariable, subaction);
             form.AddField(ClientVersionVariable, ClientVersionValue);
-            form.AddField(SaveDescriptionVariable, parameters.Description);
+            form.AddField(SaveDescriptionVariable, parameters.GetDescription());
         }
 
         protected virtual string XmlMimeType { get; } = "text/xml";
         protected virtual string ContentVariable { get; } = "file";
-        protected virtual string ContentFilename { get; } = "data";
+        protected virtual string ContentFilename { get; } = "data.ced";
         protected virtual void AddFormContentFields(WWWForm form, EncounterContent content)
         {
             var contentDoc = new XmlDocument();
@@ -158,28 +158,34 @@ namespace ClinicalTools.SimEncounters
         protected virtual void AddMetadataFields(WWWForm form, EncounterMetadata metadata)
         {
             if (metadata is INamed named) {
-                form.AddField(FirstNameVariable, named.Name.FirstName);
-                form.AddField(LastNameVariable, named.Name.LastName);
+                AddField(form, FirstNameVariable, named.Name.FirstName);
+                AddField(form, LastNameVariable, named.Name.LastName);
             } else {
-                form.AddField(TitleVariable, metadata.Title);
+                AddField(form, TitleVariable, metadata.Title);
             }
 
-            form.AddField(SubtitleVariable, metadata.Subtitle);
-            form.AddField(DescriptionVariable, metadata.Description);
+            AddField(form, SubtitleVariable, metadata.Subtitle);
+            AddField(form, DescriptionVariable, metadata.Description);
 
             AddCategoryField(form, metadata.Categories);
 
-            form.AddField(AudienceVariable, metadata.Audience);
-            form.AddField(DifficultyVariable, metadata.Difficulty.ToString());
+            AddField(form, AudienceVariable, metadata.Audience);
+            AddField(form, DifficultyVariable, metadata.Difficulty.ToString());
 
             form.AddField(TemplateVariable, metadata.IsTemplate);
 
-            form.AddField(ImageVariable, metadata.Image.Id);
+            if (metadata.Image != null)
+                form.AddField(ImageVariable, metadata.Image.Id);
 
             if (metadata is IWebCompletion webCompletion) {
-                form.AddField(UrlVariable, webCompletion.Url);
-                form.AddField(CompletionCodeVariable, webCompletion.CompletionCode);
+                AddField(form, UrlVariable, webCompletion.Url);
+                AddField(form, CompletionCodeVariable, webCompletion.CompletionCode);
             }
+        }
+
+        protected virtual void AddField(WWWForm form, string variable, string value)
+        {
+            if (value != null) form.AddField(variable, value);
         }
 
         protected virtual string ImagesVariable { get; } = "images";

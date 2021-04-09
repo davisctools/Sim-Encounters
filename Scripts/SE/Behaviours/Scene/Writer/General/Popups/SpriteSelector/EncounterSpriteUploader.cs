@@ -50,7 +50,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void SetImage()
         {
             if (useEncounterImageToggle.isOn)
-                SetImage(Encounter.Metadata.Image.Sprite);
+                SetImage(Encounter.Metadata.Image?.Sprite);
             else if (CurrentKey != null && ImageCollection.ContainsKey(CurrentKey))
                 SetImage(ImageCollection[CurrentKey].Sprite);
             else

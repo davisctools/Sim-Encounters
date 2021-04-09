@@ -23,7 +23,7 @@ namespace ClinicalTools.SimEncounters
         public void Inject(
             SignalBus signalBus,
             BaseMessageHandler messageHandler,
-            [Inject(Id = SaveType.Local)] IEncounterWriter localWriter,
+            [Inject(Id = SaveType.Server)] IEncounterWriter localWriter,
             [Inject(Id = SaveType.Server)] IEncounterWriter serverWriter)
         {
             SignalBus = signalBus;

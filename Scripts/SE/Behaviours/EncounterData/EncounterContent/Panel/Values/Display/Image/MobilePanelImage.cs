@@ -88,7 +88,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual Sprite GetSprite(PanelSelectedEventArgs eventArgs)
         {
             if (UseEncounterImage)
-                return EncounterSelectedListener.CurrentValue.Encounter.Metadata.Image.Sprite;
+                return EncounterSelectedListener.CurrentValue.Encounter.Metadata.Image?.Sprite;
 
             if (!eventArgs.Panel.Values.ContainsKey(Name))
                 return null;
@@ -96,7 +96,7 @@ namespace ClinicalTools.SimEncounters
             Value = eventArgs.Panel.Values[Name];
 
             if (KeyIsEncounterImage(Value))
-                return EncounterSelectedListener.CurrentValue.Encounter.Metadata.Image.Sprite;
+                return EncounterSelectedListener.CurrentValue.Encounter.Metadata.Image?.Sprite;
 
             var images = EncounterSelectedListener.CurrentValue.Encounter.Content.Images;
             if (Value != null && images.ContainsKey(Value))

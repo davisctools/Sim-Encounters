@@ -28,11 +28,11 @@ namespace ClinicalTools.SimEncounters
         protected Texture2D GetResults(UnityWebRequest webRequest)
         {
             if (!webRequest.isDone)
-                throw new WebException(ServerOutcome.DownloadNotDone, webRequest.error);
+                throw new WebException(ServerOutcome.WebRequestNotDone, webRequest.error);
             else if (webRequest.isNetworkError)
                 throw new WebException(ServerOutcome.NetworkError, webRequest.error);
             else if (webRequest.isHttpError)
-                throw new WebException(ServerOutcome.HttpError, webRequest.error);
+                throw new HttpErrorException(webRequest.error, webRequest.responseCode, webRequest.downloadHandler?.text);
             else if (!webRequest.downloadHandler.isDone)
                 throw new WebException(ServerOutcome.DownloadNotDone, webRequest.error);
 
