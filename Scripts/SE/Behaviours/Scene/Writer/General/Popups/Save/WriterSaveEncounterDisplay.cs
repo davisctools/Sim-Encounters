@@ -9,8 +9,6 @@ namespace ClinicalTools.SimEncounters
     {
         public Button SaveButton { get => saveButton; set => saveButton = value; }
         [SerializeField] private Button saveButton;
-        public Button PublishButton { get => publishButton; set => publishButton = value; }
-        [SerializeField] private Button publishButton;
 
         public event SelectedHandler<EncounterMetadataSelectedEventArgs> Selected;
         public EncounterMetadataSelectedEventArgs CurrentValue { get; protected set; }
@@ -23,7 +21,7 @@ namespace ClinicalTools.SimEncounters
         public void Inject(
             SignalBus signalBus,
             BaseMessageHandler messageHandler,
-            [Inject(Id = SaveType.Server)] IEncounterWriter localWriter,
+            [Inject(Id = SaveType.Local)] IEncounterWriter localWriter,
             [Inject(Id = SaveType.Server)] IEncounterWriter serverWriter)
         {
             SignalBus = signalBus;
@@ -34,8 +32,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void Awake()
         {
-            SaveButton.onClick.AddListener(Save);
-            PublishButton.onClick.AddListener(Publish);
+            SaveButton.onClick.AddListener(ServerSave);
         }
         protected Encounter CurrentEncounter { get; set; }
         protected User CurrentUser { get; set; }
@@ -53,47 +50,31 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void Serialize() => SignalBus.Fire<SerializeEncounterSignal>();
 
-        protected virtual void Save()
+        protected virtual void ServerSave()
         {
             Serialize();
 
-            var parameters = new SaveEncounterParameters() {
+            var saveParameters = new SaveEncounterParameters() {
                 Encounter = CurrentEncounter,
                 User = CurrentUser,
                 SaveVersion = SaveVersion.Private
             };
-            LocalWriter.Save(parameters);
+            var savingResult = ServerWriter.Save(saveParameters);
+            savingResult.AddOnCompletedListener((result)=>ServerSaveFinished(result, saveParameters));
 
             gameObject.SetActive(false);
         }
 
-        protected virtual void Publish()
+        protected virtual void ServerSaveFinished(TaskResult result, SaveEncounterParameters saveParameters)
         {
-            Serialize();
-
-            var parameters = new SaveEncounterParameters() {
-                Encounter = CurrentEncounter,
-                User = CurrentUser,
-                SaveVersion = SaveVersion.Public
-            };
-            var savingResult = ServerWriter.Save(parameters);
-            savingResult.AddOnCompletedListener(PublishingFinished);
-
-            gameObject.SetActive(false);
-        }
-
-        protected virtual void PublishingFinished(TaskResult result)
-        {
-            var parameters = new SaveEncounterParameters() {
-                Encounter = CurrentEncounter,
-                User = CurrentUser,
-                SaveVersion = SaveVersion.Public
-            };
-            LocalWriter.Save(parameters);
             if (!result.IsError())
                 MessageHandler.ShowMessage("Successfully published case to the server.");
-            else
-                MessageHandler.ShowMessage($"Could not publish case to server.\n{result.Exception.Message}", MessageType.Error);
+                // delete local save
+                // delete autosave
+            else { 
+                MessageHandler.ShowMessage($"Could not publish case to server. Creating local save.\n{result.Exception.Message}", MessageType.Error);
+                LocalWriter.Save(saveParameters);
+            }
         }
 
         public void Close(object sender)

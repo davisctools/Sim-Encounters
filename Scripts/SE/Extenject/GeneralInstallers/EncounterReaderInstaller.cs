@@ -76,12 +76,13 @@ namespace ClinicalTools.SimEncounters
         protected virtual void BindEncounterDataReaderInstaller(DiContainer subcontainer, SaveType saveType)
         {
             if (saveType == SaveType.Server) {
-                subcontainer.Bind<IEncounterDataReader>().To<ServerEncounterContentReader>().AsTransient();
-                //subcontainer.Bind<INonImageContentReader>().To<ServerNonImageContentReader>().AsTransient();
-                //subcontainer.Bind<IImageContentReader>().To<ServerImageContentReader>().AsTransient();
+                subcontainer.Bind<IEncounterDataReader>().To<EncounterDataReader>().AsTransient();
+                subcontainer.Bind<IEncounterDataTextRetriever>().To<ServerEncounterDataTextRetriever>().AsTransient();
+                subcontainer.Bind<IEncounterImagesReader>().To<EncounterImagesReader>().AsTransient();
+                subcontainer.Bind<IEncounterImagesJsonRetriever>().To<ServerEncounterImagesJsonRetriever>().AsTransient();
             } else {
-                subcontainer.Bind<IEncounterDataReader>().To<LegacyEncounterDataReader>().AsTransient();
-                subcontainer.Bind<INonImageContentReader>().To<LocalNonImageContentReader>().AsTransient();
+                subcontainer.Bind<IEncounterDataReader>().To<LegacyEncounterDataReader>().AsTransient().WhenNotInjectedInto<LegacyEncounterDataReader>();
+                subcontainer.Bind<IEncounterDataReader>().To<LocalLegacyEncounterContentReader>().AsTransient().WhenInjectedInto<LegacyEncounterDataReader>();
                 subcontainer.Bind<IImageContentReader>().To<LocalImageContentReader>().AsTransient();
                 FileManagerInstaller.BindFileManager(subcontainer, saveType);
             }

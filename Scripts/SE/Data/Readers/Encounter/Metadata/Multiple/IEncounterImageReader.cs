@@ -1,6 +1,6 @@
 ﻿namespace ClinicalTools.SimEncounters
 {
-    public interface IServerEncounterImageReader
+    public interface IEncounterImageReader
     {
         WaitableTask GetTexture(User user, EncounterMetadata metadata, EncounterImage image);
     }

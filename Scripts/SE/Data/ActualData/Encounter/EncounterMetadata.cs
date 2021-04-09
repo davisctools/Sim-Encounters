@@ -23,7 +23,7 @@ namespace ClinicalTools.SimEncounters
         public long DateModified { get; set; } = 0;
         public int Id { get; set; } = 0;
         public string Key { get; set; }
-        public string FileName { get; set; }
+        public string Filename { get; set; }
 
         public Sprite Sprite { get; set; }
         public event Action<EncounterImage> Updated;
@@ -38,9 +38,11 @@ namespace ClinicalTools.SimEncounters
         }
     }
 
+
     [Serializable]
     public class EncounterMetadata
     {
+
         public virtual float Rating { get; set; } = -1;
         public virtual int RecordNumber { get; set; }
         public virtual string Filename { get; set; }

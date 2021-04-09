@@ -10,12 +10,12 @@ namespace ClinicalTools.SimEncounters
         protected IUrlBuilder UrlBuilder { get; }
         protected IServerStringReader ServerReader { get; }
         protected IJsonDeserializer<EncounterMetadata> Parser { get; }
-        protected IServerEncounterImageReader ServerImageReader { get; }
+        protected IEncounterImageReader ServerImageReader { get; }
         public ServerMetadatasReader(
             IUrlBuilder urlBuilder, 
             IServerStringReader serverReader,
             IJsonDeserializer<EncounterMetadata> parser,
-            IServerEncounterImageReader serverImageReader)
+            IEncounterImageReader serverImageReader)
         {
             UrlBuilder = urlBuilder;
             ServerReader = serverReader;

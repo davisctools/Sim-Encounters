@@ -16,7 +16,7 @@ namespace ClinicalTools.Lift
                 DateModified = node["date"],
                 Id = node["id"],
                 Key = node["key"],
-                FileName = node["file"]
+                Filename = node["file"]
             };
     }
 }

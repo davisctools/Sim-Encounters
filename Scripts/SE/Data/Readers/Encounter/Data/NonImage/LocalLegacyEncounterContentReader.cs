@@ -1,16 +1,16 @@
 ﻿namespace ClinicalTools.SimEncounters
 {
-    public class LocalNonImageContentReader : INonImageContentReader
+    public class LocalLegacyEncounterContentReader : IEncounterDataReader
     {
         private readonly IFileManager fileManager;
         private readonly IStringDeserializer<EncounterContent> parser;
-        public LocalNonImageContentReader(IFileManager fileManager, IStringDeserializer<EncounterContent> parser)
+        public LocalLegacyEncounterContentReader(IFileManager fileManager, IStringDeserializer<EncounterContent> parser)
         {
             this.fileManager = fileManager;
             this.parser = parser;
         }
 
-        public WaitableTask<EncounterContent> GetNonImageContent(User user, EncounterMetadata metadata)
+        public WaitableTask<EncounterContent> GetEncounterData(User user, EncounterMetadata metadata)
         {
             var content = new WaitableTask<EncounterContent>();
 

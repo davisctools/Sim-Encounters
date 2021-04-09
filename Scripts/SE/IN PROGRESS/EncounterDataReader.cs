@@ -1,23 +1,25 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class ServerEncounterContentReader : IEncounterDataReader
+    public class EncounterDataReader : IEncounterDataReader
     {
         protected IServerStringReader ServerReader { get; }
         protected IUrlBuilder UrlBuilder { get; }
+        protected IEncounterDataTextRetriever TextRetriever { get; }
         protected IStringDeserializer<EncounterContent> Parser { get; }
-        protected IServerEncounterImagesReader ServerEncounterImagesReader { get; }
-        public ServerEncounterContentReader(
+        protected IEncounterImagesReader ServerEncounterImagesReader { get; }
+        public EncounterDataReader(
             IServerStringReader serverReader,
             IUrlBuilder urlBuilder,
+            IEncounterDataTextRetriever textRetriever,
             IStringDeserializer<EncounterContent> parser,
-            IServerEncounterImagesReader serverEncounterImagesReader)
+            IEncounterImagesReader serverEncounterImagesReader)
         {
             ServerReader = serverReader;
             UrlBuilder = urlBuilder;
+            TextRetriever = textRetriever;
             Parser = parser;
             ServerEncounterImagesReader = serverEncounterImagesReader;
         }
@@ -26,11 +28,10 @@ namespace ClinicalTools.SimEncounters
         {
             var mainTask = new WaitableTask<EncounterContent>();
 
-            var webRequest = GetWebRequest(user, metadata);
-            var serverResult = ServerReader.Begin(webRequest);
+            var encounterContentTextTask = TextRetriever.GetDataText(user, metadata);
             var contentTask = new WaitableTask<EncounterContent>();
             var imagesTask = ServerEncounterImagesReader.GetImages(user, metadata);
-            serverResult.AddOnCompletedListener((result) => ProcessResults(contentTask, result));
+            encounterContentTextTask.AddOnCompletedListener((result) => ProcessResults(contentTask, result));
 
             void setMainTask() => SetMainTask(mainTask, contentTask, imagesTask, metadata);
             contentTask.AddOnCompletedListener((result) => setMainTask());
@@ -67,26 +68,7 @@ namespace ClinicalTools.SimEncounters
             mainTask.SetResult(content);
         }
 
-        protected virtual string DownloadPhp { get; } = "Main.php";
-        protected virtual string ModeVariable { get; } = "mode";
-        protected virtual string ModeValue { get; } = "encounter";
-        protected virtual string ActionVariable { get; } = "action";
-        protected virtual string ActionValue { get; } = "data";
-        protected virtual string EncounterVariable { get; } = "encounter";
-        protected virtual string AccountVariable { get; } = "account";
-        private UnityWebRequest GetWebRequest(User user, EncounterMetadata metadata)
-        {
-            var arguments = new UrlArgument[] {
-                new UrlArgument(AccountVariable, user.AccountId.ToString()),
-                new UrlArgument(ModeVariable, ModeValue),
-                new UrlArgument(ActionVariable, ActionValue),
-                new UrlArgument(EncounterVariable, metadata.RecordNumber.ToString()),
-            };
-            var url = UrlBuilder.BuildUrl(DownloadPhp, arguments);
-            return UnityWebRequest.Get(url);
-        }
-
-        private void ProcessResults(WaitableTask<EncounterContent> result, TaskResult<string> serverResult)
+        protected virtual void ProcessResults(WaitableTask<EncounterContent> result, TaskResult<string> serverResult)
         {
             result.SetResult(Parser.Deserialize(serverResult.Value));
         }

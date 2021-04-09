@@ -2,19 +2,19 @@
 
 namespace ClinicalTools.SimEncounters
 {
-    public class ServerNonImageContentReader : INonImageContentReader
+    public class ServerEncounterContentReader2 : IEncounterDataReader
     {
         private readonly IServerStringReader serverReader;
         private readonly IUrlBuilder urlBuilder;
         private readonly IStringDeserializer<EncounterContent> parser;
-        public ServerNonImageContentReader(IServerStringReader serverReader, IUrlBuilder urlBuilder, IStringDeserializer<EncounterContent> parser)
+        public ServerEncounterContentReader2(IServerStringReader serverReader, IUrlBuilder urlBuilder, IStringDeserializer<EncounterContent> parser)
         {
             this.serverReader = serverReader;
             this.urlBuilder = urlBuilder;
             this.parser = parser;
         }
 
-        public WaitableTask<EncounterContent> GetNonImageContent(User user, EncounterMetadata metadata)
+        public WaitableTask<EncounterContent> GetEncounterData(User user, EncounterMetadata metadata)
         {
             var contentData = new WaitableTask<EncounterContent>();
 

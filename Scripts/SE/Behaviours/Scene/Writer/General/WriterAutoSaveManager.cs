@@ -11,18 +11,21 @@ namespace ClinicalTools.SimEncounters
         protected SignalBus SignalBus { get; set; }
         protected BaseMessageHandler MessageHandler { get; set; }
         protected ISelector<WriterSceneInfoSelectedEventArgs> SceneInfoSelector { get; set; }
-        protected IEncounterWriter EncounterWriter { get; set; }
+        protected IEncounterWriter EncounterServerWriter { get; set; }
+        protected IEncounterWriter EncounterAutosaveWriter { get; set; }
         [Inject]
         public virtual void Inject(
             SignalBus signalBus,
             BaseMessageHandler messageHandler,
             ISelector<WriterSceneInfoSelectedEventArgs> sceneInfoSelector,
-            [Inject(Id = SaveType.Autosave)] IEncounterWriter encounterWriter)
+            [Inject(Id = SaveType.Server)] IEncounterWriter encounterServerWriter,
+            [Inject(Id = SaveType.Local)] IEncounterWriter encounterAutosaveWriter)
         {
             SignalBus = signalBus;
             MessageHandler = messageHandler;
             SceneInfoSelector = sceneInfoSelector;
-            EncounterWriter = encounterWriter;
+            EncounterServerWriter = encounterServerWriter;
+            EncounterAutosaveWriter = encounterAutosaveWriter;
         }
 
         protected virtual Button Button { get; set; }
@@ -56,19 +59,23 @@ namespace ClinicalTools.SimEncounters
             SignalBus.Fire<SerializeEncounterSignal>();
             var sceneInfo = SceneInfoSelector.CurrentValue.SceneInfo;
 
-            var parameters = new SaveEncounterParameters() {
+            var saveParameters = new SaveEncounterParameters() {
                 Encounter = sceneInfo.Encounter,
                 User = sceneInfo.User,
                 SaveVersion = SaveVersion.AutoSave
             };
-            var writerTask = EncounterWriter.Save(parameters);
-            writerTask.AddOnCompletedListener(AutosaveCompleted);
+            var writerTask = EncounterServerWriter.Save(saveParameters);
+            writerTask.AddOnCompletedListener((result) => AutosaveCompleted(result, saveParameters));
         }
 
-        protected virtual void AutosaveCompleted(TaskResult result)
+        protected virtual void AutosaveCompleted(TaskResult result, SaveEncounterParameters saveParameters)
         {
-            if (!result.IsError())
+            if (!result.IsError()) { 
                 MessageHandler.ShowMessage("Encounter autosaved.");
+            } else {
+                MessageHandler.ShowMessage($"Error autosaving encounter. Creating local save.\n{result.Exception.Message}", MessageType.Error);
+                var writerTask = EncounterAutosaveWriter.Save(saveParameters);
+            }
         }
     }
 }

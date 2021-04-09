@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class ServerEncounterImageReader : IServerEncounterImageReader
+    public class ServerEncounterImageReader : IEncounterImageReader
     {
         private readonly IUrlBuilder urlBuilder;
         private readonly IServerTextureReader serverReader;
@@ -21,7 +21,7 @@ namespace ClinicalTools.SimEncounters
                 return WaitableTask.CompletedTask;
             }
 
-            var webRequest = GetWebRequest(user, metadata, image.FileName);
+            var webRequest = GetWebRequest(user, metadata, image.Filename);
             var serverOutput = serverReader.Begin(webRequest);
             var task = new WaitableTask();
             serverOutput.AddOnCompletedListener((result) => ProcessResults(task, image, result));

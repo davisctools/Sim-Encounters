@@ -2,9 +2,9 @@
 {
     public class LegacyEncounterDataReader : IEncounterDataReader
     {
-        protected INonImageContentReader ContentReader { get; }
+        protected IEncounterDataReader ContentReader { get; }
         protected IImageContentReader ImageDataReader { get; }
-        public LegacyEncounterDataReader(INonImageContentReader contentReader, IImageContentReader imageDataReader)
+        public LegacyEncounterDataReader(IEncounterDataReader contentReader, IImageContentReader imageDataReader)
         {
             ContentReader = contentReader;
             ImageDataReader = imageDataReader;
@@ -13,7 +13,7 @@
         public virtual WaitableTask<EncounterContent> GetEncounterData(User user, EncounterMetadata metadata)
         {
             var encounterData = new WaitableTask<EncounterContent>();
-            var content = ContentReader.GetNonImageContent(user, metadata);
+            var content = ContentReader.GetEncounterData(user, metadata);
             var imageData = ImageDataReader.GetImageData(user, metadata);
 
             content.AddOnCompletedListener((result) => ProcessResults(encounterData, content, imageData));
