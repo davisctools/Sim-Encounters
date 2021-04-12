@@ -29,7 +29,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void OnPanelSelected(object sender, PanelSelectedEventArgs eventArgs)
         {
             foreach (var valueKey in HasAllValues) {
-                if (ToggleSelected(eventArgs.Panel.Values, valueKey))
+                if (ToggleSelected(eventArgs.Panel.LegacyValues, valueKey))
                     continue;
 
                 ControlObjects(false);
@@ -42,7 +42,7 @@ namespace ClinicalTools.SimEncounters
             }
 
             foreach (var valueKey in HasAtLeastOneValue) {
-                if (!ToggleSelected(eventArgs.Panel.Values, valueKey))
+                if (!ToggleSelected(eventArgs.Panel.LegacyValues, valueKey))
                     continue;
 
                 ControlObjects(true);

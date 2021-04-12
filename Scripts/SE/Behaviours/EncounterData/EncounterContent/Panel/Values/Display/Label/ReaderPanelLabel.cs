@@ -54,12 +54,12 @@ namespace ClinicalTools.SimEncounters
 
             Panel = eventArgs.Panel;
 
-            if (!eventArgs.Panel.Values.ContainsKey(Name)) {
+            if (!eventArgs.Panel.LegacyValues.ContainsKey(Name)) {
                 HideControlledObjects();
                 return;
             }
 
-            var value = eventArgs.Panel.Values[Name];
+            var value = eventArgs.Panel.LegacyValues[Name];
             SetText(value);
 
             if (string.IsNullOrWhiteSpace(value))

@@ -90,10 +90,10 @@ namespace ClinicalTools.SimEncounters
             if (UseEncounterImage)
                 return EncounterSelectedListener.CurrentValue.Encounter.Metadata.Image?.Sprite;
 
-            if (!eventArgs.Panel.Values.ContainsKey(Name))
+            if (!eventArgs.Panel.LegacyValues.ContainsKey(Name))
                 return null;
 
-            Value = eventArgs.Panel.Values[Name];
+            Value = eventArgs.Panel.LegacyValues[Name];
 
             if (KeyIsEncounterImage(Value))
                 return EncounterSelectedListener.CurrentValue.Encounter.Metadata.Image?.Sprite;

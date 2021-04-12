@@ -42,7 +42,7 @@ namespace ClinicalTools.SimEncounters
             var panels = new List<BaseWriterPanel>();
             foreach (var panelName in PanelNames) {
                 var panel = new Panel(PanelPrefab.Type);
-                panel.Values.Add("PanelNameValue", panelName);
+                panel.LegacyValues.Add("PanelNameValue", panelName);
                 var panelUI = InstantiatePanel();
                 panelUI.Select(this, new PanelSelectedEventArgs(panel));
                 panels.Add(panelUI);

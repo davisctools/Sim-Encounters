@@ -42,7 +42,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void OnPanelSelected(object sender, PanelSelectedEventArgs e)
         {
-            var values = e.Panel.Values;
+            var values = e.Panel.LegacyValues;
             if (values.ContainsKey(Name))
                 SetEncounterImage(GetImage(values[Name]));
         }

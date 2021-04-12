@@ -15,8 +15,4 @@ namespace ClinicalTools.SimEncounters
             Bytes = bytes;
         }
     }
-    public interface ISpriteSelector2
-    {
-        SpriteData SelectSprite();
-    }
 }

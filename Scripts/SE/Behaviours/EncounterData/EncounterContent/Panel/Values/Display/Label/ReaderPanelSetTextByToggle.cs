@@ -31,7 +31,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void OnPanelSelected(object sender, PanelSelectedEventArgs eventArgs)
         {
             foreach (var textOption in TextOptions) {
-                if (!ToggleSelected(eventArgs.Panel.Values, textOption.ValueName))
+                if (!ToggleSelected(eventArgs.Panel.LegacyValues, textOption.ValueName))
                     continue;
 
                 Label.text = textOption.Text;

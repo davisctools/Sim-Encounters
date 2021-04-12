@@ -64,7 +64,7 @@ namespace ClinicalTools.SimEncounters
         protected string LegacyName => "characterName";
         protected override void OnPanelSelected(object sender, PanelSelectedEventArgs e)
         {
-            var values = e.Panel.Values;
+            var values = e.Panel.LegacyValues;
             string value;
             if (values.ContainsKey(Name)) {
                 value = values[Name];

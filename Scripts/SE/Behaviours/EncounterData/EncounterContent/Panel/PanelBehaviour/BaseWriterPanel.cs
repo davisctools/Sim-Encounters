@@ -57,7 +57,7 @@ namespace ClinicalTools.SimEncounters
                 panel.Pins = PinsDrawer.Serialize();
             if (ChildPanelCreator != null)
                 panel.ChildPanels = ChildPanelCreator.SerializeChildren();
-            panel.Values = SerializeFields(Fields);
+            panel.LegacyValues = SerializeFields(Fields);
 
             return panel;
         }

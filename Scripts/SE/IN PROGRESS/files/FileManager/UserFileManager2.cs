@@ -91,9 +91,8 @@ namespace ClinicalTools.SimEncounters
             => Path.Combine(GetEncounterFolder(user, metadata), SaveFolder);
         public virtual string GetSaveFolder(string encounterDirectory)
             => Path.Combine(encounterDirectory, SaveFolder);
-        protected virtual string ImagesFolder { get; set; } = "images";
         public virtual string GetImagesFolder(User user, EncounterMetadata metadata)
-            => Path.Combine(GetSaveFolder(user, metadata), ImagesFolder);
+            => Path.Combine(GetSaveFolder(user, metadata), filenameInfo.ImagesFolderName);
 
 
         ///<summary>

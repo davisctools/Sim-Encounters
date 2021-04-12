@@ -4,46 +4,18 @@ using UnityEngine.Networking;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class ServerEncounterImageReader : IEncounterImageReader
+    public class ServerEncounterImageTextureRetriever : IEncounterImageTextureRetriever
     {
         private readonly IUrlBuilder urlBuilder;
         private readonly IServerTextureReader serverReader;
-        public ServerEncounterImageReader(IUrlBuilder urlBuilder, IServerTextureReader serverReader)
+        public ServerEncounterImageTextureRetriever(IUrlBuilder urlBuilder, IServerTextureReader serverReader)
         {
             this.urlBuilder = urlBuilder;
             this.serverReader = serverReader;
         }
 
-        public WaitableTask GetTexture(User user, EncounterMetadata metadata, EncounterImage image)
-        {
-            if (metadata.Image?.Sprite != null && metadata.Image.Id == image.Id) {
-                image.Sprite = metadata.Image.Sprite;
-                return WaitableTask.CompletedTask;
-            }
-
-            var webRequest = GetWebRequest(user, metadata, image.Filename);
-            var serverOutput = serverReader.Begin(webRequest);
-            var task = new WaitableTask();
-            serverOutput.AddOnCompletedListener((result) => ProcessResults(task, image, result));
-
-            return task;
-        }
-
-        protected virtual void ProcessResults(WaitableTask task, EncounterImage image, TaskResult<Texture2D> serverOutput)
-        {
-            if (serverOutput == null || serverOutput.IsError()) {
-                task.SetError(serverOutput.Exception);
-                return;
-            }
-
-            var texture = serverOutput.Value;
-            if (texture == null) {
-                task.SetError(new Exception("Could not get texture."));
-                return;
-            }
-            image.Sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(texture.width / 2, texture.height / 2));
-            task.SetCompleted();
-        }
+        public WaitableTask<Texture2D> GetTexture(User user, EncounterMetadata metadata, EncounterImage image)
+            => serverReader.Begin(GetWebRequest(user, metadata, image.Filename));
 
         protected virtual string MenuPhp { get; } = "Main.php";
         protected virtual string ModeVariable { get; } = "mode";

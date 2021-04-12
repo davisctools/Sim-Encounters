@@ -102,7 +102,7 @@ namespace ClinicalTools.SimEncounters
             if (panel.Data.Type.Equals("DialogueTextbox", StringComparison.InvariantCultureIgnoreCase))
                 return TextboxPrefab;
 
-            var values = panel.Data.Values;
+            var values = panel.Data.LegacyValues;
             if (values.ContainsKey(DirectionKey))
                 return values[DirectionKey].Equals(RightValue, StringComparison.InvariantCultureIgnoreCase) ? DialogueEntryRight : DialogueEntryLeft;
 

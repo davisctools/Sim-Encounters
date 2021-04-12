@@ -6,12 +6,12 @@ namespace ClinicalTools.SimEncounters
     public class EncounterImagesReader : IEncounterImagesReader
     {
         protected IStringDeserializer<List<EncounterImage>> Parser { get; }
-        protected IEncounterImageReader ServerImageReader { get; }
+        protected IEncounterImageSpriteRefresher ServerImageReader { get; }
         protected IEncounterImagesJsonRetriever EncounterImagesJsonRetriever { get; }
         public EncounterImagesReader(
             IEncounterImagesJsonRetriever encounterImagesJsonRetriever,
             IStringDeserializer<List<EncounterImage>> parser,
-            IEncounterImageReader serverImageReader)
+            IEncounterImageSpriteRefresher serverImageReader)
         {
             EncounterImagesJsonRetriever = encounterImagesJsonRetriever;
             Parser = parser;
@@ -42,7 +42,7 @@ namespace ClinicalTools.SimEncounters
             var images = Parser.Deserialize(serverResult.Value);
             var tasks = new List<WaitableTask>();
             foreach (var image in images)
-                tasks.Add(ServerImageReader.GetTexture(user, metadata, image));
+                tasks.Add(ServerImageReader.RefreshTexture(user, metadata, image));
 
             void completionAction() => imagesTask.SetResult(images);
             if (tasks.Count == 0) {

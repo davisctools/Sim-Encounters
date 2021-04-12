@@ -8,9 +8,11 @@ namespace ClinicalTools.SimEncounters
         protected virtual PanelXmlSerializer ChildPanelFactory => this;
 
         protected virtual IXmlSerializer<PinGroup> PinsFactory { get; }
-        public PanelXmlSerializer(IXmlSerializer<PinGroup> pinsFactory)
+        protected virtual IXmlSerializer<EncounterValueGroup> ValueGroup { get; }
+        public PanelXmlSerializer(IXmlSerializer<PinGroup> pinsFactory, IXmlSerializer<EncounterValueGroup> valueGroup)
         {
             PinsFactory = pinsFactory;
+            ValueGroup = valueGroup;
         }
 
 
@@ -26,7 +28,11 @@ namespace ClinicalTools.SimEncounters
         public void Serialize(XmlSerializer serializer, Panel value)
         {
             serializer.AddString(TypeInfo, value.Type);
-            serializer.AddStringKeyValuePairs(DataInfo, value.Values);
+            if (value.LegacyValues.Count > 0)
+                serializer.AddStringKeyValuePairs(DataInfo, value.LegacyValues);
+            else
+                serializer.AddValue(DataInfo.CollectionNode, value.Values, ValueGroup);
+
             serializer.AddKeyValuePairs(ChildPanelsInfo, value.ChildPanels, ChildPanelFactory);
             serializer.AddValue(PinsInfo, value.Pins, PinsFactory);
         }
@@ -56,15 +62,15 @@ namespace ClinicalTools.SimEncounters
         protected virtual void AddData(XmlDeserializer deserializer, Panel panel)
         {
             var dataPairs = GetDataPairs(deserializer);
-            if (dataPairs != null) {
-                {
-                    foreach (var pair in dataPairs) {
-                        if (panel.Values.ContainsKey(pair.Key))
-                            Debug.LogWarning($"{panel.Type} panel has duplicate data key (Key:\"{pair.Key}\"; Value1:\"{panel.Values[pair.Key]}\"; Value2:\"{pair.Value}\")");
-                        else
-                            panel.Values.Add(pair);
-                    }
+            if (dataPairs != null && dataPairs.Count == 0) {
+                foreach (var pair in dataPairs) {
+                    if (panel.LegacyValues.ContainsKey(pair.Key))
+                        Debug.LogWarning($"{panel.Type} panel has duplicate data key (Key:\"{pair.Key}\"; Value1:\"{panel.LegacyValues[pair.Key]}\"; Value2:\"{pair.Value}\")");
+                    else
+                        panel.LegacyValues.Add(pair);
                 }
+            } else {
+
             }
         }
 
@@ -78,7 +84,6 @@ namespace ClinicalTools.SimEncounters
                     panel.ChildPanels.Add(childPanel);
             }
         }
-
 
         protected virtual PinGroup GetPins(XmlDeserializer deserializer)
             => deserializer.GetValue(PinsInfo, PinsFactory);

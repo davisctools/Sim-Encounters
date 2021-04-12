@@ -19,7 +19,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void OnDestroy() => PanelSelectedListener.Selected -= OnPanelSelected;
         protected virtual void OnPanelSelected(object sender, PanelSelectedEventArgs eventArgs)
-            => gameObject.SetActive(ShouldShow(eventArgs.Panel.Values));
+            => gameObject.SetActive(ShouldShow(eventArgs.Panel.LegacyValues));
          
         private const string CharacterNameValueKey = "characterName";
         protected virtual bool ShouldShow(IDictionary<string, string> values)

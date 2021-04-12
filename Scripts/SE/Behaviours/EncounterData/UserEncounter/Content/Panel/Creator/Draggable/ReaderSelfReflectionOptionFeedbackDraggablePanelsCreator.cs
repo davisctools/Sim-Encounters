@@ -48,7 +48,7 @@ namespace ClinicalTools.SimEncounters
             if (draggable == null || !Panels.ContainsKey(draggable))
                 return "";
 
-            var values = Panels[draggable].Data.Values;
+            var values = Panels[draggable].Data.LegacyValues;
             if (!values.ContainsKey(OptionValueKey) || !values.ContainsKey(FeedbackKey))
                 return "";
 
