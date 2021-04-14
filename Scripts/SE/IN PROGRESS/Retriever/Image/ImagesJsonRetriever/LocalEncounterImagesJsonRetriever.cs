@@ -11,7 +11,7 @@ namespace ClinicalTools.SimEncounters
             ServerReader = serverReader;
             UrlBuilder = urlBuilder;
         }
-        public WaitableTask<string> GetImagesJson(User user, EncounterMetadata metadata)
+        public WaitableTask<string> GetImagesJson(User user, OldEncounterMetadata metadata)
         {
             var webRequest = GetWebRequest(user, metadata);
             return ServerReader.Begin(webRequest);
@@ -25,7 +25,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string EncounterVariable { get; } = "encounter";
         protected virtual string AccountVariable { get; } = "account";
 
-        protected virtual UnityWebRequest GetWebRequest(User user, EncounterMetadata metadata)
+        protected virtual UnityWebRequest GetWebRequest(User user, OldEncounterMetadata metadata)
         {
             var arguments = new UrlArgument[] {
                 new UrlArgument(AccountVariable, user.AccountId.ToString()),

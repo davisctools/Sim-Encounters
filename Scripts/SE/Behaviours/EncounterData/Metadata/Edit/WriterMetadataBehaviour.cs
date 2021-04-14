@@ -14,6 +14,6 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void OnSerializeEncounterSignal() => Serialize(MetadataSelector.CurrentValue.Metadata);
-        protected abstract void Serialize(EncounterMetadata metadata);
+        protected abstract void Serialize(OldEncounterMetadata metadata);
     }
 }

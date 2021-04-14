@@ -2,6 +2,6 @@
 {
     public interface IEncounterRemover
     {
-        WaitableTask Delete(User user, EncounterMetadata encounterMetadata);
+        WaitableTask Delete(User user, OldEncounterMetadata encounterMetadata);
     }
 }

@@ -13,7 +13,7 @@ namespace ClinicalTools.SimEncounters
     public class SaveEncounterParameters
     {
         public User User { get; set; }
-        public Encounter Encounter { get; set; }
+        public ContentEncounter Encounter { get; set; }
         public SaveVersion SaveVersion { get; set; } = SaveVersion.Private;
         public string Description { get; set; }
 
@@ -44,13 +44,13 @@ namespace ClinicalTools.SimEncounters
         protected IUrlBuilder UrlBuilder { get; }
         protected IStringSerializer<Sprite> SpriteSerializer { get; }
         protected IXmlSerializer<LegacyEncounterImageContent> ImageDataSerializer { get; }
-        protected IXmlSerializer<EncounterContent> EncounterContentSerializer { get; }
+        protected IXmlSerializer<EncounterContentData> EncounterContentSerializer { get; }
         public ServerEncounterWriter(
             IServerStringReader serverReader,
             IUrlBuilder urlBuilder,
             IStringSerializer<Sprite> spriteSerializer,
             IXmlSerializer<LegacyEncounterImageContent> imageDataSerializer,
-            IXmlSerializer<EncounterContent> encounterContentSerializer)
+            IXmlSerializer<EncounterContentData> encounterContentSerializer)
         {
             ServerReader = serverReader;
             UrlBuilder = urlBuilder;
@@ -134,7 +134,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string XmlMimeType { get; } = "text/xml";
         protected virtual string ContentVariable { get; } = "file";
         protected virtual string ContentFilename { get; } = "data.ced";
-        protected virtual void AddFormContentFields(WWWForm form, EncounterContent content)
+        protected virtual void AddFormContentFields(WWWForm form, EncounterContentData content)
         {
             var contentDoc = new XmlDocument();
             var contentSerializer = new XmlSerializer(contentDoc);
@@ -155,7 +155,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string ImageVariable { get; } = "image";
         protected virtual string UrlVariable { get; } = "url";
         protected virtual string CompletionCodeVariable { get; } = "url_key";
-        protected virtual void AddMetadataFields(WWWForm form, EncounterMetadata metadata)
+        protected virtual void AddMetadataFields(WWWForm form, OldEncounterMetadata metadata)
         {
             if (metadata is INamed named) {
                 AddField(form, FirstNameVariable, named.Name.FirstName);
@@ -219,7 +219,7 @@ namespace ClinicalTools.SimEncounters
          */
         protected virtual byte[] GetFileAsByteArray(string data) => Encoding.UTF8.GetBytes(data);
 
-        protected virtual void ProcessResults(WaitableTask actionResult, TaskResult<string> serverResult, EncounterMetadata metadata)
+        protected virtual void ProcessResults(WaitableTask actionResult, TaskResult<string> serverResult, OldEncounterMetadata metadata)
         {
             if (serverResult.IsError()) {
                 actionResult.SetError(serverResult.Exception);

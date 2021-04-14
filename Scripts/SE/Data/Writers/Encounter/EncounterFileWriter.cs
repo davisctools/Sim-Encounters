@@ -7,12 +7,12 @@ namespace ClinicalTools.SimEncounters
         protected IMetadataWriter MetadataWriter { get; }
         protected IFileManager FileManager { get; }
         protected IXmlSerializer<LegacyEncounterImageContent> ImageDataSerializer { get; }
-        protected IXmlSerializer<EncounterContent> EncounterContentSerializer { get; }
+        protected IXmlSerializer<EncounterContentData> EncounterContentSerializer { get; }
         public EncounterFileWriter(
             IMetadataWriter metadataWriter,
             IFileManager fileManager, 
             IXmlSerializer<LegacyEncounterImageContent> imageDataSerializer, 
-            IXmlSerializer<EncounterContent> encounterContentSerializer)
+            IXmlSerializer<EncounterContentData> encounterContentSerializer)
         {
             MetadataWriter = metadataWriter;
             FileManager = fileManager;

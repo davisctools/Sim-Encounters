@@ -8,13 +8,13 @@ namespace ClinicalTools.SimEncounters
         protected IServerStringReader ServerReader { get; }
         protected IUrlBuilder UrlBuilder { get; }
         protected IEncounterDataTextRetriever TextRetriever { get; }
-        protected IStringDeserializer<EncounterContent> Parser { get; }
+        protected IStringDeserializer<EncounterContentData> Parser { get; }
         protected IEncounterImagesReader ServerEncounterImagesReader { get; }
         public EncounterDataReader(
             IServerStringReader serverReader,
             IUrlBuilder urlBuilder,
             IEncounterDataTextRetriever textRetriever,
-            IStringDeserializer<EncounterContent> parser,
+            IStringDeserializer<EncounterContentData> parser,
             IEncounterImagesReader serverEncounterImagesReader)
         {
             ServerReader = serverReader;
@@ -24,12 +24,12 @@ namespace ClinicalTools.SimEncounters
             ServerEncounterImagesReader = serverEncounterImagesReader;
         }
 
-        public virtual WaitableTask<EncounterContent> GetEncounterData(User user, EncounterMetadata metadata)
+        public virtual WaitableTask<EncounterContentData> GetEncounterData(User user, OldEncounterMetadata metadata)
         {
-            var mainTask = new WaitableTask<EncounterContent>();
+            var mainTask = new WaitableTask<EncounterContentData>();
 
             var encounterContentTextTask = TextRetriever.GetDataText(user, metadata);
-            var contentTask = new WaitableTask<EncounterContent>();
+            var contentTask = new WaitableTask<EncounterContentData>();
             var imagesTask = ServerEncounterImagesReader.GetImages(user, metadata);
             encounterContentTextTask.AddOnCompletedListener((result) => ProcessResults(contentTask, result));
 
@@ -41,10 +41,10 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void SetMainTask(
-            WaitableTask<EncounterContent> mainTask,
-            WaitableTask<EncounterContent> contentTask,
+            WaitableTask<EncounterContentData> mainTask,
+            WaitableTask<EncounterContentData> contentTask,
             WaitableTask<List<EncounterImage>> imagesTask,
-            EncounterMetadata metadata)
+            OldEncounterMetadata metadata)
         {
             if (mainTask.IsCompleted() || !contentTask.IsCompleted())
                 return;
@@ -68,7 +68,7 @@ namespace ClinicalTools.SimEncounters
             mainTask.SetResult(content);
         }
 
-        protected virtual void ProcessResults(WaitableTask<EncounterContent> result, TaskResult<string> serverResult)
+        protected virtual void ProcessResults(WaitableTask<EncounterContentData> result, TaskResult<string> serverResult)
         {
             result.SetResult(Parser.Deserialize(serverResult.Value));
         }

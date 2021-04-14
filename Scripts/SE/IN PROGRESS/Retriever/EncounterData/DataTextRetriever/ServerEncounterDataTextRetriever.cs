@@ -13,7 +13,7 @@ namespace ClinicalTools.SimEncounters
         }
 
 
-        public virtual WaitableTask<string> GetDataText(User user, EncounterMetadata metadata)
+        public virtual WaitableTask<string> GetDataText(User user, OldEncounterMetadata metadata)
             => ServerReader.Begin(GetWebRequest(user, metadata));
 
         protected virtual string DownloadPhp { get; } = "Main.php";
@@ -23,7 +23,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string ActionValue { get; } = "data";
         protected virtual string EncounterVariable { get; } = "encounter";
         protected virtual string AccountVariable { get; } = "account";
-        protected virtual UnityWebRequest GetWebRequest(User user, EncounterMetadata metadata)
+        protected virtual UnityWebRequest GetWebRequest(User user, OldEncounterMetadata metadata)
         {
             var arguments = new UrlArgument[] {
                 new UrlArgument(AccountVariable, user.AccountId.ToString()),

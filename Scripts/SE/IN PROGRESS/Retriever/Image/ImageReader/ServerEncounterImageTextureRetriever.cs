@@ -14,7 +14,7 @@ namespace ClinicalTools.SimEncounters
             this.serverReader = serverReader;
         }
 
-        public WaitableTask<Texture2D> GetTexture(User user, EncounterMetadata metadata, EncounterImage image)
+        public WaitableTask<Texture2D> GetTexture(User user, OldEncounterMetadata metadata, EncounterImage image)
             => serverReader.Begin(GetWebRequest(user, metadata, image.Filename));
 
         protected virtual string MenuPhp { get; } = "Main.php";
@@ -26,7 +26,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string ActionValue { get; } = "image";
         protected virtual string FileVariable { get; } = "file";
 
-        protected virtual UnityWebRequest GetWebRequest(User user, EncounterMetadata metadata, string textureName)
+        protected virtual UnityWebRequest GetWebRequest(User user, OldEncounterMetadata metadata, string textureName)
         {
             var arguments = new UrlArgument[] {
                 new UrlArgument(ModeVariable, ModeValue),

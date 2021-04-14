@@ -17,15 +17,15 @@ namespace ClinicalTools.SimEncounters
         public virtual Sprite AdvancedSprite { get => advancedSprite; set => advancedSprite = value; }
         [SerializeField] private Sprite advancedSprite;
 
-        public void Display(Difficulty difficulty)
+        public void Display(EncounterDifficulty difficulty)
         {
             Label.text = difficulty.ToString();
             Sprite sprite;
-            if (difficulty == Difficulty.Beginner)
+            if (difficulty == EncounterDifficulty.Beginner)
                 sprite = BeginnerSprite;
-            else if (difficulty == Difficulty.Intermediate)
+            else if (difficulty == EncounterDifficulty.Intermediate)
                 sprite = IntermediateSprite;
-            else if (difficulty == Difficulty.Advanced)
+            else if (difficulty == EncounterDifficulty.Advanced)
                 sprite = AdvancedSprite;
             else
                 sprite = null;

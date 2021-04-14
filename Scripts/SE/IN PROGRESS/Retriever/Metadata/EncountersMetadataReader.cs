@@ -7,11 +7,11 @@ namespace ClinicalTools.SimEncounters
     public class EncountersMetadataReader : IMetadatasReader
     {
         protected IEncountersMetadataJsonRetriever EncountersMetadataJsonRetriever { get; }
-        protected IJsonDeserializer<EncounterMetadata> Parser { get; }
+        protected IJsonDeserializer<OldEncounterMetadata> Parser { get; }
         protected IEncounterImageSpriteRefresher ServerImageReader { get; }
         public EncountersMetadataReader(
             IEncountersMetadataJsonRetriever encountersMetadataJsonRetriever,
-            IJsonDeserializer<EncounterMetadata> parser,
+            IJsonDeserializer<OldEncounterMetadata> parser,
             IEncounterImageSpriteRefresher serverImageReader)
         {
             EncountersMetadataJsonRetriever = encountersMetadataJsonRetriever;
@@ -19,22 +19,22 @@ namespace ClinicalTools.SimEncounters
             ServerImageReader = serverImageReader;
         }
 
-        public WaitableTask<List<EncounterMetadata>> GetMetadatas(User user)
+        public WaitableTask<List<OldEncounterMetadata>> GetMetadatas(User user)
         {
-            var mainTask = new WaitableTask<List<EncounterMetadata>>();
+            var mainTask = new WaitableTask<List<OldEncounterMetadata>>();
 
             var encountersMetadataJsonTask = EncountersMetadataJsonRetriever.GetMetadataJsonNodes(user);
             encountersMetadataJsonTask.AddOnCompletedListener((result) => ProcessResults(mainTask, result, user));
             return null;
         }
-        protected virtual void ProcessResults(WaitableTask<List<EncounterMetadata>> result, TaskResult<IEnumerable<JSONNode>> encountersMetadataJson, User user)
+        protected virtual void ProcessResults(WaitableTask<List<OldEncounterMetadata>> result, TaskResult<IEnumerable<JSONNode>> encountersMetadataJson, User user)
         {
             if (encountersMetadataJson == null || encountersMetadataJson.IsError()) {
                 result.SetError(encountersMetadataJson.Exception);
                 return;
             }
 
-            var metadatas = new List<EncounterMetadata>();
+            var metadatas = new List<OldEncounterMetadata>();
             foreach (var encounterNode in encountersMetadataJson.Value)
                 metadatas.Add(Parser.Deserialize(encounterNode));
 
@@ -42,8 +42,8 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void GetImages(
-            WaitableTask<List<EncounterMetadata>> result,
-            List<EncounterMetadata> metadatas,
+            WaitableTask<List<OldEncounterMetadata>> result,
+            List<OldEncounterMetadata> metadatas,
             User user)
         {
             var tasks = new List<WaitableTask>();

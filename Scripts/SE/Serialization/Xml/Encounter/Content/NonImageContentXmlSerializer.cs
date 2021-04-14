@@ -2,7 +2,7 @@
 
 namespace ClinicalTools.SimEncounters
 {
-    public class NonImageContentXmlSerializer : IXmlSerializer<EncounterContent>
+    public class NonImageContentXmlSerializer : IXmlSerializer<EncounterContentData>
     {
         protected virtual IXmlSerializer<Section> SectionFactory { get; }
         protected virtual IXmlSerializer<Character> CharacterFactory { get; }
@@ -17,15 +17,15 @@ namespace ClinicalTools.SimEncounters
         protected virtual XmlCollectionInfo SectionsInfo { get; } = new XmlCollectionInfo("sections", "section");
 
 
-        public virtual bool ShouldSerialize(EncounterContent value) => value != null;
+        public virtual bool ShouldSerialize(EncounterContentData value) => value != null;
 
-        public void Serialize(XmlSerializer serializer, EncounterContent value)
+        public void Serialize(XmlSerializer serializer, EncounterContentData value)
         {
             serializer.AddKeyValuePairs(CharactersInfo, value.Characters, CharacterFactory);
             serializer.AddKeyValuePairs(SectionsInfo, value.Sections, SectionFactory);
         }
 
-        public EncounterContent Deserialize(XmlDeserializer deserializer)
+        public EncounterContentData Deserialize(XmlDeserializer deserializer)
         {
             var encounterData = CreateEncounterData(deserializer);
 
@@ -35,14 +35,14 @@ namespace ClinicalTools.SimEncounters
             return encounterData;
         }
 
-        protected virtual EncounterContent CreateEncounterData(XmlDeserializer deserializer)
+        protected virtual EncounterContentData CreateEncounterData(XmlDeserializer deserializer)
         {
-            return new EncounterContent();
+            return new EncounterContentData();
         }
 
         protected virtual List<KeyValuePair<string, Character>> GetCharacters(XmlDeserializer deserializer)
             => deserializer.GetKeyValuePairs(CharactersInfo, CharacterFactory);
-        protected virtual void AddCharacters(XmlDeserializer deserializer, EncounterContent encounterData)
+        protected virtual void AddCharacters(XmlDeserializer deserializer, EncounterContentData encounterData)
         {
             var characterPairs = GetCharacters(deserializer);
             if (characterPairs == null)
@@ -54,7 +54,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual List<KeyValuePair<string, Section>> GetSections(XmlDeserializer deserializer)
             => deserializer.GetKeyValuePairs(SectionsInfo, SectionFactory);
-        protected virtual void AddSections(XmlDeserializer deserializer, EncounterContent encounterData)
+        protected virtual void AddSections(XmlDeserializer deserializer, EncounterContentData encounterData)
         {
             var sectionPairs = GetSections(deserializer);
             if (sectionPairs == null)

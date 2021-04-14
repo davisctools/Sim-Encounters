@@ -10,7 +10,7 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private Toggle useEncounterImageToggle;
 
         protected WaitableTask<string> CurrentWaitableSpriteKey { get; set; }
-        protected Encounter Encounter { get; set; }
+        protected ContentEncounter Encounter { get; set; }
         protected KeyedCollection<EncounterImage> ImageCollection => Encounter?.Content.Images;
         protected string CurrentKey { get; set; }
 
@@ -30,7 +30,7 @@ namespace ClinicalTools.SimEncounters
             return imagePath;
         }
 
-        public virtual WaitableTask<string> SelectSprite(Encounter encounter, string spriteKey)
+        public virtual WaitableTask<string> SelectSprite(ContentEncounter encounter, string spriteKey)
         {
             if (CurrentWaitableSpriteKey?.IsCompleted() == false)
                 CurrentWaitableSpriteKey.SetError(new Exception("New popup opened"));

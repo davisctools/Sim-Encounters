@@ -6,16 +6,16 @@ namespace ClinicalTools.SimEncounters
     public class LocalMetadatasReader : IMetadatasReader
     {
         private readonly IFileManager fileManager;
-        private readonly IStringDeserializer<EncounterMetadata> parser;
-        public LocalMetadatasReader(IFileManager fileManager, IStringDeserializer<EncounterMetadata> parser)
+        private readonly IStringDeserializer<OldEncounterMetadata> parser;
+        public LocalMetadatasReader(IFileManager fileManager, IStringDeserializer<OldEncounterMetadata> parser)
         {
             this.fileManager = fileManager;
             this.parser = parser;
         }
 
-        public WaitableTask<List<EncounterMetadata>> GetMetadatas(User user)
+        public WaitableTask<List<OldEncounterMetadata>> GetMetadatas(User user)
         {
-            var metadatas = new WaitableTask<List<EncounterMetadata>>();
+            var metadatas = new WaitableTask<List<OldEncounterMetadata>>();
 
             var fileTexts = fileManager.GetFilesText(user, FileType.Metadata);
             fileTexts.AddOnCompletedListener((result) => ProcessResults(metadatas, result));
@@ -23,14 +23,14 @@ namespace ClinicalTools.SimEncounters
             return metadatas;
         }
 
-        private void ProcessResults(WaitableTask<List<EncounterMetadata>> result, TaskResult<string[]> fileTexts)
+        private void ProcessResults(WaitableTask<List<OldEncounterMetadata>> result, TaskResult<string[]> fileTexts)
         {
             if (fileTexts == null) {
                 result.SetError(null);
                 return;
             }
 
-            var metadatas = new List<EncounterMetadata>();
+            var metadatas = new List<OldEncounterMetadata>();
             foreach (var fileText in fileTexts.Value) {
                 var metadata = parser.Deserialize(fileText);
                 if (metadata != null)

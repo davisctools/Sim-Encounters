@@ -2,6 +2,6 @@
 {
     public interface IEncounterDataTextRetriever
     {
-        WaitableTask<string> GetDataText(User user, EncounterMetadata metadata);
+        WaitableTask<string> GetDataText(User user, OldEncounterMetadata metadata);
     }
 }

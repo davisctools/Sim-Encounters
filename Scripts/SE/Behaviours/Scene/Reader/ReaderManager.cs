@@ -59,7 +59,7 @@ namespace ClinicalTools.SimEncounters
         {
             Screen.fullScreen = false;
 
-            var tempMetadata = new EncounterMetadata() {
+            var tempMetadata = new OldEncounterMetadata() {
                 Filename = DefaultEncounterFileName
             };
             var metadataResult = MetadataReader.GetMetadata(User.Guest, tempMetadata);
@@ -89,7 +89,7 @@ namespace ClinicalTools.SimEncounters
         }
 
 
-        public virtual void MetadataRetrieved(TaskResult<EncounterMetadata> metadata)
+        public virtual void MetadataRetrieved(TaskResult<OldEncounterMetadata> metadata)
         {
             if (metadata.Value == null) {
                 Debug.LogError("Metadata is null.");

@@ -11,18 +11,18 @@ namespace ClinicalTools.SimEncounters
     {
         public EncounterEditLock Lock { get; set; }
 
-        public Dictionary<SaveType, EncounterMetadata> Metadata { get; }
+        public Dictionary<SaveType, OldEncounterMetadata> Metadata { get; }
         public EncounterBasicStatus Status { get; set; }
 
-        public MenuEncounter(Dictionary<SaveType, EncounterMetadata> metadata, EncounterBasicStatus status)
+        public MenuEncounter(Dictionary<SaveType, OldEncounterMetadata> metadata, EncounterBasicStatus status)
         {
             Metadata = metadata;
             Status = status;
         }
 
-        public virtual KeyValuePair<SaveType, EncounterMetadata> GetLatestTypedMetada()
+        public virtual KeyValuePair<SaveType, OldEncounterMetadata> GetLatestTypedMetada()
         {
-            var latest = new KeyValuePair<SaveType, EncounterMetadata>();
+            var latest = new KeyValuePair<SaveType, OldEncounterMetadata>();
             foreach (var metadata in Metadata) {
                 if (metadata.Key == SaveType.Local)
                     return metadata;
@@ -34,6 +34,6 @@ namespace ClinicalTools.SimEncounters
             return latest;
         }
         public virtual SaveType GetLatestType() => GetLatestTypedMetada().Key;
-        public virtual EncounterMetadata GetLatestMetadata() => GetLatestTypedMetada().Value;
+        public virtual OldEncounterMetadata GetLatestMetadata() => GetLatestTypedMetada().Value;
     }
 }

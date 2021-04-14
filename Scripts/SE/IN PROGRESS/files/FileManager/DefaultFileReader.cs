@@ -19,7 +19,7 @@ namespace ClinicalTools.SimEncounters
             this.serverReader = serverReader;
         }
 
-        public WaitableTask<string> ReadTextFile(User user, EncounterMetadata metadata, EncounterDataFileType fileType)
+        public WaitableTask<string> ReadTextFile(User user, OldEncounterMetadata metadata, EncounterDataFileType fileType)
         {
             var fileText = new WaitableTask<string>();
 
@@ -44,7 +44,7 @@ namespace ClinicalTools.SimEncounters
             => Path.Combine(GetEncounterFolder(), filenameInfo.GetFilename(fileType));
         protected string GetEncounterFolder() => Path.Combine(DefaultDirectory, EncounterFolder);
 
-        public WaitableTask<Texture2D> ReadTextureFile(User user, EncounterMetadata metadata, string filename)
+        public WaitableTask<Texture2D> ReadTextureFile(User user, OldEncounterMetadata metadata, string filename)
             => new WaitableTask<Texture2D>(new NotImplementedException());
     }
 }

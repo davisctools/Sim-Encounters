@@ -23,14 +23,14 @@ namespace ClinicalTools.SimEncounters
         }
         protected override void StartAsInitialScene()
         {
-            var tempMetadata = new EncounterMetadata() {
+            var tempMetadata = new OldEncounterMetadata() {
                 Filename = DefaultEncounterFileName
             };
             var metadataResult = MetadataReader.GetMetadata(User.Guest, tempMetadata);
             metadataResult.AddOnCompletedListener(MetadataRetrieved);
         }
 
-        public virtual void MetadataRetrieved(TaskResult<EncounterMetadata> metadata)
+        public virtual void MetadataRetrieved(TaskResult<OldEncounterMetadata> metadata)
         {
             if (!metadata.HasValue()) {
                 Debug.LogError("Metadata is null.");

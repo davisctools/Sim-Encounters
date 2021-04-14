@@ -9,7 +9,7 @@ namespace ClinicalTools.SimEncounters
         public EncounterImageSpriteRefresher(IEncounterImageTextureRetriever spriteRetriever)
             => TextureRetriever = spriteRetriever;
 
-        public WaitableTask RefreshTexture(User user, EncounterMetadata metadata, EncounterImage image)
+        public WaitableTask RefreshTexture(User user, OldEncounterMetadata metadata, EncounterImage image)
         {
             if (metadata.Image?.Sprite != null && metadata.Image.Id == image.Id) {
                 image.Sprite = metadata.Image.Sprite;

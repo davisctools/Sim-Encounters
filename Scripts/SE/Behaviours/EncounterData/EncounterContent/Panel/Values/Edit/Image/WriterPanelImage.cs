@@ -19,7 +19,7 @@ namespace ClinicalTools.SimEncounters
         private Image image;
 
         protected WriterSceneInfo SceneInfo => SceneInfoSelectedListener.CurrentValue.SceneInfo;
-        protected Encounter Encounter => SceneInfo.Encounter;
+        protected ContentEncounter Encounter => SceneInfo.Encounter;
         protected User User => SceneInfo.User;
         protected IEncounterImageSelector ImageSelector { get; set; }
         protected ISelectedListener<WriterSceneInfoSelectedEventArgs> SceneInfoSelectedListener { get; set; }

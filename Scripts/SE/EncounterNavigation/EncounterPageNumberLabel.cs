@@ -26,7 +26,7 @@ namespace ClinicalTools.SimEncounters
 
         protected int TabCount { get; set; } = -1;
         protected UserTab CurrentTab { get; set; }
-        protected EncounterContent Content => CurrentTab.Encounter.Data.Content;
+        protected EncounterContentData Content => CurrentTab.Encounter.Data.Content;
         protected virtual void OnTabSelected(object sender, UserTabSelectedEventArgs eventArgs)
         {
             if (CurrentTab == eventArgs.SelectedTab)

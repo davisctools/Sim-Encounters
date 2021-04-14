@@ -18,7 +18,7 @@ namespace ClinicalTools.SimEncounters
             ServerImageReader = serverImageReader;
         }
 
-        public virtual WaitableTask<List<EncounterImage>> GetImages(User user, EncounterMetadata metadata)
+        public virtual WaitableTask<List<EncounterImage>> GetImages(User user, OldEncounterMetadata metadata)
         {
             var images = new WaitableTask<List<EncounterImage>>();
 
@@ -31,7 +31,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void ProcessResults(
             WaitableTask<List<EncounterImage>> imagesTask,
             User user,
-            EncounterMetadata metadata,
+            OldEncounterMetadata metadata,
             TaskResult<string> serverResult)
         {
             if (serverResult.IsError()) {

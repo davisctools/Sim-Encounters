@@ -2,6 +2,6 @@
 {
     public interface IEncounterImageUploader
     {
-        WaitableTask<EncounterImage> UploadImage(User user, Encounter encounter);
+        WaitableTask<EncounterImage> UploadImage(User user, ContentEncounter encounter);
     }
 }

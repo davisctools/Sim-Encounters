@@ -14,7 +14,7 @@ namespace ClinicalTools.SimEncounters
             this.parser = parser;
         }
 
-        public WaitableTask<LegacyEncounterImageContent> GetImageData(User user, EncounterMetadata metadata)
+        public WaitableTask<LegacyEncounterImageContent> GetImageData(User user, OldEncounterMetadata metadata)
         {
             var imageData = new WaitableTask<LegacyEncounterImageContent>();
 
@@ -32,7 +32,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string ColumnVariable { get; } = "column";
         protected virtual string ColumnValue { get; } = "imgData";
         protected virtual string AccountIdVariable { get; } = "accountId";
-        private UnityWebRequest GetWebRequest(User user, EncounterMetadata metadata)
+        private UnityWebRequest GetWebRequest(User user, OldEncounterMetadata metadata)
         {
             var arguments = new UrlArgument[] {
                 new UrlArgument(AccountIdVariable, user.AccountId.ToString()),

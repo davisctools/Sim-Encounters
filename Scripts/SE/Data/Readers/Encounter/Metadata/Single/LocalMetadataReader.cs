@@ -3,16 +3,16 @@
     public class LocalMetadataReader : IMetadataReader
     {
         private readonly IFileManager fileManager;
-        private readonly IStringDeserializer<EncounterMetadata> parser;
-        public LocalMetadataReader(IFileManager fileManager, IStringDeserializer<EncounterMetadata> parser)
+        private readonly IStringDeserializer<OldEncounterMetadata> parser;
+        public LocalMetadataReader(IFileManager fileManager, IStringDeserializer<OldEncounterMetadata> parser)
         {
             this.fileManager = fileManager;
             this.parser = parser;
         }
 
-        public WaitableTask<EncounterMetadata> GetMetadata(User user, EncounterMetadata metadata)
+        public WaitableTask<OldEncounterMetadata> GetMetadata(User user, OldEncounterMetadata metadata)
         {
-            var metadataResult = new WaitableTask<EncounterMetadata>();
+            var metadataResult = new WaitableTask<OldEncounterMetadata>();
 
             var fileText = fileManager.GetFileText(user, FileType.Metadata, metadata);
             fileText.AddOnCompletedListener((result) => ProcessResults(metadataResult, result));
@@ -20,7 +20,7 @@
             return metadataResult;
         }
 
-        private void ProcessResults(WaitableTask<EncounterMetadata> result, TaskResult<string> fileText)
+        private void ProcessResults(WaitableTask<OldEncounterMetadata> result, TaskResult<string> fileText)
         {
             if (fileText.Value == null) {
                 result.SetError(null);

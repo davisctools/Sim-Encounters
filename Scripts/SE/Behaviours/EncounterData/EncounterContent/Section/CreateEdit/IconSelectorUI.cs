@@ -23,7 +23,7 @@ namespace ClinicalTools.SimEncounters
             SelectedIconToggle = IconToggles[0];
         }
 
-        public virtual void Display(Encounter encounter, string iconKey)
+        public virtual void Display(ContentEncounter encounter, string iconKey)
         {
             foreach (var iconToggle in IconToggles) {
                 if (iconKey != GetIconReference(iconToggle))

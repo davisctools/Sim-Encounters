@@ -2,6 +2,6 @@
 {
     public interface IMetadataWriter
     {
-        void Save(User user, EncounterMetadata metadata);
+        void Save(User user, OldEncounterMetadata metadata);
     }
 }

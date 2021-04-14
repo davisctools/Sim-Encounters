@@ -37,7 +37,7 @@ namespace ClinicalTools.SimEncounters
         public virtual void ShowInstructions()
         {
             var sceneInfo = SceneInfoSelector.CurrentValue.SceneInfo;
-            var encounter = new WaitableTask<Encounter>(sceneInfo.Encounter.Data);
+            var encounter = new WaitableTask<ContentEncounter>(sceneInfo.Encounter.Data);
             var writerSceneInfo = new LoadingWriterSceneInfo(sceneInfo.User, sceneInfo.LoadingScreen, encounter);
             WriterSceneStarter.StartScene(writerSceneInfo);
         }

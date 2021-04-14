@@ -4,7 +4,7 @@
     {
         protected override void OnMetadataSelected(object sender, EncounterMetadataSelectedEventArgs eventArgs)
             => InputField.text = string.Join("; ", eventArgs.Metadata.Categories);
-        protected override void Serialize(EncounterMetadata metadata)
+        protected override void Serialize(OldEncounterMetadata metadata)
         {
             var categories = InputField.text.Split(';');
             metadata.Categories.Clear();

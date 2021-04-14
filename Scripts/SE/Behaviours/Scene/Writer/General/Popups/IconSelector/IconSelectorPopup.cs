@@ -27,7 +27,7 @@ namespace ClinicalTools.SimEncounters
             EncounterSelectedListener = encounterSelectedListener;
         }
 
-        protected Encounter Encounter => EncounterSelectedListener.CurrentValue.Encounter;
+        protected ContentEncounter Encounter => EncounterSelectedListener.CurrentValue.Encounter;
         protected KeyedCollection<EncounterImage> Images => Encounter.Content.Images;
 
         protected Dictionary<string, IconSelectorToggle> ResourceToggles { get; } = new Dictionary<string, IconSelectorToggle>();

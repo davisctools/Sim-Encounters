@@ -1,46 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
-    public interface INamed
-    {
-        Name Name { get; set; }
-    }
-    public interface IWebCompletion
-    {
-        string Url { get; set; }
-        string CompletionCode { get; set; }
-    }
-    public enum Difficulty
-    {
-        Beginner, Intermediate, Advanced
-    }
-
-    public class EncounterImage
-    {
-        public long DateModified { get; set; } = 0;
-        public int Id { get; set; } = 0;
-        public string Key { get; set; }
-        public string Filename { get; set; }
-
-        public Sprite Sprite { get; set; }
-        public event Action<EncounterImage> Updated;
-         
-        public EncounterImage() { }
-        public EncounterImage(string key) => Key = key;
-
-        public virtual void SetUpdated(EncounterImage image)
-        {
-            if (image.Key == image.Key)
-                Updated?.Invoke(image);
-        }
-    }
-
-
-    [Serializable]
-    public class EncounterMetadata
+    public class OldEncounterMetadata
     {
 
         public virtual float Rating { get; set; } = -1;
@@ -53,7 +16,7 @@ namespace ClinicalTools.SimEncounters
         public virtual string Description { get; set; }
         public virtual List<string> Categories { get; } = new List<string>();
         public virtual string Audience { get; set; }
-        public virtual Difficulty Difficulty { get; set; }
+        public virtual EncounterDifficulty Difficulty { get; set; }
         public virtual string EditorVersion { get; set; } = "0";
         public virtual bool IsTemplate { get; set; }
         public virtual bool IsPublic { get; set; }
@@ -72,9 +35,9 @@ namespace ClinicalTools.SimEncounters
             return filename;
         }
 
-        public EncounterMetadata() { }
+        public OldEncounterMetadata() { }
 
-        public EncounterMetadata(EncounterMetadata baseEncounterInfo)
+        public OldEncounterMetadata(OldEncounterMetadata baseEncounterInfo)
         {
             Categories.AddRange(baseEncounterInfo.Categories);
             Subtitle = baseEncounterInfo.Subtitle;

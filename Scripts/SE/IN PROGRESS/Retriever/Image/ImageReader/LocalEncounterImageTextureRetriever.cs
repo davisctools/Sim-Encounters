@@ -7,7 +7,7 @@ namespace ClinicalTools.SimEncounters
         protected IEncounterFileReader FileReader { get; }
         public LocalEncounterImageTextureRetriever(IEncounterFileReader fileReader) => FileReader = fileReader;
 
-        public WaitableTask<Texture2D> GetTexture(User user, EncounterMetadata metadata, EncounterImage image)
+        public WaitableTask<Texture2D> GetTexture(User user, OldEncounterMetadata metadata, EncounterImage image)
             => FileReader.ReadTextureFile(user, metadata, image.Filename);
     }
 }

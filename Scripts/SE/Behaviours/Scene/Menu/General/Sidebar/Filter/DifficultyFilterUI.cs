@@ -18,16 +18,16 @@ namespace ClinicalTools.SimEncounters
         public override Filter<MenuEncounter> EncounterFilter => FilterDifficulty;
         public override event Action<Filter<MenuEncounter>> FilterChanged;
 
-        protected List<Difficulty> FilteredDifficulties { get; } = new List<Difficulty>();
+        protected List<EncounterDifficulty> FilteredDifficulties { get; } = new List<EncounterDifficulty>();
 
         public void Awake()
         {
-            Beginner.onValueChanged.AddListener((isOn) => ToggleDifficulty(isOn, Difficulty.Beginner));
-            Intermediate.onValueChanged.AddListener((isOn) => ToggleDifficulty(isOn, Difficulty.Intermediate));
-            Advanced.onValueChanged.AddListener((isOn) => ToggleDifficulty(isOn, Difficulty.Advanced));
+            Beginner.onValueChanged.AddListener((isOn) => ToggleDifficulty(isOn, EncounterDifficulty.Beginner));
+            Intermediate.onValueChanged.AddListener((isOn) => ToggleDifficulty(isOn, EncounterDifficulty.Intermediate));
+            Advanced.onValueChanged.AddListener((isOn) => ToggleDifficulty(isOn, EncounterDifficulty.Advanced));
         }
 
-        protected void ToggleDifficulty(bool isOn, Difficulty difficulty)
+        protected void ToggleDifficulty(bool isOn, EncounterDifficulty difficulty)
         {
             if (isOn)
                 FilteredDifficulties.Add(difficulty);

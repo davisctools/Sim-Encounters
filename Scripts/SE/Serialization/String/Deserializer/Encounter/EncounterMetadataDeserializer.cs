@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class EncounterMetadataDeserializer : IStringDeserializer<EncounterMetadata>
+    public class EncounterMetadataDeserializer : IStringDeserializer<OldEncounterMetadata>
     {
         private readonly ISpriteDeserializer spriteDeserializer;
         public EncounterMetadataDeserializer(ISpriteDeserializer spriteDeserializer)
@@ -34,14 +34,14 @@ namespace ClinicalTools.SimEncounters
         private const int ImageHeightIndex = 15;
         private const int ImageDataIndex = 16;
 
-        public EncounterMetadata Deserialize(string text)
+        public OldEncounterMetadata Deserialize(string text)
         {
             try {
                 var parsedItem = text.Split(CaseInfoDivider);
                 if (parsedItem == null || parsedItem.Length < EncounterParts)
                     return null;
 
-                var metadata = new EncounterMetadata() {
+                var metadata = new OldEncounterMetadata() {
                     RecordNumber = int.Parse(parsedItem[RecordNumberIndex]),
                     Author = new Author(int.Parse(parsedItem[AuthorAccountIdIndex])) {
                         Name = GetName(parsedItem[AuthorNameIndex])
@@ -98,17 +98,17 @@ namespace ClinicalTools.SimEncounters
             }
         }
 
-        protected Difficulty GetDifficulty(string difficulty)
+        protected EncounterDifficulty GetDifficulty(string difficulty)
         {
             difficulty = UnityWebRequest.UnEscapeURL(difficulty);
 
             if (difficulty.Equals("intermediate", StringComparison.InvariantCultureIgnoreCase))
-                return Difficulty.Intermediate;
+                return EncounterDifficulty.Intermediate;
             else if (difficulty.Equals("beginner", StringComparison.InvariantCultureIgnoreCase))
-                return Difficulty.Beginner;
+                return EncounterDifficulty.Beginner;
             else if (difficulty.Equals("advanced", StringComparison.InvariantCultureIgnoreCase))
-                return Difficulty.Advanced;
-            return Difficulty.Beginner;
+                return EncounterDifficulty.Advanced;
+            return EncounterDifficulty.Beginner;
         }
 
         protected bool GetBoolValue(string value) => value == "1";

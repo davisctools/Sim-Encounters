@@ -44,11 +44,11 @@ namespace ClinicalTools.SimEncounters
         protected virtual void BindStringSplitter(DiContainer subcontainer)
             => subcontainer.Bind<IStringSplitter>().To<DoubleColonStringSplitter>().AsTransient();
         protected virtual void BindMetadataListDeserializer(DiContainer subcontainer)
-            => subcontainer.Bind<IStringDeserializer<List<EncounterMetadata>>>().To<ListDeserializer<EncounterMetadata>>().AsTransient();
+            => subcontainer.Bind<IStringDeserializer<List<OldEncounterMetadata>>>().To<ListDeserializer<OldEncounterMetadata>>().AsTransient();
         protected virtual void BindEncounterLockListDeserializer(DiContainer subcontainer)
             => subcontainer.Bind<IStringDeserializer<List<EncounterEditLock>>>().To<EncounterEditLockListDeserializer>().AsTransient();
         protected virtual void BindMetadataDeserializer(DiContainer subcontainer)
-            => subcontainer.Bind<IStringDeserializer<EncounterMetadata>>().To<EncounterMetadataDeserializer>().AsTransient(); 
+            => subcontainer.Bind<IStringDeserializer<OldEncounterMetadata>>().To<EncounterMetadataDeserializer>().AsTransient(); 
         protected virtual void BindEncounterLockDeserializer(DiContainer subcontainer)
         {
             subcontainer.Bind<IStringDeserializer<EncounterEditLock>>().To<EncounterEditLockDeserializer>().AsTransient();
@@ -70,8 +70,8 @@ namespace ClinicalTools.SimEncounters
                            .AsTransient();
 
         protected virtual void BindNonImageContentDeserializer(DiContainer subcontainer)
-            => subcontainer.Bind<IStringDeserializer<EncounterContent>>()
-                           .To<XmlStringDeserializer<EncounterContent>>()
+            => subcontainer.Bind<IStringDeserializer<EncounterContentData>>()
+                           .To<XmlStringDeserializer<EncounterContentData>>()
                            .AsTransient();
         protected virtual void BindImageContentDeserializer(DiContainer subcontainer)
             => subcontainer.Bind<IStringDeserializer<LegacyEncounterImageContent>>()
@@ -119,7 +119,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void BindSpriteSerializer(DiContainer subcontainer)
             => subcontainer.Bind<IStringSerializer<Sprite>>().To<SpriteSerializer>().AsTransient();
         protected virtual void BindMetadataSerializer(DiContainer subcontainer)
-            => subcontainer.Bind<IStringSerializer<EncounterMetadata>>().To<EncounterMetadataSerializer>().AsTransient();
+            => subcontainer.Bind<IStringSerializer<OldEncounterMetadata>>().To<EncounterMetadataSerializer>().AsTransient();
 
         /// <summary>
         /// IL2CPP will strip generic constructors, so they have to be referenced in order to not be stripped.
@@ -128,9 +128,9 @@ namespace ClinicalTools.SimEncounters
         public static void ForceIL2CPPToKeepNeededGenericConstructors()
         {
             new DictionaryDeserializer<int, EncounterBasicStatus>(null, null);
-            new ListDeserializer<EncounterMetadata>(null, null);
+            new ListDeserializer<OldEncounterMetadata>(null, null);
             new ListDeserializer<EncounterEditLock>(null, null);
-            new XmlStringDeserializer<EncounterContent>(null, null);
+            new XmlStringDeserializer<EncounterContentData>(null, null);
             new XmlStringDeserializer<LegacyEncounterImageContent>(null, null);
         }
     }

@@ -5,7 +5,7 @@
         protected IEncounterFileReader FileReader { get; }
         public LocalEncounterDataTextRetriever(IEncounterFileReader fileReader) => FileReader = fileReader;
 
-        public virtual WaitableTask<string> GetDataText(User user, EncounterMetadata metadata)
+        public virtual WaitableTask<string> GetDataText(User user, OldEncounterMetadata metadata)
             => FileReader.ReadTextFile(user, metadata, EncounterDataFileType.Data);
     }
 }

@@ -9,9 +9,9 @@ namespace ClinicalTools.SimEncounters
         public User User { get; }
         public EncounterStatus Status { get; }
         public event Action StatusChanged;
-        public Encounter Data { get; }
+        public ContentEncounter Data { get; }
 
-        public UserEncounter(User user, Encounter data, EncounterStatus status)
+        public UserEncounter(User user, ContentEncounter data, EncounterStatus status)
         {
             User = user;
             Data = data;

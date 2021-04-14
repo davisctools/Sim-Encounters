@@ -2,6 +2,6 @@
 {
     public interface IEncounterImagesJsonRetriever
     {
-        WaitableTask<string> GetImagesJson(User user, EncounterMetadata metadata);
+        WaitableTask<string> GetImagesJson(User user, OldEncounterMetadata metadata);
     }
 }

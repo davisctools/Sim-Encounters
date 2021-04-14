@@ -7,7 +7,7 @@ namespace ClinicalTools.SimEncounters
         public UserAutosaveFileManager2(IFilenameInfo filenameInfo) : base(filenameInfo) { }
         protected override string SaveFolder { get; set; } = "autosave";
 
-        public override void DeleteFiles(User user, EncounterMetadata metadata)
+        public override void DeleteFiles(User user, OldEncounterMetadata metadata)
         {
             var encounterFolder = GetSaveFolder(user, metadata);
             Directory.Delete(encounterFolder, true);

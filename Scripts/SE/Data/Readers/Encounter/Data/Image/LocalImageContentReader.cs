@@ -10,7 +10,7 @@
             this.parser = parser;
         }
 
-        public WaitableTask<LegacyEncounterImageContent> GetImageData(User user, EncounterMetadata metadata)
+        public WaitableTask<LegacyEncounterImageContent> GetImageData(User user, OldEncounterMetadata metadata)
         {
             var imageData = new WaitableTask<LegacyEncounterImageContent>();
 

@@ -7,7 +7,7 @@ namespace ClinicalTools.SimEncounters
         protected override void OnMetadataSelected(object sender, EncounterMetadataSelectedEventArgs eventArgs)
             => Toggle.isOn = eventArgs.Metadata.IsTemplate;
 
-        protected override void Serialize(EncounterMetadata metadata)
+        protected override void Serialize(OldEncounterMetadata metadata)
             => metadata.IsTemplate = Toggle.isOn;
     }
 }

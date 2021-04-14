@@ -24,14 +24,14 @@ namespace ClinicalTools.SimEncounters
             ImageDeserializer = imageDeserializer;
         }
 
-        public virtual WaitableTask<EncounterImage> UploadImage(User user, Encounter encounter)
+        public virtual WaitableTask<EncounterImage> UploadImage(User user, ContentEncounter encounter)
             => GetImageTask(user, encounter, new EncounterImage(), false);
-        public WaitableTask<EncounterImage> UpdateImage(User user, Encounter encounter, EncounterImage image)
+        public WaitableTask<EncounterImage> UpdateImage(User user, ContentEncounter encounter, EncounterImage image)
             => GetImageTask(user, encounter, new EncounterImage() { Key = image.Key }, true);
 
         protected virtual WaitableTask<EncounterImage> GetImageTask(
             User user, 
-            Encounter encounter,
+            ContentEncounter encounter,
             EncounterImage image,
             bool updating)
         {
@@ -56,7 +56,7 @@ namespace ClinicalTools.SimEncounters
 
 
         protected virtual string Php { get; } = "Main.php";
-        protected virtual UnityWebRequest GetWebRequest(User user, EncounterMetadata metadata, EncounterImage image, SpriteData spriteData)
+        protected virtual UnityWebRequest GetWebRequest(User user, OldEncounterMetadata metadata, EncounterImage image, SpriteData spriteData)
         {
             var url = UrlBuilder.BuildUrl(Php);
             var form = new WWWForm();
@@ -74,7 +74,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string SubactionValue { get; } = "image";
         protected virtual string EncounterVariable { get; } = "encounter";
         protected virtual string KeyVariable { get; } = "key";
-        protected virtual void AddFormModeFields(WWWForm form, User user, EncounterMetadata metadata, EncounterImage image)
+        protected virtual void AddFormModeFields(WWWForm form, User user, OldEncounterMetadata metadata, EncounterImage image)
         {
             form.AddField(AccountVariable, user.AccountId.ToString());
             form.AddField(ModeVariable, ModeValue);

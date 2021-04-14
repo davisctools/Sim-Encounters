@@ -5,6 +5,6 @@ namespace ClinicalTools.SimEncounters
 {
     public abstract class BaseSectionDrawer : MonoBehaviour
     {
-        public abstract void Display(Encounter encounter, Section section);
+        public abstract void Display(ContentEncounter encounter, Section section);
     }
 }

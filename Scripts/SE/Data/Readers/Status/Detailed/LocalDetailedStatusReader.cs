@@ -11,7 +11,7 @@
         }
 
         public WaitableTask<EncounterStatus> GetDetailedStatus(User user,
-            EncounterMetadata metadata, EncounterBasicStatus basicStatus)
+            OldEncounterMetadata metadata, EncounterBasicStatus basicStatus)
         {
             var detailedStatus = new WaitableTask<EncounterStatus>();
 

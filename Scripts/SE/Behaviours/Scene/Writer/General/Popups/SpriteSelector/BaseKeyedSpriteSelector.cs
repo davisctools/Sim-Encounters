@@ -5,7 +5,7 @@ namespace ClinicalTools.SimEncounters
 {
     public interface IEncounterSpriteSelector
     {
-        WaitableTask<string> SelectSprite(Encounter encounter, string spriteKey);
+        WaitableTask<string> SelectSprite(ContentEncounter encounter, string spriteKey);
     }
     public interface IKeyedSpriteSelector
     {

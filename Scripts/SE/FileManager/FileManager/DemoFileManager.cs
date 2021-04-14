@@ -19,10 +19,10 @@ namespace ClinicalTools.SimEncounters
             this.serverReader = serverReader;
         }
 
-        public void SetFileText(User user, FileType fileType, EncounterMetadata metadata, string contents)
+        public void SetFileText(User user, FileType fileType, OldEncounterMetadata metadata, string contents)
             => throw new Exception("Cannot write to demo files");
 
-        public WaitableTask<string> GetFileText(User user, FileType fileType, EncounterMetadata metadata)
+        public WaitableTask<string> GetFileText(User user, FileType fileType, OldEncounterMetadata metadata)
         {
             var fileText = new WaitableTask<string>();
 
@@ -116,9 +116,9 @@ namespace ClinicalTools.SimEncounters
             demoEncounters.SetResult(encounters);
         }
 
-        public void UpdateFilename(User user, EncounterMetadata metadata)
+        public void UpdateFilename(User user, OldEncounterMetadata metadata)
             => throw new Exception("Cannot update names of demo files");
-        public void DeleteFiles(User user, EncounterMetadata metadata)
+        public void DeleteFiles(User user, OldEncounterMetadata metadata)
             => throw new Exception("Cannot delete demo files");
     }
 }

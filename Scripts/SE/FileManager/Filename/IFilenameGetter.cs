@@ -2,6 +2,6 @@
 {
     public interface IFilenameGetter
     {
-        string GetFilename(FileType fileType, EncounterMetadata metadata);
+        string GetFilename(FileType fileType, OldEncounterMetadata metadata);
     }
 }

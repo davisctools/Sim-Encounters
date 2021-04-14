@@ -6,7 +6,7 @@ namespace ClinicalTools.SimEncounters
 {
     public abstract class BaseWriterSectionsHandler : MonoBehaviour, ISectionSelector
     {
-        public abstract void Display(Encounter encounter);
+        public abstract void Display(ContentEncounter encounter);
         public abstract event SectionSelectedHandler SectionSelected;
         public abstract void SelectSection(Section section);
         public abstract event Action<Section> SectionEdited;

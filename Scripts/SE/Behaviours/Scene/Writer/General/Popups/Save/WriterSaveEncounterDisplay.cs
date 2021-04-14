@@ -34,11 +34,11 @@ namespace ClinicalTools.SimEncounters
         {
             SaveButton.onClick.AddListener(ServerSave);
         }
-        protected Encounter CurrentEncounter { get; set; }
+        protected ContentEncounter CurrentEncounter { get; set; }
         protected User CurrentUser { get; set; }
 
 
-        public override void Display(User user, Encounter encounter)
+        public override void Display(User user, ContentEncounter encounter)
         {
             CurrentUser = user;
             gameObject.SetActive(true);

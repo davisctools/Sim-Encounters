@@ -35,7 +35,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected WaitableTask<Section> CurrentWaitableSection { get; set; }
-        public virtual WaitableTask<Section> CreateSection(Encounter encounter)
+        public virtual WaitableTask<Section> CreateSection(ContentEncounter encounter)
         {
             CurrentWaitableSection?.SetError(new Exception("New popup opened"));
             CurrentWaitableSection = new WaitableTask<Section>();

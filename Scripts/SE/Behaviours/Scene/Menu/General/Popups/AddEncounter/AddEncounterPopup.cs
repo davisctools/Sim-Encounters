@@ -8,7 +8,7 @@ namespace ClinicalTools.SimEncounters
 {
     public interface IEncounterPublisher
     {
-        WaitableTask<Encounter> Publish(User user, WaitableTask<Encounter> encounter);
+        WaitableTask<ContentEncounter> Publish(User user, WaitableTask<ContentEncounter> encounter);
     }
 
     public class EncounterPublisher : IEncounterPublisher
@@ -17,15 +17,15 @@ namespace ClinicalTools.SimEncounters
         [Inject]
         public void Inject([Inject(Id = SaveType.Server)] IEncounterWriter serverWriter) => ServerWriter = serverWriter;
 
-        public virtual WaitableTask<Encounter> Publish(User user, WaitableTask<Encounter> encounter)
+        public virtual WaitableTask<ContentEncounter> Publish(User user, WaitableTask<ContentEncounter> encounter)
         {
-            var task = new WaitableTask<Encounter>();
+            var task = new WaitableTask<ContentEncounter>();
             encounter.AddOnCompletedListener((result) => OnEncounterRetrieved(task, user, result));
 
             return task;
         }
 
-        protected virtual void OnEncounterRetrieved(WaitableTask<Encounter> encounterTask, User user, TaskResult<Encounter> encounterResult)
+        protected virtual void OnEncounterRetrieved(WaitableTask<ContentEncounter> encounterTask, User user, TaskResult<ContentEncounter> encounterResult)
         {
             var parameters = new SaveEncounterParameters() {
                 Encounter = encounterResult.Value,
@@ -35,7 +35,7 @@ namespace ClinicalTools.SimEncounters
             publishTask.AddOnCompletedListener((result) => OnPublished(encounterTask, encounterResult.Value, result));
         }
 
-        protected virtual void OnPublished(WaitableTask<Encounter> encounterTask, Encounter encounter, TaskResult result)
+        protected virtual void OnPublished(WaitableTask<ContentEncounter> encounterTask, ContentEncounter encounter, TaskResult result)
         {
             encounter.Metadata.Filename = encounter.Metadata.GetDesiredFilename();
             encounterTask.SetResult(encounter);
@@ -44,7 +44,7 @@ namespace ClinicalTools.SimEncounters
 
     public interface IEncounterCreator
     {
-        WaitableTask<Encounter> CreateEncounter(User user, EncounterMetadata metadata, WaitableTask<EncounterContent> encounterData);
+        WaitableTask<ContentEncounter> CreateEncounter(User user, OldEncounterMetadata metadata, WaitableTask<EncounterContentData> encounterData);
     }
     public class EncounterCreator : IEncounterCreator
     {
@@ -52,19 +52,19 @@ namespace ClinicalTools.SimEncounters
         [Inject]
         protected virtual void Inject(IEncounterPublisher encounterPublisher) => EncounterPublisher = encounterPublisher;
 
-        public virtual WaitableTask<Encounter> CreateEncounter(User user, EncounterMetadata metadata, WaitableTask<EncounterContent> encounterData)
+        public virtual WaitableTask<ContentEncounter> CreateEncounter(User user, OldEncounterMetadata metadata, WaitableTask<EncounterContentData> encounterData)
             => EncounterPublisher.Publish(user, CreateEncounterFromData(metadata, encounterData));
 
-        protected virtual WaitableTask<Encounter> CreateEncounterFromData(EncounterMetadata metadata, WaitableTask<EncounterContent> encounterData)
+        protected virtual WaitableTask<ContentEncounter> CreateEncounterFromData(OldEncounterMetadata metadata, WaitableTask<EncounterContentData> encounterData)
         {
-            var task = new WaitableTask<Encounter>();
+            var task = new WaitableTask<ContentEncounter>();
             encounterData.AddOnCompletedListener((result) => OnDataRetrieved(task, metadata, result));
             return task;
         }
 
-        protected virtual void OnDataRetrieved(WaitableTask<Encounter> encounterTask, EncounterMetadata metadata, TaskResult<EncounterContent> encounterData)
+        protected virtual void OnDataRetrieved(WaitableTask<ContentEncounter> encounterTask, OldEncounterMetadata metadata, TaskResult<EncounterContentData> encounterData)
         {
-            var encounter = new Encounter(metadata, encounterData.Value);
+            var encounter = new ContentEncounter(metadata, encounterData.Value);
             encounterTask.SetResult(encounter);
         }
     }
@@ -99,13 +99,13 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected MenuSceneInfo SceneInfo { get; set; }
-        protected EncounterMetadata CurrentMetadata { get; set; }
-        protected WaitableTask<EncounterContent> EncounterData { get; set; }
+        protected OldEncounterMetadata CurrentMetadata { get; set; }
+        protected WaitableTask<EncounterContentData> EncounterData { get; set; }
         public override void Display(MenuSceneInfo sceneInfo, MenuEncounter encounter)
         {
             SceneInfo = sceneInfo;
             var metadata = encounter.GetLatestTypedMetada();
-            CurrentMetadata = new EncounterMetadata(metadata.Value);
+            CurrentMetadata = new OldEncounterMetadata(metadata.Value);
             SetFields();
             var dataReader = DataReaderSelector.GetEncounterDataReader(metadata.Key);
             EncounterData = dataReader.GetEncounterData(sceneInfo.User, metadata.Value);
@@ -114,7 +114,7 @@ namespace ClinicalTools.SimEncounters
         public override void Display(MenuSceneInfo sceneInfo)
         {
             SceneInfo = sceneInfo;
-            CurrentMetadata = new EncounterMetadata();
+            CurrentMetadata = new OldEncounterMetadata();
             SetFields();
             var dataReader = DataReaderSelector.GetEncounterDataReader(SaveType.Default);
             EncounterData = dataReader.GetEncounterData(sceneInfo.User, CurrentMetadata);

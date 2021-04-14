@@ -63,13 +63,13 @@ namespace ClinicalTools.SimEncounters
 
 
         protected User User { get; set; }
-        protected Encounter Encounter { get; set; }
+        protected ContentEncounter Encounter { get; set; }
         protected KeyedCollection<EncounterImage> Images { get; set; }
         protected EncounterImage SelectedImage { get; set; }
         protected WaitableTask<EncounterImage> CurrentTask { get; set; }
         protected Dictionary<string, BaseEncounterImageOption> ImageOptions { get; } = new Dictionary<string, BaseEncounterImageOption>();
 
-        public virtual WaitableTask<EncounterImage> SelectImage(User user, Encounter encounter, string key)
+        public virtual WaitableTask<EncounterImage> SelectImage(User user, ContentEncounter encounter, string key)
         {
             if (encounter.Metadata.RecordNumber <= 0) {
                 MessageHandler.ShowMessage("Save encounter before adding image.");

@@ -10,7 +10,7 @@ namespace ClinicalTools.SimEncounters
         public virtual List<Image> SectionBorders { get => sectionBorders; set => sectionBorders = value; }
         [SerializeField] private List<Image> sectionBorders;
 
-        public override void Display(Encounter encounter, Section section)
+        public override void Display(ContentEncounter encounter, Section section)
         {
             var color = section.Color;
             foreach (var sectionBorder in SectionBorders)

@@ -21,7 +21,7 @@ namespace ClinicalTools.SimEncounters
             this.serverTextureReader = serverTextureReader;
         }
 
-        public WaitableTask<string> ReadTextFile(User user, EncounterMetadata metadata, EncounterDataFileType fileType)
+        public WaitableTask<string> ReadTextFile(User user, OldEncounterMetadata metadata, EncounterDataFileType fileType)
         {
             var task = new WaitableTask<string>();
 
@@ -109,7 +109,7 @@ namespace ClinicalTools.SimEncounters
             demoEncounters.SetResult(encounters);
         }
 
-        public WaitableTask<Texture2D> ReadTextureFile(User user, EncounterMetadata metadata, string filename)
+        public WaitableTask<Texture2D> ReadTextureFile(User user, OldEncounterMetadata metadata, string filename)
         {
             var task = new WaitableTask<Texture2D>();
 
@@ -129,18 +129,18 @@ namespace ClinicalTools.SimEncounters
 
 
 
-        public string GetEncounterFolder(EncounterMetadata metadata)
+        public string GetEncounterFolder(OldEncounterMetadata metadata)
             => Path.Combine(DemoDirectory, metadata.GetDesiredFilename());
         protected virtual string SaveFolder { get; set; } = "save";
-        public string GetSaveFolder(EncounterMetadata metadata)
+        public string GetSaveFolder(OldEncounterMetadata metadata)
             => Path.Combine(GetEncounterFolder(metadata), SaveFolder);
         public string GetSaveFolder(string encounterDirectory)
             => Path.Combine(encounterDirectory, SaveFolder);
         protected virtual string ImagesFolder { get; set; } = "images";
-        public string GetImagesFolder(EncounterMetadata metadata)
+        public string GetImagesFolder(OldEncounterMetadata metadata)
             => Path.Combine(GetSaveFolder(metadata), ImagesFolder);
 
-        protected string GetFilepath(EncounterMetadata metadata, EncounterDataFileType fileType)
+        protected string GetFilepath(OldEncounterMetadata metadata, EncounterDataFileType fileType)
         {
             var folder = GetSaveFolder(metadata);
             var filename = filenameInfo.GetFilename(fileType);
@@ -152,6 +152,6 @@ namespace ClinicalTools.SimEncounters
             var filename = filenameInfo.GetFilename(fileType);
             return Path.Combine(folder, filename);
         }
-        protected string GetImageFilepath(EncounterMetadata metadata, EncounterImage image) => Path.Combine(GetImagesFolder(metadata), image.Filename);
+        protected string GetImageFilepath(OldEncounterMetadata metadata, EncounterImage image) => Path.Combine(GetImagesFolder(metadata), image.Filename);
     }
 }

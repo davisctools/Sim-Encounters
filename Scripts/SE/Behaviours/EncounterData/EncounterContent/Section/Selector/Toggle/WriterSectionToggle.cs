@@ -40,9 +40,9 @@ namespace ClinicalTools.SimEncounters
             DragHandle.StartDragging += () => MouseInput.Instance.RegisterDraggable(this);
         }
 
-        protected Encounter CurrentEncounter { get; set; }
+        protected ContentEncounter CurrentEncounter { get; set; }
         protected Section CurrentSection { get; set; }
-        public override void Display(Encounter encounter, Section section)
+        public override void Display(ContentEncounter encounter, Section section)
         {
             CurrentEncounter = encounter;
             CurrentSection = section;

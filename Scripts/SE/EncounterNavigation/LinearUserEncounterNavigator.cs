@@ -33,7 +33,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected UserEncounter UserEncounter { get; set; }
-        protected EncounterContent Content => UserEncounter.Data.Content;
+        protected EncounterContentData Content => UserEncounter.Data.Content;
         protected Section CurrentSection => Content.Sections[Content.CurrentSectionIndex].Value;
         protected virtual void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs eventArgs)
             => UserEncounter = eventArgs.Encounter;

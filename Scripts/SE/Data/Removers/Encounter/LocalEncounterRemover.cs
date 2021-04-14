@@ -14,7 +14,7 @@ namespace ClinicalTools.SimEncounters
             AutosaveFileManager = autosaveFileManager;
         }
 
-        public WaitableTask Delete(User user, EncounterMetadata encounterMetadata)
+        public WaitableTask Delete(User user, OldEncounterMetadata encounterMetadata)
         {
             LocalFileManager.DeleteFiles(user, encounterMetadata);
             AutosaveFileManager.DeleteFiles(user, encounterMetadata);

@@ -4,6 +4,6 @@ namespace ClinicalTools.SimEncounters
 {
     public interface IIconSpriteRetriever
     {
-        Sprite GetIconSprite(Encounter encounter, Icon icon);
+        Sprite GetIconSprite(ContentEncounter encounter, Icon icon);
     }
 }

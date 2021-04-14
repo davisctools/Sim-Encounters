@@ -16,7 +16,7 @@ namespace ClinicalTools.SimEncounters
             this.filenameInfo = filenameInfo;
         }
 
-        public virtual void WriteTextFile(User user, EncounterMetadata metadata, EncounterDataFileType fileType, string contents)
+        public virtual void WriteTextFile(User user, OldEncounterMetadata metadata, EncounterDataFileType fileType, string contents)
         {
             var filepath = GetFilepath(user, metadata, fileType);
             var directory = Path.GetDirectoryName(filepath);
@@ -26,7 +26,7 @@ namespace ClinicalTools.SimEncounters
             File.WriteAllText(filepath, contents);
         }
 
-        public virtual WaitableTask<string> ReadTextFile(User user, EncounterMetadata metadata, EncounterDataFileType fileType)
+        public virtual WaitableTask<string> ReadTextFile(User user, OldEncounterMetadata metadata, EncounterDataFileType fileType)
         {
             var filepath = GetFilepath(user, metadata, fileType);
             if (!File.Exists(filepath))
@@ -45,7 +45,7 @@ namespace ClinicalTools.SimEncounters
             return new WaitableTask<string[]>(texts);
         }
 
-        protected virtual string GetFilepath(User user, EncounterMetadata metadata, EncounterDataFileType fileType)
+        protected virtual string GetFilepath(User user, OldEncounterMetadata metadata, EncounterDataFileType fileType)
         {
             var folder = GetSaveFolder(user, metadata);
             var filename = filenameInfo.GetFilename(fileType);
@@ -75,7 +75,7 @@ namespace ClinicalTools.SimEncounters
             return Directory.GetDirectories(folder);
         }
 
-        public virtual void DeleteFiles(User user, EncounterMetadata metadata)
+        public virtual void DeleteFiles(User user, OldEncounterMetadata metadata)
         {
             var encounterFolder = GetEncounterFolder(user, metadata);
             Directory.Delete(encounterFolder, true);
@@ -84,14 +84,14 @@ namespace ClinicalTools.SimEncounters
         protected virtual string EncountersFolder { get; set; } = "encounters";
         public virtual string GetEncountersFolder(User user)
             => Path.Combine(GetUserFolder(user), EncountersFolder);
-        public virtual string GetEncounterFolder(User user, EncounterMetadata metadata)
+        public virtual string GetEncounterFolder(User user, OldEncounterMetadata metadata)
             => Path.Combine(GetEncountersFolder(user), metadata.GetDesiredFilename());
         protected virtual string SaveFolder { get; set; } = "save";
-        public virtual string GetSaveFolder(User user, EncounterMetadata metadata)
+        public virtual string GetSaveFolder(User user, OldEncounterMetadata metadata)
             => Path.Combine(GetEncounterFolder(user, metadata), SaveFolder);
         public virtual string GetSaveFolder(string encounterDirectory)
             => Path.Combine(encounterDirectory, SaveFolder);
-        public virtual string GetImagesFolder(User user, EncounterMetadata metadata)
+        public virtual string GetImagesFolder(User user, OldEncounterMetadata metadata)
             => Path.Combine(GetSaveFolder(user, metadata), filenameInfo.ImagesFolderName);
 
 
@@ -119,7 +119,7 @@ namespace ClinicalTools.SimEncounters
         }
 
 
-        public virtual WaitableTask<Texture2D> ReadTextureFile(User user, EncounterMetadata metadata, string filename)
+        public virtual WaitableTask<Texture2D> ReadTextureFile(User user, OldEncounterMetadata metadata, string filename)
         {
             var imagesFolder = GetImagesFolder(user, metadata);
             var path = Path.Combine(imagesFolder, filename);
@@ -131,7 +131,7 @@ namespace ClinicalTools.SimEncounters
             return new WaitableTask<Texture2D>(texture);
         }
 
-        public virtual void WriteTextureFile(User user, EncounterMetadata metadata, EncounterImage image)
+        public virtual void WriteTextureFile(User user, OldEncounterMetadata metadata, EncounterImage image)
         {
             byte[] textureBytes;
             if (image.Filename.EndsWith(".png", StringComparison.InvariantCultureIgnoreCase))

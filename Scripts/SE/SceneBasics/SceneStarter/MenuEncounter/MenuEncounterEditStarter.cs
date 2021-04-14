@@ -41,7 +41,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void MetadataSelected(
             MenuSceneInfo sceneInfo,
             MenuEncounter menuEncounter,
-            TaskResult<KeyValuePair<SaveType, EncounterMetadata>> metadata)
+            TaskResult<KeyValuePair<SaveType, OldEncounterMetadata>> metadata)
         {
             if (metadata.HasValue())
                 EnsureEncounterUnlocked(sceneInfo, menuEncounter, metadata.Value);
@@ -50,7 +50,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void EnsureEncounterUnlocked(
             MenuSceneInfo sceneInfo,
             MenuEncounter menuEncounter,
-            KeyValuePair<SaveType, EncounterMetadata> metadata)
+            KeyValuePair<SaveType, OldEncounterMetadata> metadata)
         {
             if (menuEncounter.Metadata.ContainsKey(SaveType.Server)) {
                 var task = EncounterLocker.LockEncounter(sceneInfo.User, metadata.Value);
@@ -63,7 +63,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void EncounterLocked(
             TaskResult result,
             MenuSceneInfo sceneInfo,
-            KeyValuePair<SaveType, EncounterMetadata> metadata)
+            KeyValuePair<SaveType, OldEncounterMetadata> metadata)
         {
             if (!result.IsError()) {
                 StartWriter(sceneInfo, metadata);
@@ -73,7 +73,7 @@ namespace ClinicalTools.SimEncounters
             MessageHandler.ShowMessage($"Cannot set lock on encounter: {result.Exception.Message}", MessageType.Error);
         }
 
-        protected virtual void StartWriter(MenuSceneInfo sceneInfo, KeyValuePair<SaveType, EncounterMetadata> metadata)
+        protected virtual void StartWriter(MenuSceneInfo sceneInfo, KeyValuePair<SaveType, OldEncounterMetadata> metadata)
         {
             if (metadata.Value == null)
                 return;

@@ -41,7 +41,7 @@ namespace ClinicalTools.SimEncounters
                 OnSectionSelected(this, SectionSelector.CurrentValue);
         }
 
-        protected Encounter CurrentEncounter { get; set; }
+        protected ContentEncounter CurrentEncounter { get; set; }
         protected Dictionary<Section, BaseWriterSectionToggle> SectionButtons { get; } = new Dictionary<Section, BaseWriterSectionToggle>();
 
         protected virtual void Awake()
@@ -90,7 +90,7 @@ namespace ClinicalTools.SimEncounters
             SectionSelector.Select(this, sectionSelectedArgs);
         }
 
-        protected void AddSectionButton(Encounter encounter, Section section)
+        protected void AddSectionButton(ContentEncounter encounter, Section section)
         {
             var sectionButton = SectionButtonPool.Spawn();
             RearrangeableGroup.Add(sectionButton);

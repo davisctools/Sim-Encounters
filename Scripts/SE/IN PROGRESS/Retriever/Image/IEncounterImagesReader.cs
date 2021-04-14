@@ -4,6 +4,6 @@ namespace ClinicalTools.SimEncounters
 {
     public interface IEncounterImagesReader
     {
-        WaitableTask<List<EncounterImage>> GetImages(User user, EncounterMetadata metadata);
+        WaitableTask<List<EncounterImage>> GetImages(User user, OldEncounterMetadata metadata);
     }
 }

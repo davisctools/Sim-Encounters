@@ -19,7 +19,7 @@ namespace ClinicalTools.SimEncounters
             this.fileExtensionGetter = fileExtensionGetter;
         }
 
-        public void SetFileText(User user, FileType fileType, EncounterMetadata metadata, string contents)
+        public void SetFileText(User user, FileType fileType, OldEncounterMetadata metadata, string contents)
         {
             var filepath = GetFilepath(user, fileType, metadata);
             var directory = Path.GetDirectoryName(filepath);
@@ -28,7 +28,7 @@ namespace ClinicalTools.SimEncounters
 
             File.WriteAllText(filepath, contents);
         }
-        public WaitableTask<string> GetFileText(User user, FileType fileType, EncounterMetadata metadata)
+        public WaitableTask<string> GetFileText(User user, FileType fileType, OldEncounterMetadata metadata)
         {
             var filepath = GetFilepath(user, fileType, metadata);
             if (!File.Exists(filepath))
@@ -47,7 +47,7 @@ namespace ClinicalTools.SimEncounters
             return new WaitableTask<string[]>(texts);
         }
 
-        protected string GetFilepath(User user, FileType fileType, EncounterMetadata metadata)
+        protected string GetFilepath(User user, FileType fileType, OldEncounterMetadata metadata)
         {
             var folder = GetFolder(user, fileType);
             var filename = filenameGetter.GetFilename(fileType, metadata);
@@ -67,7 +67,7 @@ namespace ClinicalTools.SimEncounters
             return filepaths;
         }
 
-        public void UpdateFilename(User user, EncounterMetadata metadata)
+        public void UpdateFilename(User user, OldEncounterMetadata metadata)
         {
             string oldFilePrefix = metadata.Filename;
             string newFilePrefix = metadata.GetDesiredFilename();
@@ -87,7 +87,7 @@ namespace ClinicalTools.SimEncounters
             }
         }
 
-        public void DeleteFiles(User user, EncounterMetadata metadata)
+        public void DeleteFiles(User user, OldEncounterMetadata metadata)
         {
             var folder = GetFolder(user, FileType.Data);
             if (!Directory.Exists(folder))

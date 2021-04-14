@@ -4,7 +4,7 @@
     {
         public User User { get; }
         public ILoadingScreen LoadingScreen { get; }
-        public Encounter Encounter { get; }
+        public ContentEncounter Encounter { get; }
 
         public WriterSceneInfo(LoadingWriterSceneInfo loadingEncounterSceneInfo)
         {

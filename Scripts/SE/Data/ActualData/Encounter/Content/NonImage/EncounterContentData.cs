@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class EncounterContent
+    public class EncounterContentData
     {
         public OrderedCollection<Character> Characters { get; } = new OrderedCollection<Character>();
         public KeyedCollection<EncounterImage> Images { get; } = new KeyedCollection<EncounterImage>();

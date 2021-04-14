@@ -43,7 +43,7 @@ namespace ClinicalTools.SimEncounters
 
         protected WaitableTask<Section> CurrentWaitableSection { get; set; }
         protected Section CurrentSection { get; set; }
-        public virtual WaitableTask<Section> EditSection(Encounter encounter, Section section)
+        public virtual WaitableTask<Section> EditSection(ContentEncounter encounter, Section section)
         {
             CurrentSection = section;
 

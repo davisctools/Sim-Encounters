@@ -2,6 +2,6 @@
 {
     public interface IEncounterUnlocker
     {
-        WaitableTask UnlockEncounter(User user, EncounterMetadata metadata);
+        WaitableTask UnlockEncounter(User user, OldEncounterMetadata metadata);
     }
 }

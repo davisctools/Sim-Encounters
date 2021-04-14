@@ -2,6 +2,6 @@
 {
     public interface IEncounterImageSpriteRefresher
     {
-        WaitableTask RefreshTexture(User user, EncounterMetadata metadata, EncounterImage image);
+        WaitableTask RefreshTexture(User user, OldEncounterMetadata metadata, EncounterImage image);
     }
 }

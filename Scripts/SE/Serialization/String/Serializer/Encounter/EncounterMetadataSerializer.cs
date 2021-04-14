@@ -4,11 +4,11 @@ using UnityEngine.Networking;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class EncounterMetadataSerializer : IStringSerializer<EncounterMetadata>
+    public class EncounterMetadataSerializer : IStringSerializer<OldEncounterMetadata>
     {
         public IStringSerializer<Sprite> SpriteSerializer { get; set; } = new SpriteSerializer();
 
-        public virtual string Serialize(EncounterMetadata metadata)
+        public virtual string Serialize(OldEncounterMetadata metadata)
         {
             var str = metadata.RecordNumber.ToString();
             str += AppendValue(metadata.Author.Id.ToString());

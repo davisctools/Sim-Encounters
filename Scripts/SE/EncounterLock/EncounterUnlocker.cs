@@ -16,7 +16,7 @@ namespace ClinicalTools.SimEncounters
             this.parser = parser;
         }
 
-        public virtual WaitableTask UnlockEncounter(User user, EncounterMetadata metadata)
+        public virtual WaitableTask UnlockEncounter(User user, OldEncounterMetadata metadata)
         {
             var webRequest = GetWebRequest(user, metadata);
             var serverOutput = serverReader.Begin(webRequest);
@@ -36,14 +36,14 @@ namespace ClinicalTools.SimEncounters
         protected virtual string AccountVariable { get; } = "account";
         protected virtual string UsernameVariable { get; } = "editor";
         protected virtual string EncounterVariable { get; } = "encounter";
-        protected virtual UnityWebRequest GetWebRequest(User user, EncounterMetadata metadata)
+        protected virtual UnityWebRequest GetWebRequest(User user, OldEncounterMetadata metadata)
         {
             var url = urlBuilder.BuildUrl(Php);
             var form = CreateForm(user, metadata);
             return UnityWebRequest.Post(url, form);
         }
 
-        protected virtual WWWForm CreateForm(User user, EncounterMetadata metadata)
+        protected virtual WWWForm CreateForm(User user, OldEncounterMetadata metadata)
         {
             var form = new WWWForm();
 

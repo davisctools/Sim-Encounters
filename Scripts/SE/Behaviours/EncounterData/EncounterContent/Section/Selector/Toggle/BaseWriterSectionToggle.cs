@@ -20,7 +20,7 @@ namespace ClinicalTools.SimEncounters
         public event Action<IDraggable, Vector3> DragEnded;
         public event Action<IDraggable, Vector3> Dragging;
 
-        public abstract void Display(Encounter encounter, Section section);
+        public abstract void Display(ContentEncounter encounter, Section section);
         public abstract void SetToggleGroup(ToggleGroup group);
         public abstract void Select();
 

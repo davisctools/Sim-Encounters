@@ -35,7 +35,7 @@ namespace ClinicalTools.SimEncounters
                 OnTabSelected(TabSelector, TabSelector.CurrentValue);
         }
 
-        protected EncounterContent Content { get; set; }
+        protected EncounterContentData Content { get; set; }
         private int tabCount;
         public virtual void OnEncounterSelected(object sender, EncounterSelectedEventArgs eventArgs)
         {

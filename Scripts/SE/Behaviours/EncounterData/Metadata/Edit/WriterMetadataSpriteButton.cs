@@ -41,7 +41,7 @@ namespace ClinicalTools.SimEncounters
             if (!imageResult.IsError())
                 SetEncounterImage(imageResult.Value);
         }
-        protected override void Serialize(EncounterMetadata metadata) => MetadataSelector.CurrentValue.Metadata.Image = CurrentImage;
+        protected override void Serialize(OldEncounterMetadata metadata) => MetadataSelector.CurrentValue.Metadata.Image = CurrentImage;
 
         protected override void OnMetadataSelected(object sender, EncounterMetadataSelectedEventArgs eventArgs) => SetEncounterImage(eventArgs.Metadata.Image);
 

@@ -10,7 +10,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string IconsResourcePath => "Icons";
         protected virtual Dictionary<string, Sprite> ResourceSpriteDictionary { get; } = new Dictionary<string, Sprite>();
 
-        public Sprite GetIconSprite(Encounter encounter, Icon icon)
+        public Sprite GetIconSprite(ContentEncounter encounter, Icon icon)
         {
             if (icon == null)
                 return null;

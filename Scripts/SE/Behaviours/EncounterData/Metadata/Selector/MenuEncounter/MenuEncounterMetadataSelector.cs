@@ -26,12 +26,12 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual MenuEncounter CurrentEncounter { get; set; }
-        protected virtual WaitableTask<KeyValuePair<SaveType, EncounterMetadata>> CurrentResult { get; set; }
-        public override WaitableTask<KeyValuePair<SaveType, EncounterMetadata>> GetMetadata(MenuEncounter menuEncounter)
+        protected virtual WaitableTask<KeyValuePair<SaveType, OldEncounterMetadata>> CurrentResult { get; set; }
+        public override WaitableTask<KeyValuePair<SaveType, OldEncounterMetadata>> GetMetadata(MenuEncounter menuEncounter)
         {
             var metadatas = menuEncounter.Metadata;
             if (!metadatas.ContainsKey(SaveType.Local))
-                return new WaitableTask<KeyValuePair<SaveType, EncounterMetadata>>(menuEncounter.GetLatestTypedMetada());
+                return new WaitableTask<KeyValuePair<SaveType, OldEncounterMetadata>>(menuEncounter.GetLatestTypedMetada());
 
             var localMetadata = metadatas[SaveType.Local];
             var localModifiedTime = localMetadata.DateModified;
@@ -39,10 +39,10 @@ namespace ClinicalTools.SimEncounters
             var newerServer = IsMetadataNewer(metadatas, SaveType.Server, localModifiedTime);
             var newerAutosave = IsMetadataNewer(metadatas, SaveType.Autosave, localModifiedTime);
             if (!newerServer && !newerAutosave)
-                return new WaitableTask<KeyValuePair<SaveType, EncounterMetadata>>(new KeyValuePair<SaveType, EncounterMetadata>(SaveType.Local, localMetadata));
+                return new WaitableTask<KeyValuePair<SaveType, OldEncounterMetadata>>(new KeyValuePair<SaveType, OldEncounterMetadata>(SaveType.Local, localMetadata));
 
             CurrentEncounter = menuEncounter;
-            CurrentResult = new WaitableTask<KeyValuePair<SaveType, EncounterMetadata>>();
+            CurrentResult = new WaitableTask<KeyValuePair<SaveType, OldEncounterMetadata>>();
 
             gameObject.SetActive(true);
             serverButton.gameObject.SetActive(newerServer);
@@ -52,7 +52,7 @@ namespace ClinicalTools.SimEncounters
             return CurrentResult;
         }
 
-        protected virtual bool IsMetadataNewer(Dictionary<SaveType, EncounterMetadata> metadatas, SaveType saveType, long modifiedTime)
+        protected virtual bool IsMetadataNewer(Dictionary<SaveType, OldEncounterMetadata> metadatas, SaveType saveType, long modifiedTime)
             => metadatas.ContainsKey(saveType) && metadatas[saveType].DateModified > modifiedTime;
 
         protected virtual void SelectLocal() => SelectMetadata(SaveType.Local);
@@ -64,7 +64,7 @@ namespace ClinicalTools.SimEncounters
             if (CurrentResult?.IsCompleted() != false)
                 throw new Exception("It shouldn't be possible to select the result again.");
 
-            CurrentResult.SetResult(new KeyValuePair<SaveType, EncounterMetadata>(saveType, CurrentEncounter.Metadata[saveType]));
+            CurrentResult.SetResult(new KeyValuePair<SaveType, OldEncounterMetadata>(saveType, CurrentEncounter.Metadata[saveType]));
             gameObject.SetActive(false);
         }
 

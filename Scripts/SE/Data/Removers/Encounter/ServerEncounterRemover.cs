@@ -15,7 +15,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual string PhpFile { get; } = "DeleteEncounter.php";
-        public WaitableTask Delete(User user, EncounterMetadata metadata)
+        public WaitableTask Delete(User user, OldEncounterMetadata metadata)
         {
             if (user.IsGuest)
                 return WaitableTask.CompletedTask;
@@ -36,7 +36,7 @@ namespace ClinicalTools.SimEncounters
         private const string RecordNumberVariable = "recordNumber";
         private const string ModeVariable = "mode";
         private const string DeleteModeValue = "delete";
-        protected virtual WWWForm CreateForm(User user, EncounterMetadata metadata)
+        protected virtual WWWForm CreateForm(User user, OldEncounterMetadata metadata)
         {
             var form = new WWWForm();
 
@@ -47,7 +47,7 @@ namespace ClinicalTools.SimEncounters
             return form;
         }
 
-        private void ProcessResults(WaitableTask actionResult, TaskResult<string> serverResult, EncounterMetadata metadata)
+        private void ProcessResults(WaitableTask actionResult, TaskResult<string> serverResult, OldEncounterMetadata metadata)
         {
             if (serverResult.IsError()) {
                 actionResult.SetError(serverResult.Exception);

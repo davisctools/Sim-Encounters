@@ -10,9 +10,9 @@
             ImageDataReader = imageDataReader;
         }
 
-        public virtual WaitableTask<EncounterContent> GetEncounterData(User user, EncounterMetadata metadata)
+        public virtual WaitableTask<EncounterContentData> GetEncounterData(User user, OldEncounterMetadata metadata)
         {
-            var encounterData = new WaitableTask<EncounterContent>();
+            var encounterData = new WaitableTask<EncounterContentData>();
             var content = ContentReader.GetEncounterData(user, metadata);
             var imageData = ImageDataReader.GetImageData(user, metadata);
 
@@ -22,8 +22,8 @@
             return encounterData;
         }
 
-        protected virtual void ProcessResults(WaitableTask<EncounterContent> result,
-            WaitableTask<EncounterContent> content,
+        protected virtual void ProcessResults(WaitableTask<EncounterContentData> result,
+            WaitableTask<EncounterContentData> content,
             WaitableTask<LegacyEncounterImageContent> imageData)
         {
             if (result.IsCompleted() || !content.IsCompleted() || !imageData.IsCompleted())

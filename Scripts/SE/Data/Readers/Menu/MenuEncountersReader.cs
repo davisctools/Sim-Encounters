@@ -34,7 +34,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void ProcessResults(WaitableTask<List<MenuEncounter>> result,
-            WaitableTask<Dictionary<int, Dictionary<SaveType, EncounterMetadata>>> metadataGroups,
+            WaitableTask<Dictionary<int, Dictionary<SaveType, OldEncounterMetadata>>> metadataGroups,
             WaitableTask<Dictionary<int, EncounterEditLock>> locks,
             WaitableTask<Dictionary<int, EncounterBasicStatus>> statuses)
         {
@@ -54,7 +54,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual MenuEncounter GetMenuEncounter(
-            KeyValuePair<int, Dictionary<SaveType, EncounterMetadata>> metadataGroup,
+            KeyValuePair<int, Dictionary<SaveType, OldEncounterMetadata>> metadataGroup,
             WaitableTask<Dictionary<int, EncounterEditLock>> locks,
             WaitableTask<Dictionary<int, EncounterBasicStatus>> statuses)
         {

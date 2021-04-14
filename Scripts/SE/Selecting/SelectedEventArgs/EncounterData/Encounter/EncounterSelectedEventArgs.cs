@@ -4,7 +4,7 @@ namespace ClinicalTools.SimEncounters
 {
     public class EncounterSelectedEventArgs : EventArgs
     {
-        public Encounter Encounter { get; }
-        public EncounterSelectedEventArgs(Encounter encounter) => Encounter = encounter;
+        public ContentEncounter Encounter { get; }
+        public EncounterSelectedEventArgs(ContentEncounter encounter) => Encounter = encounter;
     }
 }
