@@ -2,12 +2,12 @@
 
 namespace ClinicalTools.SimEncounters
 {
-    public class TabXmlSerializer : IXmlSerializer<Tab>
+    public class TabXmlSerializer : IObjectSerializer<Tab>
     {
-        protected virtual IXmlSerializer<Panel> PanelFactory { get; }
+        protected virtual IObjectSerializer<Panel> PanelFactory { get; }
         // shared between sections, tabs, and panels
 
-        public TabXmlSerializer(IXmlSerializer<Panel> panelFactory)
+        public TabXmlSerializer(IObjectSerializer<Panel> panelFactory)
         {
             PanelFactory = panelFactory;
         }
@@ -20,14 +20,14 @@ namespace ClinicalTools.SimEncounters
 
         public virtual bool ShouldSerialize(Tab value) => value != null;
 
-        public void Serialize(XmlSerializer serializer, Tab value)
+        public void Serialize(IDataSerializer serializer, Tab value)
         {
             serializer.AddString(TypeInfo, value.Type);
             serializer.AddString(NameInfo, value.Name);
             serializer.AddKeyValuePairs(PanelsInfo, value.Panels, PanelFactory);
         }
 
-        public virtual Tab Deserialize(XmlDeserializer deserializer)
+        public virtual Tab Deserialize(IDataDeserializer deserializer)
         {
             var tab = CreateTab(deserializer);
 
@@ -36,11 +36,11 @@ namespace ClinicalTools.SimEncounters
             return tab;
         }
 
-        protected virtual string GetType(XmlDeserializer deserializer)
+        protected virtual string GetType(IDataDeserializer deserializer)
             => deserializer.GetString(TypeInfo);
-        protected virtual string GetName(XmlDeserializer deserializer)
+        protected virtual string GetName(IDataDeserializer deserializer)
             => deserializer.GetString(NameInfo);
-        protected virtual Tab CreateTab(XmlDeserializer deserializer)
+        protected virtual Tab CreateTab(IDataDeserializer deserializer)
         {
             var type = GetType(deserializer);
             var name = GetName(deserializer);
@@ -48,9 +48,9 @@ namespace ClinicalTools.SimEncounters
             return new Tab(type, name);
         }
 
-        protected virtual List<KeyValuePair<string, Panel>> GetPanels(XmlDeserializer deserializer)
+        protected virtual List<KeyValuePair<string, Panel>> GetPanels(IDataDeserializer deserializer)
             => deserializer.GetKeyValuePairs(PanelsInfo, PanelFactory);
-        protected virtual void AddPanels(XmlDeserializer deserializer, Tab tab)
+        protected virtual void AddPanels(IDataDeserializer deserializer, Tab tab)
         {
             var panels = GetPanels(deserializer);
             if (panels == null)

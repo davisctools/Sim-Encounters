@@ -1,12 +1,13 @@
-﻿using System.Xml;
+﻿using SimpleJSON;
+using System.Xml;
 
 namespace ClinicalTools.SimEncounters
 {
     public class XmlStringDeserializer<T> : IStringDeserializer<T>
     {
         private readonly IStringDeserializer<XmlDocument> xmlParser;
-        private readonly IXmlSerializer<T> serializationFactory;
-        public XmlStringDeserializer(IStringDeserializer<XmlDocument> xmlParser, IXmlSerializer<T> serializationFactory)
+        private readonly IObjectSerializer<T> serializationFactory;
+        public XmlStringDeserializer(IStringDeserializer<XmlDocument> xmlParser, IObjectSerializer<T> serializationFactory)
         {
             this.xmlParser = xmlParser;
             this.serializationFactory = serializationFactory;

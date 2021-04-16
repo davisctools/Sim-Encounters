@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class SpriteXmlSerializer : IXmlSerializer<Sprite>
+    public class SpriteXmlSerializer : IObjectSerializer<Sprite>
     {
         protected virtual XmlNodeInfo WidthName { get; } = new XmlNodeInfo("width");
         protected virtual XmlNodeInfo HeightName { get; } = new XmlNodeInfo("height");
@@ -11,20 +11,20 @@ namespace ClinicalTools.SimEncounters
 
         public virtual bool ShouldSerialize(Sprite value) => value != null;
 
-        public void Serialize(XmlSerializer serializer, Sprite sprite)
+        public void Serialize(IDataSerializer serializer, Sprite sprite)
         {
             serializer.AddInt(WidthName, sprite.texture.width);
             serializer.AddInt(HeightName, sprite.texture.height);
             serializer.AddString(DataName, GetTextureString(sprite));
         }
 
-        protected virtual int GetWidth(XmlDeserializer deserializer)
+        protected virtual int GetWidth(IDataDeserializer deserializer)
             => deserializer.GetInt(WidthName);
-        protected virtual int GetHeight(XmlDeserializer deserializer)
+        protected virtual int GetHeight(IDataDeserializer deserializer)
             => deserializer.GetInt(HeightName);
-        protected virtual string GetImageData(XmlDeserializer deserializer)
+        protected virtual string GetImageData(IDataDeserializer deserializer)
             => deserializer.GetString(DataName);
-        public Sprite Deserialize(XmlDeserializer deserializer)
+        public Sprite Deserialize(IDataDeserializer deserializer)
         {
             int width = GetWidth(deserializer);
             int height = GetHeight(deserializer);

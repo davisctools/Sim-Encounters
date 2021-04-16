@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class PanelXmlSerializer : IXmlSerializer<Panel>
+    public class PanelXmlSerializer : IObjectSerializer<Panel>
     {
         protected virtual PanelXmlSerializer ChildPanelFactory => this;
 
-        protected virtual IXmlSerializer<PinGroup> PinsFactory { get; }
-        protected virtual IXmlSerializer<EncounterValueGroup> ValueGroup { get; }
-        public PanelXmlSerializer(IXmlSerializer<PinGroup> pinsFactory, IXmlSerializer<EncounterValueGroup> valueGroup)
+        protected virtual IObjectSerializer<PinGroup> PinsFactory { get; }
+        protected virtual IObjectSerializer<EncounterValueGroup> ValueGroup { get; }
+        public PanelXmlSerializer(IObjectSerializer<PinGroup> pinsFactory, IObjectSerializer<EncounterValueGroup> valueGroup)
         {
             PinsFactory = pinsFactory;
             ValueGroup = valueGroup;
@@ -25,7 +25,7 @@ namespace ClinicalTools.SimEncounters
 
         public virtual bool ShouldSerialize(Panel value) => value != null;
 
-        public void Serialize(XmlSerializer serializer, Panel value)
+        public void Serialize(IDataSerializer serializer, Panel value)
         {
             serializer.AddString(TypeInfo, value.Type);
             if (value.LegacyValues.Count > 0)
@@ -37,7 +37,7 @@ namespace ClinicalTools.SimEncounters
             serializer.AddValue(PinsInfo, value.Pins, PinsFactory);
         }
 
-        public virtual Panel Deserialize(XmlDeserializer deserializer)
+        public virtual Panel Deserialize(IDataDeserializer deserializer)
         {
             var panel = CreatePanel(deserializer);
 
@@ -48,18 +48,18 @@ namespace ClinicalTools.SimEncounters
             return panel;
         }
 
-        protected virtual string GetType(XmlDeserializer deserializer)
+        protected virtual string GetType(IDataDeserializer deserializer)
             => deserializer.GetString(TypeInfo);
-        protected virtual Panel CreatePanel(XmlDeserializer deserializer)
+        protected virtual Panel CreatePanel(IDataDeserializer deserializer)
         {
             var type = GetType(deserializer);
 
             return new Panel(type);
         }
 
-        protected virtual List<KeyValuePair<string, string>> GetDataPairs(XmlDeserializer deserializer)
+        protected virtual List<KeyValuePair<string, string>> GetDataPairs(IDataDeserializer deserializer)
             => deserializer.GetStringKeyValuePairs(DataInfo);
-        protected virtual void AddData(XmlDeserializer deserializer, Panel panel)
+        protected virtual void AddData(IDataDeserializer deserializer, Panel panel)
         {
             var dataPairs = GetDataPairs(deserializer);
             if (dataPairs != null && dataPairs.Count == 0) {
@@ -74,9 +74,9 @@ namespace ClinicalTools.SimEncounters
             }
         }
 
-        protected virtual List<KeyValuePair<string, Panel>> GetChildPanels(XmlDeserializer deserializer)
+        protected virtual List<KeyValuePair<string, Panel>> GetChildPanels(IDataDeserializer deserializer)
             => deserializer.GetKeyValuePairs(ChildPanelsInfo, ChildPanelFactory);
-        protected virtual void AddChildPanels(XmlDeserializer deserializer, Panel panel)
+        protected virtual void AddChildPanels(IDataDeserializer deserializer, Panel panel)
         {
             var childPanels = GetChildPanels(deserializer);
             if (childPanels != null) {
@@ -85,9 +85,9 @@ namespace ClinicalTools.SimEncounters
             }
         }
 
-        protected virtual PinGroup GetPins(XmlDeserializer deserializer)
+        protected virtual PinGroup GetPins(IDataDeserializer deserializer)
             => deserializer.GetValue(PinsInfo, PinsFactory);
-        protected virtual void AddPins(XmlDeserializer deserializer, Panel panel)
+        protected virtual void AddPins(IDataDeserializer deserializer, Panel panel)
             => panel.Pins = GetPins(deserializer);
     }
 }

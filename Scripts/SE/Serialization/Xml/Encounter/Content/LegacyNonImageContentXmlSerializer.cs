@@ -6,7 +6,7 @@ namespace ClinicalTools.SimEncounters
     public class LegacyNonImageContentXmlSerializer : NonImageContentXmlSerializer
     {
         protected virtual ICharacterColorThemeManager ColorThemeManager { get; } = new CharacterColorThemeManager();
-        public LegacyNonImageContentXmlSerializer(IXmlSerializer<Section> sectionFactory, IXmlSerializer<Character> characterFactory)
+        public LegacyNonImageContentXmlSerializer(IObjectSerializer<Section> sectionFactory, IObjectSerializer<Character> characterFactory)
             : base(sectionFactory, characterFactory) { }
 
         protected virtual Character PatientCharacter => new Character {
@@ -31,7 +31,7 @@ namespace ClinicalTools.SimEncounters
                 new KeyValuePair<string, Character>("Instructor", InstructorCharacter)
             };
 
-        protected override List<KeyValuePair<string, Character>> GetCharacters(XmlDeserializer deserializer)
+        protected override List<KeyValuePair<string, Character>> GetCharacters(IDataDeserializer deserializer)
         {
             var characters = base.GetCharacters(deserializer);
             return (characters?.Count > 0) ? characters : DefaultCharacters;

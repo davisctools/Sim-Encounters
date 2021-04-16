@@ -43,14 +43,14 @@ namespace ClinicalTools.SimEncounters
         protected IServerStringReader ServerReader { get; }
         protected IUrlBuilder UrlBuilder { get; }
         protected IStringSerializer<Sprite> SpriteSerializer { get; }
-        protected IXmlSerializer<LegacyEncounterImageContent> ImageDataSerializer { get; }
-        protected IXmlSerializer<EncounterContentData> EncounterContentSerializer { get; }
+        protected IObjectSerializer<LegacyEncounterImageContent> ImageDataSerializer { get; }
+        protected IObjectSerializer<EncounterContentData> EncounterContentSerializer { get; }
         public ServerEncounterWriter(
             IServerStringReader serverReader,
             IUrlBuilder urlBuilder,
             IStringSerializer<Sprite> spriteSerializer,
-            IXmlSerializer<LegacyEncounterImageContent> imageDataSerializer,
-            IXmlSerializer<EncounterContentData> encounterContentSerializer)
+            IObjectSerializer<LegacyEncounterImageContent> imageDataSerializer,
+            IObjectSerializer<EncounterContentData> encounterContentSerializer)
         {
             ServerReader = serverReader;
             UrlBuilder = urlBuilder;

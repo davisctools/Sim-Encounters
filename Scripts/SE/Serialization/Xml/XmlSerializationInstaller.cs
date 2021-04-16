@@ -7,6 +7,7 @@ namespace ClinicalTools.SimEncounters
     {
         public override void InstallBindings()
         {
+            Container.Bind<IObjectSerializer<Color>>().To<ColorSerializer>().AsTransient();
             BindImageContentSerializer(Container);
             BindNonImageSerializer(Container);
             BindCharacterSerializer(Container);
@@ -15,45 +16,45 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void BindImageContentSerializer(DiContainer subcontainer)
         {
-            subcontainer.Bind<IXmlSerializer<LegacyEncounterImageContent>>().To<ImageContentXmlSerializer>().AsTransient();
+            subcontainer.Bind<IObjectSerializer<LegacyEncounterImageContent>>().To<ImageContentXmlSerializer>().AsTransient();
             BindSpriteSerializer(subcontainer);
         }
         protected virtual void BindSpriteSerializer(DiContainer subcontainer)
-            => subcontainer.Bind<IXmlSerializer<Sprite>>().To<SpriteXmlSerializer>().AsTransient();
+            => subcontainer.Bind<IObjectSerializer<Sprite>>().To<SpriteXmlSerializer>().AsTransient();
         protected virtual void BindCharacterSerializer(DiContainer subcontainer)
-            => subcontainer.Bind<IXmlSerializer<Character>>().To<CharacterXmlSerializer>().AsTransient();
+            => subcontainer.Bind<IObjectSerializer<Character>>().To<CharacterXmlSerializer>().AsTransient();
         protected virtual void BindIconSerializer(DiContainer subcontainer)
-                    => subcontainer.Bind<IXmlSerializer<Icon>>().To<LegacyIconXmlSerializer>().AsTransient();
+            => subcontainer.Bind<IObjectSerializer<Icon>>().To<LegacyIconXmlSerializer>().AsTransient();
 
         protected virtual void BindNonImageSerializer(DiContainer subcontainer)
         {
-            subcontainer.Bind<IXmlSerializer<EncounterContentData>>().To<LegacyNonImageContentXmlSerializer>().AsTransient();
+            subcontainer.Bind<IObjectSerializer<EncounterContentData>>().To<LegacyNonImageContentXmlSerializer>().AsTransient();
             BindSectionSerializer(subcontainer);
         }
         protected virtual void BindSectionSerializer(DiContainer subcontainer)
         {
-            subcontainer.Bind<IXmlSerializer<Section>>().To<SectionXmlSerializer>().AsTransient();
+            subcontainer.Bind<IObjectSerializer<Section>>().To<SectionXmlSerializer>().AsTransient();
             BindTabSerializer(subcontainer);
         }
         protected virtual void BindTabSerializer(DiContainer subcontainer)
         {
-            subcontainer.Bind<IXmlSerializer<Tab>>().To<TabXmlSerializer>().AsTransient();
+            subcontainer.Bind<IObjectSerializer<Tab>>().To<TabXmlSerializer>().AsTransient();
             BindPanelSerializer(subcontainer);
         }
         protected virtual void BindPanelSerializer(DiContainer subcontainer)
         {
-            subcontainer.Bind<IXmlSerializer<Panel>>().To<PanelXmlSerializer>().AsTransient();
+            subcontainer.Bind<IObjectSerializer<Panel>>().To<PanelXmlSerializer>().AsTransient();
             BindPinGroupSerializer(subcontainer);
         }
         protected virtual void BindPinGroupSerializer(DiContainer subcontainer)
         {
-            subcontainer.Bind<IXmlSerializer<PinGroup>>().To<PinGroupXmlSerializer>().AsTransient();
+            subcontainer.Bind<IObjectSerializer<PinGroup>>().To<PinGroupXmlSerializer>().AsTransient();
             BindDialoguePinSerializer(subcontainer);
             BindQuizPinSerializer(subcontainer);
         }
         protected virtual void BindDialoguePinSerializer(DiContainer subcontainer)
-            => subcontainer.Bind<IXmlSerializer<DialoguePin>>().To<DialoguePinXmlSerializer>().AsTransient();
+            => subcontainer.Bind<IObjectSerializer<DialoguePin>>().To<DialoguePinXmlSerializer>().AsTransient();
         protected virtual void BindQuizPinSerializer(DiContainer subcontainer)
-            => subcontainer.Bind<IXmlSerializer<QuizPin>>().To<QuizPinXmlSerializer>().AsTransient();
+            => subcontainer.Bind<IObjectSerializer<QuizPin>>().To<QuizPinXmlSerializer>().AsTransient();
     }
 }

@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class CharacterXmlSerializer : IXmlSerializer<Character>
+    public class CharacterXmlSerializer : IObjectSerializer<Character>
     {
-        protected virtual IXmlSerializer<Icon> IconFactory { get; }
+        protected virtual IObjectSerializer<Icon> IconFactory { get; }
         protected virtual ICharacterColorThemeManager ColorThemeManager { get; } = new CharacterColorThemeManager();
-        public CharacterXmlSerializer(IXmlSerializer<Icon> iconFactory) => IconFactory = iconFactory;
+        public CharacterXmlSerializer(IObjectSerializer<Icon> iconFactory) => IconFactory = iconFactory;
 
         protected virtual XmlNodeInfo ColorThemeInfo { get; } = new XmlNodeInfo("colorTheme");
         protected virtual XmlNodeInfo SecondaryColorInfo { get; } = new XmlNodeInfo("color2");
@@ -18,7 +18,7 @@ namespace ClinicalTools.SimEncounters
 
         public virtual bool ShouldSerialize(Character value) => value != null;
 
-        public virtual void Serialize(XmlSerializer serializer, Character value)
+        public virtual void Serialize(IDataSerializer serializer, Character value)
         {
             serializer.AddInt(ColorThemeInfo, ColorThemeManager.GetThemeIndex(value.ColorTheme));
             if (value.Icon != null)
@@ -29,7 +29,7 @@ namespace ClinicalTools.SimEncounters
                 serializer.AddString(NameInfo, value.Name);
         }
 
-        public virtual Character Deserialize(XmlDeserializer deserializer)
+        public virtual Character Deserialize(IDataDeserializer deserializer)
             => new Character {
                 Icon = GetIcon(deserializer),
                 ColorTheme = GetColorTheme(deserializer),
@@ -37,9 +37,9 @@ namespace ClinicalTools.SimEncounters
                 Name = GetName(deserializer)
             };
 
-        protected virtual Icon GetIcon(XmlDeserializer deserializer)
+        protected virtual Icon GetIcon(IDataDeserializer deserializer)
             => deserializer.GetValue(IconInfo, IconFactory);
-        protected virtual CharacterColorTheme GetColorTheme(XmlDeserializer deserializer)
+        protected virtual CharacterColorTheme GetColorTheme(IDataDeserializer deserializer)
         {
             var colorThemeIndex = deserializer.GetInt(ColorThemeInfo);
             if (colorThemeIndex >= 0)
@@ -48,11 +48,11 @@ namespace ClinicalTools.SimEncounters
                 return ColorThemeManager.GetColorTheme(GetSecondaryColor(deserializer));
         }
 
-        protected virtual Color GetSecondaryColor(XmlDeserializer deserializer)
+        protected virtual Color GetSecondaryColor(IDataDeserializer deserializer)
             => deserializer.GetColor(SecondaryColorInfo);
-        protected virtual string GetRole(XmlDeserializer deserializer)
+        protected virtual string GetRole(IDataDeserializer deserializer)
             => deserializer.GetString(RoleInfo);
-        protected virtual string GetName(XmlDeserializer deserializer)
+        protected virtual string GetName(IDataDeserializer deserializer)
             => deserializer.GetString(NameInfo);
     }
 }

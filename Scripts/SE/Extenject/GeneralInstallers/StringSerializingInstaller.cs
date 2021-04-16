@@ -39,8 +39,15 @@ namespace ClinicalTools.SimEncounters
             BindColorDeserializer(subcontainer);
             BindSpriteSerializer(subcontainer);
             BindMetadataSerializer(subcontainer);
+
+            BindNonImageContentDeserializer2(subcontainer);
         }
 
+        protected virtual void BindNonImageContentDeserializer2(DiContainer subcontainer)
+            => subcontainer.Bind<IStringDeserializer<EncounterContentData>>()
+                           .WithId(2)
+                           .To<JsonStringDeserializer<EncounterContentData>>()
+                           .AsTransient();
         protected virtual void BindStringSplitter(DiContainer subcontainer)
             => subcontainer.Bind<IStringSplitter>().To<DoubleColonStringSplitter>().AsTransient();
         protected virtual void BindMetadataListDeserializer(DiContainer subcontainer)

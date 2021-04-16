@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SimpleJSON;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.Networking;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class XmlSerializer
+    public class XmlSerializer : IDataSerializer
     {
         protected virtual XmlNode Node { get; }
 
@@ -65,7 +66,7 @@ namespace ClinicalTools.SimEncounters
         public virtual void AddColor(XmlNodeInfo nodeData, Color value)
             => CreateElement(nodeData.Name, $"{value.r},{value.g},{value.b},{value.a}", Node);
 
-        public virtual void AddValue<T>(XmlNodeInfo nodeData, T value, IXmlSerializer<T> serializationFactory)
+        public virtual void AddValue<T>(XmlNodeInfo nodeData, T value, IObjectSerializer<T> serializationFactory)
         {
             if (!serializationFactory.ShouldSerialize(value))
                 return;
@@ -86,7 +87,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         public virtual void AddList<T>(XmlCollectionInfo collectionInfo, IEnumerable<T> list,
-            IXmlSerializer<T> serializationFactory)
+            IObjectSerializer<T> serializationFactory)
         {
             if (list.Count() == 0)
                 return;
@@ -116,7 +117,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         public virtual void AddKeyValuePairs<T>(XmlCollectionInfo collectionInfo,
-            IEnumerable<KeyValuePair<string, T>> list, IXmlSerializer<T> serializationFactory)
+            IEnumerable<KeyValuePair<string, T>> list, IObjectSerializer<T> serializationFactory)
         {
             if (list.Count() == 0)
                 return;
@@ -129,6 +130,10 @@ namespace ClinicalTools.SimEncounters
                 var serializer = new XmlSerializer(childNode);
                 serializationFactory.Serialize(serializer, pair.Value);
             }
+        }
+
+        public void AddFloat(XmlNodeInfo nodeData, float value)
+        {
         }
     }
 }

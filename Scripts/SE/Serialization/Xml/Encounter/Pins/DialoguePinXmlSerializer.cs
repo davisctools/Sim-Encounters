@@ -3,11 +3,11 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class DialoguePinXmlSerializer : IXmlSerializer<DialoguePin>
+    public class DialoguePinXmlSerializer : IObjectSerializer<DialoguePin>
     {
         // pins are created by panels, so a lazy injection needs to be used to prevent an infinite loop
-        protected virtual LazyInject<IXmlSerializer<Panel>> PanelFactory { get; }
-        public DialoguePinXmlSerializer(LazyInject<IXmlSerializer<Panel>> panelFactory)
+        protected virtual LazyInject<IObjectSerializer<Panel>> PanelFactory { get; }
+        public DialoguePinXmlSerializer(LazyInject<IObjectSerializer<Panel>> panelFactory)
         {
             PanelFactory = panelFactory;
         }
@@ -16,12 +16,12 @@ namespace ClinicalTools.SimEncounters
 
         public virtual bool ShouldSerialize(DialoguePin value) => value != null;
 
-        public void Serialize(XmlSerializer serializer, DialoguePin value)
+        public void Serialize(IDataSerializer serializer, DialoguePin value)
         {
             serializer.AddKeyValuePairs(ConversationInfo, value.Conversation, PanelFactory.Value);
         }
 
-        public DialoguePin Deserialize(XmlDeserializer deserializer)
+        public DialoguePin Deserialize(IDataDeserializer deserializer)
         {
             var dialoguePin = CreateDialoguePin(deserializer);
 
@@ -30,11 +30,11 @@ namespace ClinicalTools.SimEncounters
             return dialoguePin;
         }
 
-        protected virtual DialoguePin CreateDialoguePin(XmlDeserializer deserializer) => new DialoguePin();
+        protected virtual DialoguePin CreateDialoguePin(IDataDeserializer deserializer) => new DialoguePin();
 
-        protected virtual List<KeyValuePair<string, Panel>> GetConversation(XmlDeserializer deserializer)
+        protected virtual List<KeyValuePair<string, Panel>> GetConversation(IDataDeserializer deserializer)
             => deserializer.GetKeyValuePairs(ConversationInfo, PanelFactory.Value);
-        protected virtual void AddConversation(XmlDeserializer deserializer, DialoguePin dialoguePin)
+        protected virtual void AddConversation(IDataDeserializer deserializer, DialoguePin dialoguePin)
         {
             var conversationPairs = GetConversation(deserializer);
             if (conversationPairs == null)

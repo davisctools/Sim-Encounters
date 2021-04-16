@@ -3,12 +3,14 @@ using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class SectionXmlSerializer : IXmlSerializer<Section>
+    public class SectionXmlSerializer : IObjectSerializer<Section>
     {
-        protected virtual IXmlSerializer<Tab> TabFactory { get; }
-        public SectionXmlSerializer(IXmlSerializer<Tab> tabFactory)
+        protected virtual IObjectSerializer<Tab> TabFactory { get; }
+        protected IObjectSerializer<Color> ColorSerializer { get; }
+        public SectionXmlSerializer(IObjectSerializer<Tab> tabFactory, IObjectSerializer<Color> colorSerializer)
         {
-            TabFactory = tabFactory;
+            TabFactory = tabFactory; 
+            ColorSerializer = colorSerializer;
         }
 
         protected virtual XmlNodeInfo NameInfo { get; set; } = new XmlNodeInfo("name");
@@ -20,15 +22,15 @@ namespace ClinicalTools.SimEncounters
 
         public virtual bool ShouldSerialize(Section value) => value != null;
 
-        public virtual void Serialize(XmlSerializer serializer, Section value)
+        public virtual void Serialize(IDataSerializer serializer, Section value)
         {
             serializer.AddString(NameInfo, value.Name);
             serializer.AddString(IconKeyInfo, value.IconKey);
-            serializer.AddColor(ColorInfo, value.Color);
+            serializer.AddValue(ColorInfo, value.Color, ColorSerializer);
             serializer.AddKeyValuePairs(TabsInfo, value.Tabs, TabFactory);
         }
 
-        public virtual Section Deserialize(XmlDeserializer deserializer)
+        public virtual Section Deserialize(IDataDeserializer deserializer)
         {
             var section = CreateSection(deserializer);
             SetTabs(deserializer, section);
@@ -36,13 +38,13 @@ namespace ClinicalTools.SimEncounters
             return section;
         }
 
-        protected virtual string GetName(XmlDeserializer deserializer)
+        protected virtual string GetName(IDataDeserializer deserializer)
             => deserializer.GetString(NameInfo);
-        protected virtual string GetIconKey(XmlDeserializer deserializer)
+        protected virtual string GetIconKey(IDataDeserializer deserializer)
             => deserializer.GetString(IconKeyInfo);
-        protected virtual Color GetColor(XmlDeserializer deserializer)
+        protected virtual Color GetColor(IDataDeserializer deserializer)
             => deserializer.GetColor(ColorInfo);
-        protected virtual Section CreateSection(XmlDeserializer deserializer)
+        protected virtual Section CreateSection(IDataDeserializer deserializer)
         {
             var name = GetName(deserializer);
             var iconKey = GetIconKey(deserializer);
@@ -51,9 +53,9 @@ namespace ClinicalTools.SimEncounters
             return new Section(name, iconKey, color);
         }
 
-        protected virtual List<KeyValuePair<string, Tab>> GetTabs(XmlDeserializer deserializer)
+        protected virtual List<KeyValuePair<string, Tab>> GetTabs(IDataDeserializer deserializer)
             => deserializer.GetKeyValuePairs(TabsInfo, TabFactory);
-        protected virtual void SetTabs(XmlDeserializer deserializer, Section section)
+        protected virtual void SetTabs(IDataDeserializer deserializer, Section section)
         {
             var tabs = GetTabs(deserializer);
             if (tabs == null)
