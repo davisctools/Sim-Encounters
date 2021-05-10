@@ -160,7 +160,7 @@ namespace ClinicalTools.SimEncounters
             foreach (var sectionContent in Contents)
                 sectionContent.gameObject.SetActive(sectionContent == Current || sectionContent == Leaving);
 
-            ResetMovement();
+            Curve.SetPosition(Current.RectTransform);
 
             if (currentCoroutine != null)
                 StopCoroutine(currentCoroutine);
