@@ -229,11 +229,19 @@ namespace ClinicalTools.SimEncounters
             var corners = new Vector3[4];
             SwipeBounds.GetWorldCorners(corners);
             SwipeParamater.StartPositionRange = new Rect(corners[0], corners[2] - corners[0]);
+            NextFrame.Function(UpdateSwipeParameters);
             SwipeParamater.AngleRanges.Add(new AngleRange(-30, 30));
             SwipeParamater.AngleRanges.Add(new AngleRange(150, 210));
             SwipeParamater.OnSwipeStart += SwipeStart;
             SwipeParamater.OnSwipeUpdate += SwipeUpdate;
             SwipeParamater.OnSwipeEnd += SwipeEnd;
+        }
+
+        protected virtual void UpdateSwipeParameters()
+        {
+            var corners = new Vector3[4];
+            SwipeBounds.GetWorldCorners(corners);
+            SwipeParamater.StartPositionRange = new Rect(corners[0], corners[2] - corners[0]);
         }
 
         private void SwipeStart(Swipe obj) => SwipeUpdate(obj);

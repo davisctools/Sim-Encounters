@@ -49,11 +49,23 @@ namespace ClinicalTools.UI
             base.Awake();
             UpdateSize();
         }
+
+        protected override void Start()
+        {
+            base.Start();
+            if (canvas == null) {
+                canvas = GetComponentInParent<Canvas>();
+                UpdateSize();
+                // this is messy but the reference pixels needs to be a big enough change for this to actually update properly
+                canvas.referencePixelsPerUnit -= .01f;
+                NextFrame.Function(UpdateSize);
+            }
+        }
         protected virtual void Update()
         {
             var currentHeight = RectTransform.rect.height;
             var currentScale = RectTransform.lossyScale.y / RectTransform.lossyScale.x;
-            if (Texture == Image.sprite.texture 
+            if (Texture == Image.sprite.texture
                 && Mathf.Abs(currentHeight - height) < Tolerance
                 && Mathf.Abs(currentScale - scale) < Tolerance) {
                 return;
@@ -78,7 +90,8 @@ namespace ClinicalTools.UI
             var imageheight = Texture.height;
             // TODO: This is updated when the image scale is changed, but it doesn't always update how the image looks
             // Updating on later frames also doesn't fix the issue
-            Image.pixelsPerUnitMultiplier = imageheight / height / scale * canvas.referencePixelsPerUnit / 100;
+            if (canvas != null)
+                Image.pixelsPerUnitMultiplier = imageheight / height / scale * canvas.referencePixelsPerUnit / 100;
         }
     }
 }

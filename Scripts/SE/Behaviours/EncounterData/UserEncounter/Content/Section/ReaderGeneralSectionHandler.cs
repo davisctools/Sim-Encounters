@@ -79,16 +79,24 @@ namespace ClinicalTools.SimEncounters
             var corners = new Vector3[4];
             swipeBounds.GetWorldCorners(corners);
             SwipeParamater.StartPositionRange = new Rect(corners[0], corners[2] - corners[0]);
+            NextFrame.Function(UpdateSwipeParameters);
             SwipeParamater.AngleRanges.Add(new AngleRange(-30, 30));
             SwipeParamater.AngleRanges.Add(new AngleRange(150, 210));
             SwipeParamater.OnSwipeStart += SwipeStart;
             SwipeParamater.OnSwipeUpdate += SwipeUpdate;
             SwipeParamater.OnSwipeEnd += SwipeEnd;
         }
+        protected virtual void UpdateSwipeParameters()
+        {
+            var corners = new Vector3[4];
+            swipeBounds.GetWorldCorners(corners);
+            SwipeParamater.StartPositionRange = new Rect(corners[0], corners[2] - corners[0]);
+        }
+
 
         protected virtual void SwipeStart(Swipe obj)
         {
-            if (CurrentCoroutine != null) { 
+            if (CurrentCoroutine != null) {
                 StopCoroutine(CurrentCoroutine);
                 CurrentCoroutine = null;
             }
@@ -131,7 +139,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected Coroutine CurrentCoroutine { get; set; }
-        protected virtual float GetDistance(Swipe obj) 
+        protected virtual float GetDistance(Swipe obj)
             => (obj.LastPosition.x - obj.StartPosition.x) / SwipeParamater.StartPositionRange.Value.width;
 
         protected bool CanSwipeRight { get; set; }
@@ -148,12 +156,15 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual UserSectionSelectedEventArgs GetSwipeSectionSelectedEventArgs(Swipe obj, Direction swipingDirection, float dist)
         {
-            if (swipingDirection == Direction.Previous && (dist > .5f || obj.Velocity.x / Screen.dpi > 1.5f))
+            if (swipingDirection == Direction.Previous && (dist > .5f || obj.Velocity.x / Screen.dpi > 1.5f)) {
+                PreviousSection.Data.CurrentTabIndex = PreviousSection.Data.Tabs.Count - 1;
                 return new UserSectionSelectedEventArgs(PreviousSection, ChangeType.Previous);
-            else if (swipingDirection == Direction.Next && (dist < -.5f || obj.Velocity.x / Screen.dpi < -1.5f))
+            } else if (swipingDirection == Direction.Next && (dist < -.5f || obj.Velocity.x / Screen.dpi < -1.5f)) {
+                NextSection.Data.CurrentTabIndex = 0;
                 return new UserSectionSelectedEventArgs(NextSection, ChangeType.Next);
-            else
+            } else {
                 return null;
+            }
         }
 
         protected virtual float Distance { get; set; }
@@ -194,7 +205,7 @@ namespace ClinicalTools.SimEncounters
             if (changingSections)
                 direction = direction == Direction.Next ? Direction.Previous : Direction.Next;
 
-                dist = 1 - dist;
+            dist = 1 - dist;
             foreach (var swipableSection in SwipableSections)
                 swipableSection.Move(direction, dist);
         }

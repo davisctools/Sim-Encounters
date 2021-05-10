@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 445948632425173610}
+  - component: {fileID: 7591060354463911414}
   - component: {fileID: 4482683986309288656}
   - component: {fileID: 5594355613865934821}
-  - component: {fileID: 7591060354463911414}
   m_Layer: 5
   m_Name: TopGradient
   m_TagString: Untagged
@@ -36,31 +36,8 @@ RectTransform:
   m_AnchorMin: {x: -0.5, y: 1}
   m_AnchorMax: {x: 1.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 25.165049}
+  m_SizeDelta: {x: 0, y: 44.737865}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &4482683986309288656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 60688195126095470}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d569ead9213747143bb0732193957f50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scale: 0.5
-  sizeWidth: 0
-  sizeHeight: 1
---- !u!222 &5594355613865934821
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 60688195126095470}
-  m_CullTransparentMesh: 0
 --- !u!114 &7591060354463911414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,6 +67,29 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4482683986309288656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60688195126095470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d569ead9213747143bb0732193957f50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scale: 0.5
+  sizeWidth: 0
+  sizeHeight: 1
+--- !u!222 &5594355613865934821
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60688195126095470}
+  m_CullTransparentMesh: 0
 --- !u!1 &2647253695691551133
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,9 +99,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6120509802892648908}
-  - component: {fileID: 4320209313185151026}
   - component: {fileID: 5874542747221878735}
   - component: {fileID: 545655910995632115}
+  - component: {fileID: 4320209313185151026}
   m_Layer: 5
   m_Name: BottomGradient
   m_TagString: Untagged
@@ -126,16 +126,8 @@ RectTransform:
   m_AnchorMin: {x: -0.5, y: 0}
   m_AnchorMax: {x: 1.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 25.165049}
+  m_SizeDelta: {x: 0, y: 44.737865}
   m_Pivot: {x: 0.5, y: 0}
---- !u!222 &4320209313185151026
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2647253695691551133}
-  m_CullTransparentMesh: 0
 --- !u!114 &5874542747221878735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,7 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -180,6 +172,14 @@ MonoBehaviour:
   scale: 0.5
   sizeWidth: 0
   sizeHeight: 1
+--- !u!222 &4320209313185151026
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2647253695691551133}
+  m_CullTransparentMesh: 0
 --- !u!1 &6405682402917306660
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,7 +201,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3517652837626325743
 RectTransform:
   m_ObjectHideFlags: 0
@@ -485,6 +485,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bottomGradient: {fileID: 5874542747221878735}
   topGradient: {fileID: 7591060354463911414}
+  leftGradient: {fileID: 0}
+  rightGradient: {fileID: 0}
 --- !u!114 &225323001931291571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -724,7 +726,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

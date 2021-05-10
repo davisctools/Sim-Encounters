@@ -12,7 +12,11 @@ namespace ClinicalTools.UI
             if (itemsDisablingSwipe > 0)
                 itemsDisablingSwipe--;
         }
-        public void DisableSwipe() => itemsDisablingSwipe++;
+        public void DisableSwipe()
+        {
+            itemsDisablingSwipe++;
+        }
+
         public bool SwipeAllowed => itemsDisablingSwipe <= 0;
 
         private HashSet<SwipeParameter> SwipeParameters { get; } = new HashSet<SwipeParameter>();

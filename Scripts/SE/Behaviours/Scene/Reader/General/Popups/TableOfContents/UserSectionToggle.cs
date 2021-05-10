@@ -33,6 +33,7 @@ namespace ClinicalTools.SimEncounters
             if (isOn && EncounterSelectedListener.CurrentValue.Encounter.GetCurrentSection() != Section)
                 Select(this, new UserTabSelectedEventArgs(Section.Tabs[0].Value, ChangeType.JumpTo));
 
+            toggle.interactable = !isOn;
             if (isOn) {
                 text.color = Color.white;
                 toggle.image.color = Section.Data.Color;

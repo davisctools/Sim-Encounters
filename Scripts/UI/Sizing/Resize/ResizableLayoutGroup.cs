@@ -29,8 +29,13 @@ namespace ClinicalTools.UI
             defaultSpacing = LayoutGroup.spacing;
 
             Resizer = resizer;
-            Resizer.Resized += Resized;
             Resized(Resizer.ResizeValue);
+        }
+
+        protected virtual void Start()
+        {
+            Resized(Resizer.ResizeValue);
+            Resizer.Resized += Resized;
         }
 
         protected virtual void Resized(float size)

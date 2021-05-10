@@ -19,7 +19,7 @@ namespace ClinicalTools.SimEncounters
             Encounter = encounter;
             Data = data;
             Status = status;
-            if (data.Pins != null && data.Pins.HasPin()) { 
+            if (data.Pins != null && data.Pins.HasPin()) {
                 PinGroup = new UserPinGroup(encounter, data.Pins, status.PinGroupStatus);
                 PinGroup.StatusChanged += UpdateIsRead;
             }
@@ -33,7 +33,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void UpdateIsRead()
         {
-            if (!Status.Read && PinGroup?.IsRead() != false && !ChildPanels.Values.Any(p => !p.IsRead()))
+            if (!Status.Read && !ChildPanels.Values.Any(p => !p.IsRead()))
                 SetRead(true);
         }
 

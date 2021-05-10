@@ -15,6 +15,7 @@ namespace ClinicalTools.UI
         private float defaultMinWidth, defaultPreferredWidth, defaultMinHeight, defaultPreferredHeight;
         protected LayoutElement LayoutElement { get; set; }
         protected CanvasResizer Resizer { get; set; }
+
         [Inject]
         public virtual void Inject(CanvasResizer resizer)
         {
@@ -25,8 +26,14 @@ namespace ClinicalTools.UI
             defaultPreferredHeight = LayoutElement.preferredHeight;
 
             Resizer = resizer;
-            Resizer.Resized += Resized;
             Resized(Resizer.ResizeValue);
+        }
+
+        // OnDestroy is only called on objects that were once enabled, so adding listener here ensures it's only added if enabled
+        protected virtual void Start()
+        {
+            Resized(Resizer.ResizeValue);
+            Resizer.Resized += Resized;
         }
 
         protected virtual void Resized(float size)
