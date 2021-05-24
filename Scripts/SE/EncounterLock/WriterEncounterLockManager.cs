@@ -37,7 +37,8 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void OnDestroy()
         {
-            StopCoroutine(LockRefreshRoutine);
+            if (LockRefreshRoutine != null)
+                StopCoroutine(LockRefreshRoutine);
 
             var sceneInfo = SceneSelectedListener.CurrentValue.SceneInfo;
             var task = EncounterUnlocker.UnlockEncounter(sceneInfo.User, sceneInfo.Encounter.Metadata);
