@@ -21,8 +21,8 @@ namespace ClinicalTools.SimEncounters
             SceneSelectedListener = sceneSelectedListener;
         }
 
-
-        public virtual void Start() => StartCoroutine(LockRefresh());
+        protected virtual Coroutine LockRefreshRoutine { get; set; }
+        public virtual void Start() => LockRefreshRoutine = StartCoroutine(LockRefresh());
 
         private const float LockIntervalSeconds = 30;
         protected virtual IEnumerator LockRefresh()
@@ -32,12 +32,13 @@ namespace ClinicalTools.SimEncounters
             var task = EncounterLocker.LockEncounter(sceneInfo.User, sceneInfo.Encounter.Metadata);
             task.AddOnCompletedListener(EncounterRelocked);
 
-
             yield return LockRefresh();
         }
 
         protected virtual void OnDestroy()
         {
+            StopCoroutine(LockRefreshRoutine);
+
             var sceneInfo = SceneSelectedListener.CurrentValue.SceneInfo;
             var task = EncounterUnlocker.UnlockEncounter(sceneInfo.User, sceneInfo.Encounter.Metadata);
             task.AddOnCompletedListener(EncounterUnlocked);
