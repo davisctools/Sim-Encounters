@@ -17,7 +17,7 @@ namespace ClinicalTools.UI
         protected virtual void ResetScroll()
         {
             if (this != null)
-                Scrollbar.value = 1;
+                Scrollbar.value = Mathf.Clamp01(Scrollbar.value);
         }
 
         protected virtual void Update()
