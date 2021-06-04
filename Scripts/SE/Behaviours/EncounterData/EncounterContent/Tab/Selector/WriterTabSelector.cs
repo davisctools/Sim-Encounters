@@ -19,19 +19,19 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private ScrollRect tabButtonsScroll;
         public virtual Button AddButton { get => addButton; set => addButton = value; }
         [SerializeField] private Button addButton;
-        public TabCreatorPopup AddTabPopup { get => addTabPopup; set => addTabPopup = value; }
-        [SerializeField] private TabCreatorPopup addTabPopup;
-
         protected ISelectedListener<SectionSelectedEventArgs> SectionSelectedListener { get; set; }
         protected ISelector<TabSelectedEventArgs> TabSelector { get; set; }
         protected virtual BaseWriterTabToggle.Pool TabButtonPool { get; set; }
+        protected virtual TabCreatorPopup AddTabPopup { get; set; }
         [Inject]
         public virtual void Inject(
             ISelectedListener<SectionSelectedEventArgs> sectionSelectedListener,
             ISelector<TabSelectedEventArgs> tabSelector,
-            BaseWriterTabToggle.Pool tabButtonPool)
+            BaseWriterTabToggle.Pool tabButtonPool,
+            TabCreatorPopup addTabPopup)
         {
             TabButtonPool = tabButtonPool;
+            AddTabPopup = addTabPopup;
 
             SectionSelectedListener = sectionSelectedListener;
             SectionSelectedListener.Selected += OnSectionSelected;
@@ -42,7 +42,6 @@ namespace ClinicalTools.SimEncounters
             TabSelector.Selected += OnTabSelected;
             if (TabSelector.CurrentValue != null)
                 OnTabSelected(this, TabSelector.CurrentValue);
-
         }
 
         protected virtual void Awake()
@@ -56,7 +55,7 @@ namespace ClinicalTools.SimEncounters
             CurrentSection = e.SelectedSection;
             foreach (var tabButton in TabButtons)
                 DespawnTabButton(tabButton.Value);
-            
+
             RearrangeableGroup.Clear();
             TabButtons.Clear();
 

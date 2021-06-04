@@ -16,19 +16,21 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private ToggleGroup sectionsToggleGroup;
         public virtual Button AddButton { get => addButton; set => addButton = value; }
         [SerializeField] private Button addButton;
-        public SectionCreatorPopup AddSectionPopup { get => addSectionPopup; set => addSectionPopup = value; }
-        [SerializeField] private SectionCreatorPopup addSectionPopup;
 
         protected ISelectedListener<EncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
         protected ISelector<SectionSelectedEventArgs> SectionSelector { get; set; }
         protected virtual BaseWriterSectionToggle.Pool SectionButtonPool { get; set; }
+        protected virtual SectionCreatorPopup AddSectionPopup { get; set; }
+
         [Inject]
         public virtual void Inject(
             ISelectedListener<EncounterSelectedEventArgs> encounterSelectedListener,
             ISelector<SectionSelectedEventArgs> sectionSelectedListener,
-            BaseWriterSectionToggle.Pool sectionButtonPool)
+            BaseWriterSectionToggle.Pool sectionButtonPool,
+            SectionCreatorPopup addSectionPopup)
         {
             SectionButtonPool = sectionButtonPool;
+            AddSectionPopup = addSectionPopup;
 
             EncounterSelectedListener = encounterSelectedListener;
             EncounterSelectedListener.Selected += OnEncounterSelected;

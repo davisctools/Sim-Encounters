@@ -21,10 +21,17 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private WriterDialoguePopup dialoguePopup;
         public WriterQuizPopup QuizPopup { get => quizPopup; set => quizPopup = value; }
         [SerializeField] private WriterQuizPopup quizPopup;
+
+        public SectionCreatorPopup SectionCreatorPopup { get => sectionCreatorPopup; set => sectionCreatorPopup = value; }
+        [SerializeField] private SectionCreatorPopup sectionCreatorPopup;
         public SectionEditorPopup SectionEditorPopup { get => sectionEditorPopup; set => sectionEditorPopup = value; }
         [SerializeField] private SectionEditorPopup sectionEditorPopup;
+
+        public TabCreatorPopup TabCreatorPopup { get => tabCreatorPopup; set => tabCreatorPopup = value; }
+        [SerializeField] private TabCreatorPopup tabCreatorPopup;
         public TabEditorPopup TabEditorPopup { get => tabEditorPopup; set => tabEditorPopup = value; }
         [SerializeField] private TabEditorPopup tabEditorPopup;
+
         public BaseConfirmationPopup ConfirmationPopup { get => confirmationPopup; set => confirmationPopup = value; }
         [SerializeField] private BaseConfirmationPopup confirmationPopup;
 
@@ -58,8 +65,12 @@ namespace ClinicalTools.SimEncounters
             Container.BindInstance(ReadMorePopup);
             Container.BindInstance(DialoguePopup);
             Container.BindInstance(QuizPopup);
+
             Container.BindInstance(SectionEditorPopup);
+            Container.BindInstance(SectionCreatorPopup);
+            Container.BindInstance(TabCreatorPopup);
             Container.BindInstance(TabEditorPopup);
+
             Container.BindInstance(ConfirmationPopup);
             Container.BindInstance(SaveEncounterDisplay);
 
