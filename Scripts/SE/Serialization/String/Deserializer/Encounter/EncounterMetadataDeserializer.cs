@@ -69,6 +69,7 @@ namespace ClinicalTools.SimEncounters
                 if (parsedItem.Length + 1 >= ImageDataIndex) {
                     metadata.Sprite = GetSprite(parsedItem[ImageWidthIndex], parsedItem[ImageHeightIndex],
                         UnityWebRequest.UnEscapeURL(parsedItem[ImageDataIndex]));
+                    ImageHolder.HoldImage(metadata.Sprite);
                 }
 
                 return metadata;

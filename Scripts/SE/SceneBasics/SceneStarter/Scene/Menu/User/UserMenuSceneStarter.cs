@@ -20,6 +20,7 @@ namespace ClinicalTools.SimEncounters
 
         public virtual void StartMenuScene(User user, ILoadingScreen loadingScreen, MenuArea menuArea)
         {
+            ImageHolder.BeginHoldingData();
             var categories = MenuInfoReader.GetMenuEncountersInfo(user);
             var menuSceneInfo = new LoadingMenuSceneInfo(user, loadingScreen, menuArea, categories);
             MenuSceneStarter.StartScene(menuSceneInfo);

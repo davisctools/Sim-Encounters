@@ -20,6 +20,8 @@ namespace ClinicalTools.SimEncounters
                 StartAsLaterScene();
 
             FirstScene = false;
+
+            ImageHolder.StopHoldingData();
         }
 
         protected abstract void StartAsInitialScene();

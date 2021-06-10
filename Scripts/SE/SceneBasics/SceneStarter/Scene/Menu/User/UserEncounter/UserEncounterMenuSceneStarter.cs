@@ -14,6 +14,7 @@ namespace ClinicalTools.SimEncounters
 
         public void StartMenuScene(UserEncounter userEncounter, ILoadingScreen loadingScreen, MenuArea menuArea)
         {
+            ImageHolder.BeginHoldingData();
             var categories = GetMenuEncountersInfo(userEncounter);
             var menuSceneInfo = new LoadingMenuSceneInfo(userEncounter.User, loadingScreen, menuArea, categories);
             MenuSceneStarter.StartScene(menuSceneInfo);

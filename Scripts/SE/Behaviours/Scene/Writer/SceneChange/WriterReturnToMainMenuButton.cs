@@ -36,6 +36,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void ReturnToMainMenu()
         {
+            ImageHolder.BeginHoldingData();
             var sceneInfo = WriterSceneInfoSelectedListener.CurrentValue.SceneInfo;
             var categories = MenuInfoReader.GetMenuEncountersInfo(sceneInfo.User);
             var menuSceneInfo = new LoadingMenuSceneInfo(sceneInfo.User, sceneInfo.LoadingScreen, MenuArea.InitialSelection, categories);
