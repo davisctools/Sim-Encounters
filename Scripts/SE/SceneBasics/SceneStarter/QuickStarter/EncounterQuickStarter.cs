@@ -26,6 +26,7 @@ namespace ClinicalTools.SimEncounters
         public void StartEncounter(User user, ILoadingScreen loadingScreen, WaitableTask<IMenuEncountersInfo> encounters, int recordNumber)
         {
             loadingScreen.Show();
+            ImageHolder.BeginHoldingData();
             var encounter = GetEncounter(user, encounters, recordNumber);
             var loadingSceneInfo = new LoadingReaderSceneInfo(user, loadingScreen, encounter);
             SceneStarter.StartScene(loadingSceneInfo);
@@ -51,6 +52,7 @@ namespace ClinicalTools.SimEncounters
                 if (typedMetadata.Value.RecordNumber != recordNumber)
                     continue;
 
+                ImageHolder.HoldImage(typedMetadata.Value.Sprite);
                 var userEncounter = EncounterReader.GetUserEncounter(user, typedMetadata.Value, encounter.Status, typedMetadata.Key);
                 userEncounter.CopyValueWhenCompleted(result);
                 return;

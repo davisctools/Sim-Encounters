@@ -19,17 +19,17 @@ namespace ClinicalTools.SimEncounters
             SignalBus.Fire<SceneChangedSignal>();
 
             var loading = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(ScenePath);
-            loading.completed += (asyncOperation) => StartMainMenu(data);
+            loading.completed += (asyncOperation) => InitializeScene(data);
         }
 
-        public virtual void StartMainMenu(LoadingMenuSceneInfo data)
+        protected virtual void InitializeScene(LoadingMenuSceneInfo data)
         {
-            if (!(SceneManager.Instance is IMenuSceneDrawer menuScene)) {
+            if (SceneManager<LoadingMenuSceneInfo>.Instance == null) {
                 Debug.LogError("Started scene UI is not Menu scene.");
                 return;
             }
 
-            menuScene.Display(data);
+            SceneManager<LoadingMenuSceneInfo>.Instance.Display(data);
         }
     }
 }

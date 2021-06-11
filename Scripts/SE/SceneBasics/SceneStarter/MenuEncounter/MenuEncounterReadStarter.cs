@@ -33,6 +33,8 @@ namespace ClinicalTools.SimEncounters
             if (status == null)
                 status = new EncounterBasicStatus();
 
+            ImageHolder.BeginHoldingData();
+            ImageHolder.HoldImage(metadata.Value.Sprite);
             var encounter = EncounterReader.GetUserEncounter(sceneInfo.User, metadata.Value, status, metadata.Key);
             var encounterSceneInfo = new LoadingReaderSceneInfo(sceneInfo.User, sceneInfo.LoadingScreen, encounter);
             SceneStarter.StartScene(encounterSceneInfo);

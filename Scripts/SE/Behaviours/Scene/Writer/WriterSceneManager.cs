@@ -3,7 +3,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class WriterSceneManager : SceneManager, ILoadingWriterSceneDrawer
+    public class WriterSceneManager : SceneManager<LoadingWriterSceneInfo>, ILoadingWriterSceneDrawer
     {
         public string DefaultEncounterFileName { get => defaultEncounterFileName; set => defaultEncounterFileName = value; }
         [SerializeField] private string defaultEncounterFileName;
@@ -45,7 +45,7 @@ namespace ClinicalTools.SimEncounters
         protected override void StartAsLaterScene() { }
 
 
-        public void Display(LoadingWriterSceneInfo sceneInfo)
+        protected override void ProcessSceneInfo(LoadingWriterSceneInfo sceneInfo)
         {
             SceneSelector.Select(this, new LoadingWriterSceneInfoSelectedEventArgs(sceneInfo));
             sceneInfo.Result.AddOnCompletedListener(SceneInfoLoaded);

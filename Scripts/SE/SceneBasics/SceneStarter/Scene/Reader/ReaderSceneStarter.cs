@@ -24,12 +24,12 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void InitializeScene(LoadingReaderSceneInfo data)
         {
-            if (!(SceneManager.Instance is IReaderSceneDrawer readerScene)) {
+            if (SceneManager<LoadingReaderSceneInfo>.Instance == null) {
                 Debug.LogError("Started scene UI is not Reader.");
                 return;
             }
 
-            readerScene.Display(data);
+            SceneManager<LoadingReaderSceneInfo>.Instance.Display(data);
         }
     }
 }

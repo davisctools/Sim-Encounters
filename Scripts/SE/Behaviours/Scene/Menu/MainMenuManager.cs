@@ -7,7 +7,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class MainMenuManager : SceneManager, IMenuSceneDrawer
+    public class MainMenuManager : SceneManager<LoadingMenuSceneInfo>, IMenuSceneDrawer
     {
         public BaseMenuSceneDrawer MenuDrawer { get => menuDrawer; set => menuDrawer = value; }
         [SerializeField] private BaseMenuSceneDrawer menuDrawer;
@@ -68,7 +68,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected LoadingMenuSceneInfo SceneInfo { get; set; }
-        public void Display(LoadingMenuSceneInfo sceneInfo)
+        protected override void ProcessSceneInfo(LoadingMenuSceneInfo sceneInfo)
         {
             if (sceneInfo.MenuArea == MenuArea.Cases)
                 foreach (var welcomeScreen in WelcomeScreens)

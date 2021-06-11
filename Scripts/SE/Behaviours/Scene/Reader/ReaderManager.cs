@@ -7,7 +7,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class ReaderManager : SceneManager, IReaderSceneDrawer
+    public class ReaderManager : SceneManager<LoadingReaderSceneInfo>, IReaderSceneDrawer
     {
         public string DefaultEncounterFileName { get => defaultEncounterFileName; set => defaultEncounterFileName = value; }
         [SerializeField] private string defaultEncounterFileName;
@@ -103,7 +103,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected LoadingReaderSceneInfo SceneInfo { get; set; }
-        public void Display(LoadingReaderSceneInfo sceneInfo)
+        protected override void ProcessSceneInfo(LoadingReaderSceneInfo sceneInfo)
         {
             SceneInfo = sceneInfo;
 #if DEEP_LINKING

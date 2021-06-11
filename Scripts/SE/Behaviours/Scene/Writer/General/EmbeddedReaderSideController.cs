@@ -6,7 +6,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class WriterReaderSideController : MonoBehaviour, IReaderSceneStarter, IMenuSceneStarter
+    public class EmbeddedReaderSideController : MonoBehaviour, IReaderSceneStarter, IMenuSceneStarter
     {
         [SerializeField] private Button button;
         [SerializeField] private AnchorsToMatchAspectRatio aspectRatioHandler;
