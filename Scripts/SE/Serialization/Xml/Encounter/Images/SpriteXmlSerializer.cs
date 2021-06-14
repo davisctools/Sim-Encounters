@@ -33,7 +33,9 @@ namespace ClinicalTools.SimEncounters
                 throw new Exception("No image data included.");
 
             var imageRect = new Rect(0, 0, width, height);
-            return GetSprite(imageRect, imageData);
+            var sprite = GetSprite(imageRect, imageData);
+            ImageHolder.HoldImage(sprite);
+            return sprite;
         }
 
         protected virtual Sprite GetSprite(Rect imageRect, string imageData)
