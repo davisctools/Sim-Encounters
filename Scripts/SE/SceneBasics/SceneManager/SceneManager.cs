@@ -13,6 +13,15 @@ namespace ClinicalTools.SimEncounters
         // That's not necessarily a bad thing, but it does require a bit more maintenance.
         public new static SceneManager<T> Instance { get; protected set; }
 
+        protected override void Awake()
+        {
+            // The main scene manager from a scene is expected to not have a parent
+            // This allows embedded scenes within scenes, while allowing them to
+            // avoid causing overarching scene changes
+            if (transform.parent == null)
+                Instance = this;
+        }
+
         public virtual void Display(T sceneInfo)
         {
             // Ensure that it's the main scene manager
@@ -33,7 +42,7 @@ namespace ClinicalTools.SimEncounters
             // The main scene manager from a scene is expected to not have a parent
             // This allows embedded scenes within scenes, while allowing them to
             // avoid causing overarching scene changes
-            if (transform.parent != null)
+            if (transform.parent == null)
                 Instance = this;
         }
         protected virtual void Start()
