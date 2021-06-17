@@ -8,6 +8,14 @@ namespace ClinicalTools.SimEncounters
     {
         public BaseConfirmationPopup ConfirmationPopup { get => confirmationPopup; set => confirmationPopup = value; }
         [SerializeField] private BaseConfirmationPopup confirmationPopup;
+        public AnimationMonitor AnimationMonitor { get => animationMonitor; set => animationMonitor = value; }
+        [SerializeField] private AnimationMonitor animationMonitor;
+        public SwipeManager SwipeManager { get => swipeManager; set => swipeManager = value; }
+        [SerializeField] private SwipeManager swipeManager;
+        public ReaderSidebarController SidebarController { get => sidebarController; set => sidebarController = value; }
+        [SerializeField] private ReaderSidebarController sidebarController;
+        public EncounterFilterBehaviour Filters { get => filters; set => filters = value; }
+        [SerializeField] private EncounterFilterBehaviour filters;
         public DeleteEncounterPopup DeleteEncounterPopup { get => deleteEncounterPopup; set => deleteEncounterPopup = value; }
         [SerializeField] private DeleteEncounterPopup deleteEncounterPopup;
         public BaseAddEncounterPopup AddEncounterPopup { get => addEncounterPopup; set => addEncounterPopup = value; }
@@ -40,6 +48,12 @@ namespace ClinicalTools.SimEncounters
             Container.Bind<IEncounterRemover>().WithId(SaveType.Server).To<ServerEncounterRemover>().AsTransient();
 
             Container.BindInstance<IDeleteEncounterHandler>(DeleteEncounterPopup);
+
+            Container.BindInstance(SidebarController);
+            Container.BindInstance(Filters);
+            Container.BindInstance(AnimationMonitor);
+            Container.BindInstance(SwipeManager);
+
             Container.BindInstance(ConfirmationPopup);
             Container.BindInstance(BackButton);
             Container.BindInstance(AddEncounterPopup);

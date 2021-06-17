@@ -7,6 +7,8 @@ namespace ClinicalTools.SimEncounters
 {
     public class ReaderSidebarController : MonoBehaviour, ISidebarController
     {
+        public bool OpenOnSwipe { get => openOnSwipe; set => openOnSwipe = value; }
+        [SerializeField] private bool openOnSwipe;
         public GameObject Sidebar { get => sidebar; set => sidebar = value; }
         [SerializeField] private GameObject sidebar;
         public CanvasGroup SidebarMainPanel { get => sidebarMainPanel; set => sidebarMainPanel = value; }
@@ -57,6 +59,9 @@ namespace ClinicalTools.SimEncounters
 #if false
             Open();
 #else
+            if (OpenOnSwipe)
+                swipeManager.AddSwipeAction(OpenSidebarSwipeParamater);
+
             Sidebar.SetActive(false);
             SidebarDimBackground.alpha = 0;
             SidebarDimBackground.interactable = false;
@@ -130,7 +135,8 @@ namespace ClinicalTools.SimEncounters
             SidebarMainPanel.interactable = true;
             SidebarDimBackground.interactable = true;
             swipeManager.AddSwipeAction(CloseSidebarSwipeParamater);
-            //swipeManager.RemoveSwipeAction(OpenSidebarSwipeParamater);
+            if (OpenOnSwipe)
+                swipeManager.RemoveSwipeAction(OpenSidebarSwipeParamater);
             if (BackButton != null)
                 BackButton.Register(StartCloseEnumerator);
         }
@@ -146,8 +152,9 @@ namespace ClinicalTools.SimEncounters
         protected void CompleteHidingSidebar()
         {
             Sidebar.SetActive(false);
-            //swipeManager.AddSwipeAction(OpenSidebarSwipeParamater);
-            swipeManager.RemoveSwipeAction(CloseSidebarSwipeParamater);
+            if (OpenOnSwipe)
+                swipeManager.AddSwipeAction(OpenSidebarSwipeParamater);
+                swipeManager.RemoveSwipeAction(CloseSidebarSwipeParamater);
         }
 
 

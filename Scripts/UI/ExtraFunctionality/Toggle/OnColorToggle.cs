@@ -3,24 +3,34 @@ using UnityEngine.UI;
 
 namespace ClinicalTools.UI
 {
+    [ExecuteAlways]
     [RequireComponent(typeof(Toggle))]
-    public class OnColorToggle : MonoBehaviour
+    public class OnColorToggle : ColorBehaviour
     {
-        [field: SerializeField] public Color OnColor { get; set; }
+        protected Color OnColor { get; set; }
+        protected Color OffColor { get; set; }
+        protected Color OffSelectedColor { get; set; }
+        protected Toggle Toggle { get; set; }
 
-        private void Start()
+        protected override void Start()
         {
-            var toggle = GetComponent<Toggle>();
-            var offColor = toggle.colors.normalColor;
+            Toggle = GetComponent<Toggle>();
+            OffColor = Toggle.image.color;
 
-            toggle.onValueChanged.AddListener((selected) => Selected(toggle, offColor));
+            Toggle.onValueChanged.AddListener(Selected);
+
+            base.Start();
         }
 
-        private void Selected(Toggle toggle, Color offColor)
+        protected override void SetColor(Color color)
         {
-            var colorBlock = toggle.colors;
-            colorBlock.normalColor = (toggle.isOn) ? OnColor : offColor;
-            toggle.colors = colorBlock;
+            OnColor = color;
+            Selected(Toggle.isOn);
+        }
+
+        private void Selected(bool isOn)
+        {
+            Toggle.image.color = isOn ? OnColor : OffColor;
         }
     }
 }

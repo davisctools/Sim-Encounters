@@ -2,7 +2,6 @@
 using System;
 using TMPro;
 
-
 namespace ClinicalTools.SimEncounters
 {
     public class SearchFilterUI : EncounterFilterBehaviour
@@ -15,6 +14,7 @@ namespace ClinicalTools.SimEncounters
         public virtual TMP_InputField SearchField { get => searchField; set => searchField = value; }
 
         protected string SearchTerm { get; set; }
+
         protected void Awake()
         {
             SearchField.onValueChanged.AddListener(SearchTermChanged);

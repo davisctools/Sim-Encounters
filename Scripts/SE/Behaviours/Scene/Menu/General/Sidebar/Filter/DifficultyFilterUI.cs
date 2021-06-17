@@ -18,6 +18,7 @@ namespace ClinicalTools.SimEncounters
         public override Filter<MenuEncounter> EncounterFilter => FilterDifficulty;
         public override event Action<Filter<MenuEncounter>> FilterChanged;
 
+        protected bool ChangeCallerDisabled { get; set; } = false;
         protected List<Difficulty> FilteredDifficulties { get; } = new List<Difficulty>();
 
         public void Awake()
@@ -34,7 +35,8 @@ namespace ClinicalTools.SimEncounters
             else
                 FilteredDifficulties.Remove(difficulty);
 
-            FilterChanged?.Invoke(EncounterFilter);
+            if (!ChangeCallerDisabled)
+                FilterChanged?.Invoke(EncounterFilter);
         }
 
         protected bool FilterDifficulty(MenuEncounter encounter)
@@ -47,9 +49,18 @@ namespace ClinicalTools.SimEncounters
 
         public override void Clear()
         {
+            if (!Beginner.isOn && !Intermediate.isOn && !Advanced.isOn)
+                return;
+
+            ChangeCallerDisabled = true;
+
             Beginner.isOn = false;
             Intermediate.isOn = false;
             Advanced.isOn = false;
+
+            ChangeCallerDisabled = false;
+
+            FilterChanged?.Invoke(EncounterFilter);
         }
     }
 }

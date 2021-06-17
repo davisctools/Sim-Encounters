@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-
 namespace ClinicalTools.SimEncounters
 {
     public class FilterGroupUI : EncounterFilterBehaviour
@@ -14,10 +13,12 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private List<EncounterFilterBehaviour> encounterFilters;
         public List<EncounterFilterBehaviour> EncounterFilters { get => encounterFilters; set => encounterFilters = value; }
 
+        protected bool ChangeCallerDisabled { get; set; } = false;
+
         protected void Awake()
         {
             foreach (var encounterFilter in EncounterFilters)
-                encounterFilter.FilterChanged += (filter) => FilterChanged?.Invoke(EncounterFilter);
+                encounterFilter.FilterChanged += OnFilterChanged;
         }
 
         protected bool FilterGroups(MenuEncounter encounter)
@@ -30,10 +31,23 @@ namespace ClinicalTools.SimEncounters
             return true;
         }
 
+        protected bool ChildChanged { get; set; } = false;
+        protected virtual void OnFilterChanged(Filter<MenuEncounter> filter)
+        {
+            if (!ChangeCallerDisabled)
+                FilterChanged?.Invoke(EncounterFilter);
+            else
+                ChildChanged = true;
+        }
+
         public override void Clear()
         {
             foreach (var encounterFilter in EncounterFilters)
                 encounterFilter.Clear();
+            if (ChildChanged) {
+                FilterChanged?.Invoke(EncounterFilter);
+                ChildChanged = false;
+            }
         }
     }
 }

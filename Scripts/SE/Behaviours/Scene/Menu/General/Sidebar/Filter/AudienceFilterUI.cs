@@ -13,6 +13,7 @@ namespace ClinicalTools.SimEncounters
         public override Filter<MenuEncounter> EncounterFilter => FilterAudience;
         public override event Action<Filter<MenuEncounter>> FilterChanged;
 
+        protected bool ChangeCallerDisabled { get; set; } = false;
         protected List<string> FilteredAudiences { get; } = new List<string>();
 
         protected void Awake()
@@ -28,7 +29,8 @@ namespace ClinicalTools.SimEncounters
             else
                 FilteredAudiences.Remove(difficulty);
 
-            FilterChanged?.Invoke(EncounterFilter);
+            if (!ChangeCallerDisabled)
+                FilterChanged?.Invoke(EncounterFilter);
         }
 
         protected bool FilterAudience(MenuEncounter encounter)
@@ -47,8 +49,20 @@ namespace ClinicalTools.SimEncounters
 
         public override void Clear()
         {
-            foreach (var toggle in AudienceToggles)
+            ChangeCallerDisabled = true;
+
+            var filterChanged = false;
+            foreach (var toggle in AudienceToggles) {
+                if (!toggle.Toggle.isOn)
+                    continue;
+
                 toggle.Toggle.isOn = false;
+                filterChanged = true;
+            }
+            ChangeCallerDisabled = false;
+
+            if (filterChanged)
+                FilterChanged?.Invoke(EncounterFilter);
         }
     }
 }
