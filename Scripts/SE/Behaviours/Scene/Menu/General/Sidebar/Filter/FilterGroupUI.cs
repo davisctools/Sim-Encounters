@@ -56,9 +56,9 @@ namespace ClinicalTools.SimEncounters
 
         public override IEnumerable<EncounterFilterItem> GetFilterItems()
         {
-            var filterItems = new List<EncounterFilterItem>();
+            IEnumerable<EncounterFilterItem> filterItems = new List<EncounterFilterItem>();
             foreach (var filter in EncounterFilters)
-                filterItems.Concat(filter.GetFilterItems());
+                filterItems = filterItems.Concat(filter.GetFilterItems());
 
             return filterItems;
         }

@@ -1,4 +1,5 @@
 ﻿using ClinicalTools.UI;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -21,6 +22,8 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private string defaultValue;
         public string Prefix { get => prefix; set => prefix = value; }
         [Multiline] [SerializeField] private string prefix;
+        public string IgnoreValue { get => ignoreValue; set => ignoreValue = value; }
+        [SerializeField] private string ignoreValue;
         public bool Trim { get => trim; set => trim = value; }
         [SerializeField] private bool trim;
 
@@ -62,7 +65,7 @@ namespace ClinicalTools.SimEncounters
             var value = eventArgs.Panel.Values[Name];
             SetText(value);
 
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(value) || value.Trim().Equals(IgnoreValue, StringComparison.InvariantCultureIgnoreCase))
                 HideControlledObjects();
         }
 

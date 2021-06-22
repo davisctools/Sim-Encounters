@@ -15,7 +15,12 @@ namespace ClinicalTools.SimEncounters
         protected override void OnPanelSelected(object sender, PanelSelectedEventArgs e)
         {
             var values = e.Panel.Values;
-            InputField.SetUnformattedText(values.ContainsKey(Name) ? values[Name] : "");
+            if (InputField == null)
+                Debug.LogWarning("input field null");
+            else if (values == null)
+                Debug.LogWarning("values null");
+            else 
+                InputField.SetUnformattedText(values.ContainsKey(Name) ? values[Name] : "");
         }
     }
 }

@@ -11,14 +11,15 @@ namespace ClinicalTools.UI
 
         protected virtual void Awake()
         {
-            if (string.IsNullOrWhiteSpace(Url))
-                return;
-
             var button = GetComponent<Button>();
             if (button != null)
                 button.onClick.AddListener(OpenUrl);
         }
 
-        protected virtual void OpenUrl() => Application.OpenURL(Url);
+        protected virtual void OpenUrl()
+        {
+            if (!string.IsNullOrWhiteSpace(Url))
+                Application.OpenURL(Url);
+        }
     }
 }
