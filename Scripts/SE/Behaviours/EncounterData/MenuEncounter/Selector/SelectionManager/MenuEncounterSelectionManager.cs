@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -18,6 +19,10 @@ namespace ClinicalTools.SimEncounters
 
         private int currentViewIndex = 0;
 
+        protected EncounterFilterBehaviour Filters { get; set; }
+        [Inject] public virtual void Inject([InjectOptional] EncounterFilterBehaviour filters) => Filters = filters;
+
+
         protected void Awake()
         {
             if (ToggleViewButton != null) {
@@ -28,6 +33,9 @@ namespace ClinicalTools.SimEncounters
                 Sidebar.SearchStuff.SortingOrder.SortingOrderChanged += (sortingOrder) => ShowEncounters();
                 Sidebar.SearchStuff.Filters.FilterChanged += (filter) => ShowEncounters();
             }
+
+            if (Filters != null)
+                Filters.FilterChanged += (filter) => ShowEncounters();
         }
 
         public override void Initialize()
@@ -65,10 +73,10 @@ namespace ClinicalTools.SimEncounters
 
         private IEnumerable<MenuEncounter> FilterEncounterDetails(IEnumerable<MenuEncounter> encounters)
         {
-            if (Sidebar == null)
+            if (Filters == null)
                 return encounters;
 
-            var filter = Sidebar.SearchStuff.Filters.EncounterFilter;
+            var filter = Filters.EncounterFilter;
             return encounters.Where(e => filter(e));
         }
 

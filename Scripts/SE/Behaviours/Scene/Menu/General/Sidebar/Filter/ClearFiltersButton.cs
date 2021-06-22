@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -7,7 +8,7 @@ namespace ClinicalTools.SimEncounters
     public class ClearFiltersButton : MonoBehaviour
     {
         protected EncounterFilterBehaviour FilterBehaviour { get; set; }
-        protected virtual void Inject(EncounterFilterBehaviour filterBehaviour) => FilterBehaviour = filterBehaviour;
+        [Inject] public virtual void Inject(EncounterFilterBehaviour filterBehaviour) => FilterBehaviour = filterBehaviour;
 
         protected virtual void Awake()
         {

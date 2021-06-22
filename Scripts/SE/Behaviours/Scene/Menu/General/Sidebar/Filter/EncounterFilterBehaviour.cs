@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ClinicalTools.SimEncounters
@@ -10,6 +11,8 @@ namespace ClinicalTools.SimEncounters
         public abstract Filter<MenuEncounter> EncounterFilter { get; }
         
         public abstract event Action<Filter<MenuEncounter>> FilterChanged;
+
+        public abstract IEnumerable<EncounterFilterItem> GetFilterItems();
 
         public abstract void Clear();
     }

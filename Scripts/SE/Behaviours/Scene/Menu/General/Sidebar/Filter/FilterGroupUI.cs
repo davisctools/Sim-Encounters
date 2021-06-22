@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -42,12 +43,24 @@ namespace ClinicalTools.SimEncounters
 
         public override void Clear()
         {
+            ChangeCallerDisabled = true;
             foreach (var encounterFilter in EncounterFilters)
                 encounterFilter.Clear();
+
+            ChangeCallerDisabled = false;
             if (ChildChanged) {
                 FilterChanged?.Invoke(EncounterFilter);
                 ChildChanged = false;
             }
+        }
+
+        public override IEnumerable<EncounterFilterItem> GetFilterItems()
+        {
+            var filterItems = new List<EncounterFilterItem>();
+            foreach (var filter in EncounterFilters)
+                filterItems.Concat(filter.GetFilterItems());
+
+            return filterItems;
         }
     }
 }

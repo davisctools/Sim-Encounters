@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using TMPro;
+using System.Collections.Generic;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -38,5 +39,8 @@ namespace ClinicalTools.SimEncounters
         {
             SearchField.text = "";
         }
+
+        // TODO: create an actual filter item based on the text search filter
+        public override IEnumerable<EncounterFilterItem> GetFilterItems() => new List<EncounterFilterItem>();
     }
 }
