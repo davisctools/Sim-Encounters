@@ -10,8 +10,13 @@ namespace ClinicalTools.SimEncounters
         public override void Select(object sender, UserTabSelectedEventArgs eventArgs)
         {
             base.Select(sender, eventArgs);
-            if (PanelCreator != null && eventArgs.SelectedTab.Panels?.Count > 0)
-                PanelCreator.Display(eventArgs.SelectedTab.Panels, eventArgs.ChangeType != ChangeType.Inactive); 
+
+            var tab = eventArgs.SelectedTab;
+            if (PanelCreator != null && tab.Panels?.Count > 0)
+                PanelCreator.Display(tab.Panels, eventArgs.ChangeType != ChangeType.Inactive);
+
+            if (eventArgs.ChangeType != ChangeType.Inactive && tab.Panels.Count == 0)
+                tab.SetRead(true);
         }
     }
 }

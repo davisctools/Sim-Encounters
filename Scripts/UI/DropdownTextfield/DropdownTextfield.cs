@@ -105,7 +105,10 @@ namespace ClinicalTools.UI
 
         protected virtual void OptionSelected(string value)
         {
-            InputField.text = value;
+            if (InputField is FormattedInputField formattedInputField)
+                formattedInputField.SetUnformattedText(value);
+            else
+                InputField.text = value;
             Close();
         }
         protected virtual void Close() => Dropdown.SetActive(false);

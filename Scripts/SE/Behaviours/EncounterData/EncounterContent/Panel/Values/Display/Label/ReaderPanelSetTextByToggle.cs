@@ -16,6 +16,10 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private List<GameObject> shownObjects;
         public List<GameObject> HiddenObjects { get => hiddenObjects; set => hiddenObjects = value; }
         [SerializeField] private List<GameObject> hiddenObjects;
+        public string AlternateValueName { get => alternateValueName; set => alternateValueName = value; }
+        [SerializeField] private string alternateValueName;
+        public string AlternateIgnoreValue { get => alternateIgnoreValue; set => alternateIgnoreValue = value; }
+        [SerializeField] private string alternateIgnoreValue;
 
         protected ISelectedListener<PanelSelectedEventArgs> PanelSelectedListener { get; set; }
         [Inject]
@@ -30,8 +34,9 @@ namespace ClinicalTools.SimEncounters
         protected virtual void OnDestroy() => PanelSelectedListener.Selected -= OnPanelSelected;
         protected virtual void OnPanelSelected(object sender, PanelSelectedEventArgs eventArgs)
         {
+            var values = eventArgs.Panel.Values;
             foreach (var textOption in TextOptions) {
-                if (!ToggleSelected(eventArgs.Panel.Values, textOption.ValueName))
+                if (!ToggleSelected(values, textOption.ValueName))
                     continue;
 
                 Label.text = textOption.Text;
@@ -39,7 +44,19 @@ namespace ClinicalTools.SimEncounters
                 return;
             }
 
-            ControlObjects(false);
+            if (!values.ContainsKey(AlternateValueName)) {
+                ControlObjects(false);
+                return;
+            }
+
+            var value = eventArgs.Panel.Values[AlternateValueName].Trim();
+            if (value.Equals(AlternateIgnoreValue, StringComparison.InvariantCultureIgnoreCase)) {
+                ControlObjects(false);
+                return;
+            }
+
+            Label.text = value;
+            ControlObjects(true);
         }
 
         protected virtual void ControlObjects(bool active)

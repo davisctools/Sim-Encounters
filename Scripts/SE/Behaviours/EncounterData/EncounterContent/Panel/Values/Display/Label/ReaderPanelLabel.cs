@@ -49,7 +49,12 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected Panel Panel { get; set; }
-        protected virtual void OnDestroy() => PanelSelectedListener.Selected -= OnPanelSelected;
+        protected virtual void OnDestroy()
+        {
+            if (PanelSelectedListener != null)
+                PanelSelectedListener.Selected -= OnPanelSelected;
+        }
+
         protected virtual void OnPanelSelected(object sender, PanelSelectedEventArgs eventArgs)
         {
             if (Panel == eventArgs.Panel)
