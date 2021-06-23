@@ -18,7 +18,7 @@ namespace ClinicalTools.SimEncounters
             base.Select(sender, eventArgs);
             CurrentPanel = eventArgs.SelectedPanel;
 
-            if (ChildPanelsDrawer != null && CurrentPanel.ChildPanels?.Count > 0)
+            if (ChildPanelsDrawer != null)
                 ChildPanelsDrawer.Display(eventArgs.SelectedPanel.ChildPanels, eventArgs.Active);
             if (PinsDrawer != null)
                 PinsDrawer.Display(eventArgs.SelectedPanel.PinGroup);

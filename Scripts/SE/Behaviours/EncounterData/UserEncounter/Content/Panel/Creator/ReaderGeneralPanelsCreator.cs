@@ -25,6 +25,9 @@ namespace ClinicalTools.SimEncounters
         public GameObject SpacerPrefab { get => spacerPrefab; set => spacerPrefab = value; }
         [SerializeField] private GameObject spacerPrefab;
 
+        public List<GameObject> ControlledObjects { get => controlledObjects; set => controlledObjects = value; }
+        [SerializeField] private List<GameObject> controlledObjects;
+
         protected Stack<GameObject> SpacerStack { get; } = new Stack<GameObject>();
         protected List<GameObject> Spacers { get; } = new List<GameObject>();
 
@@ -43,8 +46,14 @@ namespace ClinicalTools.SimEncounters
         protected bool IsActive { get; set; }
         protected Dictionary<UserPanel, T> Children { get; } = new Dictionary<UserPanel, T>();
 
+
         public override void Display(OrderedCollection<UserPanel> panels, bool active)
         {
+            if (panels == null || panels.Count == 0) {
+                HideControlledObjects();
+                return;
+            }
+
             if (CurrentPanels == panels) {
                 HandleSamePanels(panels, active);
                 return;
@@ -136,6 +145,19 @@ namespace ClinicalTools.SimEncounters
 
             Debug.LogError($"No prefab for panel type \"{type}\"");
             return null;
+        }
+
+        protected virtual void HideControlledObjects()
+        {
+            if (ControlledObjects == null)
+                return;
+
+            foreach (var controlledObject in ControlledObjects) {
+                if (controlledObject == null)
+                    Debug.LogError(gameObject.name);
+                else
+                    controlledObject.SetActive(false);
+            }
         }
     }
 }

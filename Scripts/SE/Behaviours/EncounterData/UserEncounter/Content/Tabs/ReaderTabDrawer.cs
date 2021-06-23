@@ -12,7 +12,7 @@ namespace ClinicalTools.SimEncounters
             base.Select(sender, eventArgs);
 
             var tab = eventArgs.SelectedTab;
-            if (PanelCreator != null && tab.Panels?.Count > 0)
+            if (PanelCreator != null)
                 PanelCreator.Display(tab.Panels, eventArgs.ChangeType != ChangeType.Inactive);
 
             if (eventArgs.ChangeType != ChangeType.Inactive && tab.Panels.Count == 0)

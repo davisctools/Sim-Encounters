@@ -31,6 +31,8 @@ namespace ClinicalTools.SimEncounters
 
         public override void Display(OrderedCollection<UserPanel> panels, bool active)
         {
+            if (panels == null || panels.Count == 0) return;
+
             foreach (Transform child in OptionsParent)
                 Destroy(child.gameObject);
 

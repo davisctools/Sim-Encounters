@@ -35,6 +35,8 @@ namespace ClinicalTools.SimEncounters
         protected OrderedCollection<UserPanel> Panels { get; set; }
         public override void Display(OrderedCollection<UserPanel> panels, bool active)
         {
+            if (panels == null || panels.Count == 0) return;
+
             if (active) {
                 foreach (var panel in panels)
                     panel.Value.SetRead(true);
