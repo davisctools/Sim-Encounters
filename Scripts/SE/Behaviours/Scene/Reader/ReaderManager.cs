@@ -20,7 +20,7 @@ namespace ClinicalTools.SimEncounters
         public List<GameObject> NonStandaloneSceneObjects { get => nonStandaloneSceneObjects; set => nonStandaloneSceneObjects = value; }
         [SerializeField] private List<GameObject> nonStandaloneSceneObjects;
 
-        protected ISelector<LoadingReaderSceneInfoSelectedEventArgs> LoadingSceneInfoSelector { get; set; }
+        protected ISelector<LoadingReaderSceneInfoSelectedEventArgs> SceneSelector { get; set; }
         protected IMetadataReader MetadataReader { get; set; }
         protected IUserEncounterReader EncounterReader { get; set; }
         [Inject]
@@ -29,7 +29,7 @@ namespace ClinicalTools.SimEncounters
             IMetadataReader metadataReader,
             IUserEncounterReader encounterReader)
         {
-            LoadingSceneInfoSelector = loadingSceneInfoSelector;
+            SceneSelector = loadingSceneInfoSelector;
             MetadataReader = metadataReader;
             EncounterReader = encounterReader;
 
@@ -52,7 +52,7 @@ namespace ClinicalTools.SimEncounters
             base.Start();
             started = true;
             if (SceneInfo != null)
-                LoadingSceneInfoSelector.Select(this, new LoadingReaderSceneInfoSelectedEventArgs(SceneInfo));
+                SceneSelector.Select(this, new LoadingReaderSceneInfoSelectedEventArgs(SceneInfo));
         }
 
         protected override void StartAsInitialScene()
@@ -110,7 +110,15 @@ namespace ClinicalTools.SimEncounters
             DeepLinkManager.Instance.LinkActivated += Instance_LinkActivated;
 #endif
             if (started)
-                LoadingSceneInfoSelector.Select(this, new LoadingReaderSceneInfoSelectedEventArgs(SceneInfo));
+                SceneSelector.Select(this, new LoadingReaderSceneInfoSelectedEventArgs(SceneInfo));
+            sceneInfo.Result.AddOnCompletedListener(SceneInfoLoaded);
+        }
+        protected virtual void SceneInfoLoaded(TaskResult<ReaderSceneInfo> sceneInfo)
+        {
+            if (!sceneInfo.HasValue())
+                return;
+            if (sceneInfo.Value.LoadingScreen != null)
+                sceneInfo.Value.LoadingScreen.Stop();
         }
 
 

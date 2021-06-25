@@ -86,7 +86,6 @@ namespace ClinicalTools.SimEncounters
                 return;
 
             DisplayOnUpdate = false;
-            SceneInfo.LoadingScreen?.Stop();
             foreach (var downloadingMessageObject in DownloadingMessageObjects)
                 downloadingMessageObject.SetActive(false);
 

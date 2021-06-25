@@ -14,7 +14,6 @@
 
         protected virtual void SelectReaderSceneInfo(TaskResult<WriterSceneInfo> sceneInfoResult)
         {
-            CurrentValue.SceneInfo.LoadingScreen?.Stop();
             if (sceneInfoResult.HasValue())
                 SceneInfoSelector.Select(this, new WriterSceneInfoSelectedEventArgs(sceneInfoResult.Value));
         }
