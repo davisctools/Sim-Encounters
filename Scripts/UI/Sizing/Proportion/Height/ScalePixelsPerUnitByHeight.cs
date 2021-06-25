@@ -22,6 +22,7 @@ namespace ClinicalTools.UI
         private const float Tolerance = .0001f;
         private float height;
         private float scale;
+        private float referencePixelsPerUnit;
         protected override void OnRectTransformDimensionsChange()
         {
             if (canvas == null)
@@ -29,17 +30,11 @@ namespace ClinicalTools.UI
 
             base.OnRectTransformDimensionsChange();
 
-            var currentHeight = RectTransform.rect.height;
-            var currentScale = RectTransform.lossyScale.y / RectTransform.lossyScale.x;
-            if (Mathf.Abs(currentHeight - height) < Tolerance
-                && Mathf.Abs(currentScale - scale) < Tolerance) {
-                return;
-            }
-
-            height = currentHeight;
-            scale = currentScale;
-            UpdateSize();
+            UpdateSizeIfValueChanged();
         }
+
+        protected bool IsWithinTolerance(float num1, float num2)
+            => Mathf.Abs(num1 - num2) <= Tolerance;
 
         protected Texture2D Texture { get; set; }
         protected float LastScale { get; set; }
@@ -61,20 +56,39 @@ namespace ClinicalTools.UI
                 NextFrame.Function(UpdateSize);
             }
         }
-        protected virtual void Update()
+
+        protected virtual void Update() => UpdateSizeIfValueChanged();
+
+        protected void UpdateSizeIfValueChanged()
         {
+            bool valueChanged = false;
+
             var currentHeight = RectTransform.rect.height;
-            var currentScale = RectTransform.lossyScale.y / RectTransform.lossyScale.x;
-            if (Texture == Image.sprite.texture
-                && Mathf.Abs(currentHeight - height) < Tolerance
-                && Mathf.Abs(currentScale - scale) < Tolerance) {
-                return;
+            if (!IsWithinTolerance(currentHeight, height)) {
+                height = currentHeight;
+                valueChanged = true;
             }
 
-            height = currentHeight;
-            scale = currentScale;
-            UpdateSize();
+            var currentScale = RectTransform.lossyScale.y / RectTransform.lossyScale.x;
+            if (!IsWithinTolerance(currentScale, scale)) {
+                scale = currentScale;
+                valueChanged = true;
+            }
+
+            if (Texture != Image.sprite.texture) {
+                Texture = Image.sprite.texture;
+                valueChanged = true;
+            }
+
+            if (!IsWithinTolerance(canvas.referencePixelsPerUnit, referencePixelsPerUnit)) {
+                referencePixelsPerUnit = canvas.referencePixelsPerUnit;
+                valueChanged = true;
+            }
+
+            if (valueChanged)
+                UpdateSize();
         }
+
 
         protected virtual void UpdateSize()
         {
@@ -86,12 +100,13 @@ namespace ClinicalTools.UI
                 height = RectTransform.rect.height;
 
             scale = RectTransform.lossyScale.y / RectTransform.lossyScale.x;
+            referencePixelsPerUnit = canvas.referencePixelsPerUnit;
 
             var imageheight = Texture.height;
             // TODO: This is updated when the image scale is changed, but it doesn't always update how the image looks
             // Updating on later frames also doesn't fix the issue
             if (canvas != null)
-                Image.pixelsPerUnitMultiplier = imageheight / height / scale * canvas.referencePixelsPerUnit / 100;
+                Image.pixelsPerUnitMultiplier = imageheight / height / scale * referencePixelsPerUnit / 100;
         }
     }
 }
