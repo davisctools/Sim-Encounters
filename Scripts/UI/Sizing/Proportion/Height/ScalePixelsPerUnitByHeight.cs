@@ -80,7 +80,7 @@ namespace ClinicalTools.UI
                 valueChanged = true;
             }
 
-            if (!IsWithinTolerance(canvas.referencePixelsPerUnit, referencePixelsPerUnit)) {
+            if (canvas != null && !IsWithinTolerance(canvas.referencePixelsPerUnit, referencePixelsPerUnit)) {
                 referencePixelsPerUnit = canvas.referencePixelsPerUnit;
                 valueChanged = true;
             }
@@ -100,13 +100,14 @@ namespace ClinicalTools.UI
                 height = RectTransform.rect.height;
 
             scale = RectTransform.lossyScale.y / RectTransform.lossyScale.x;
-            referencePixelsPerUnit = canvas.referencePixelsPerUnit;
 
             var imageheight = Texture.height;
             // TODO: This is updated when the image scale is changed, but it doesn't always update how the image looks
             // Updating on later frames also doesn't fix the issue
-            if (canvas != null)
+            if (canvas != null) {
+                referencePixelsPerUnit = canvas.referencePixelsPerUnit;
                 Image.pixelsPerUnitMultiplier = imageheight / height / scale * referencePixelsPerUnit / 100;
+            }
         }
     }
 }
