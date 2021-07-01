@@ -37,6 +37,8 @@ namespace ClinicalTools.SimEncounters
         public virtual void Open() => StartCoroutine(OpenSidebarEnumerator());
         public virtual void Close() => StartCoroutine(CloseSidebarEnumerator());
 
+        protected SwipeLayer SwipeLayer { get; } = new SwipeLayer();
+
         SwipeParameter OpenSidebarSwipeParamater, CloseSidebarSwipeParamater;
         protected virtual void InitializeSidebarParamaters()
         {
@@ -55,6 +57,8 @@ namespace ClinicalTools.SimEncounters
             CloseSidebarSwipeParamater.OnSwipeStart += CloseSwipeStart;
             CloseSidebarSwipeParamater.OnSwipeUpdate += CloseSwipeUpdate;
             CloseSidebarSwipeParamater.OnSwipeEnd += CloseSwipeEnd;
+
+            SwipeLayer.AddSwipeAction(CloseSidebarSwipeParamater);
 
 #if false
             Open();
