@@ -41,6 +41,7 @@ namespace ClinicalTools.SimEncounters
         }
 
         private bool initialized;
+        protected Color VisitedColor { get; set; } = new Color(1, 1, 1, .95f);
         protected Color NotVisitedColor { get; set; }
         public override void Initialize(UserTab tab)
         {
@@ -69,8 +70,9 @@ namespace ClinicalTools.SimEncounters
 
         public override void SetToggleGroup(ToggleGroup group) => SelectToggle.SetToggleGroup(group);
 
-        protected virtual void UpdateIsVisited() 
-            => SelectToggle.Toggle.image.color = Tab?.IsRead() == true ? ColorManager.GetColor(ColorType.Green) : NotVisitedColor;
+
+        protected virtual void UpdateIsVisited()
+            => SelectToggle.Toggle.image.color = Tab?.IsRead() == true ? VisitedColor : NotVisitedColor;
 
         protected virtual void ToggleSelected() => SelectedImage.gameObject.SetActive(true);
         protected virtual void ToggleUnselected() => SelectedImage.gameObject.SetActive(false);

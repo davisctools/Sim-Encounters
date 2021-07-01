@@ -13,64 +13,69 @@ namespace ClinicalTools.SimEncounters
         // Ideally I'd use JSON objects, and I've set the PHP to allow them.
         // Unfortunately, it would drastically increase the size of the menu information the server gives
         // It would also cause more work to support it, so for now, I'll stick with more simplistic storage methods
-        private const char CaseInfoDivider = '|';
-        private const char CategoryDivider = ';';
-        private const int EncounterParts = 14;
-        private const int RecordNumberIndex = 0;
-        private const int AuthorAccountIdIndex = 1;
-        private const int AuthorNameIndex = 2;
-        private const int TitleIndex = 3;
-        private const int DifficultyIndex = 4;
-        private const int SubtitleIndex = 5;
-        private const int DescriptionIndex = 6;
-        private const int TagsIndex = 7;
-        private const int ModifiedIndex = 8;
-        private const int AudienceIndex = 9;
-        private const int VersionIndex = 10;
-        private const int IsPublicIndex = 11;
-        private const int IsTemplateIndex = 12;
-        private const int RatingIndex = 13;
-        private const int ImageWidthIndex = 14;
-        private const int ImageHeightIndex = 15;
-        private const int ImageDataIndex = 16;
+        protected virtual char CaseInfoDivider { get; } = '|';
+        protected virtual char CategoryDivider { get; } = ';';
+        protected virtual int EncounterParts { get; } = 14;
 
-        public EncounterMetadata Deserialize(string text)
+        public virtual EncounterMetadata Deserialize(string text)
         {
             try {
                 var parsedItem = text.Split(CaseInfoDivider);
                 if (parsedItem == null || parsedItem.Length < EncounterParts)
                     return null;
 
-                var metadata = new EncounterMetadata() {
-                    RecordNumber = int.Parse(parsedItem[RecordNumberIndex]),
-                    AuthorAccountId = int.Parse(parsedItem[AuthorAccountIdIndex]),
-                    AuthorName = GetName(parsedItem[AuthorNameIndex]),
-                    Title = parsedItem[TitleIndex],
-                    Difficulty = GetDifficulty(parsedItem[DifficultyIndex]),
-                    Subtitle = UnityWebRequest.UnEscapeURL(parsedItem[SubtitleIndex]),
-                    Description = UnityWebRequest.UnEscapeURL(parsedItem[DescriptionIndex]),
-                    DateModified = long.Parse(parsedItem[ModifiedIndex]),
-                    Audience = UnityWebRequest.UnEscapeURL(parsedItem[AudienceIndex]),
-                    EditorVersion = UnityWebRequest.UnEscapeURL(parsedItem[VersionIndex]),
-                    IsPublic = GetBoolValue(parsedItem[IsPublicIndex]),
-                    IsTemplate = GetBoolValue(parsedItem[IsTemplateIndex]),
-                    Rating = float.Parse(parsedItem[RatingIndex])
-                };
-                if (float.TryParse(parsedItem[RatingIndex], out var rating))
+                int index = 0;
+                var metadata = CreateMetadata();
+                metadata.RecordNumber = int.Parse(parsedItem[index++]);
+                metadata.AuthorAccountId = int.Parse(parsedItem[index++]);
+                metadata.AuthorName = GetName(parsedItem[index++]);
+
+                if (metadata is INamed named)
+                    named.Name = GetName(parsedItem[index++]);
+                else
+                    metadata.Title = parsedItem[index++];
+
+                metadata.Difficulty = GetDifficulty(parsedItem[index++]);
+                metadata.Subtitle = UnityWebRequest.UnEscapeURL(parsedItem[index++]);
+                metadata.Description = UnityWebRequest.UnEscapeURL(parsedItem[index++]);
+
+                AddCategories(metadata, parsedItem[index++]);
+
+                metadata.DateModified = long.Parse(parsedItem[index++]);
+                metadata.Audience = UnityWebRequest.UnEscapeURL(parsedItem[index++]);
+                metadata.EditorVersion = UnityWebRequest.UnEscapeURL(parsedItem[index++]);
+                metadata.IsPublic = GetBoolValue(parsedItem[index++]);
+                metadata.IsTemplate = GetBoolValue(parsedItem[index++]);
+
+                if (float.TryParse(parsedItem[index++], out var rating))
                     metadata.Rating = rating;
-                var categories = parsedItem[TagsIndex].Split(CategoryDivider);
-                if (categories.Length == 1)
-                    categories = parsedItem[TagsIndex].Split(',');
-                foreach (var category in categories)
-                    metadata.Categories.Add(UnityWebRequest.UnEscapeURL(category).Trim());
+
 
                 metadata.Filename = metadata.GetDesiredFilename();
 
-                if (parsedItem.Length + 1 >= ImageDataIndex) {
-                    metadata.Sprite = GetSprite(parsedItem[ImageWidthIndex], parsedItem[ImageHeightIndex],
-                        UnityWebRequest.UnEscapeURL(parsedItem[ImageDataIndex]));
+
+                if (metadata is IWebCompletion webCompletion) {
+                    webCompletion.Url = UnityWebRequest.UnEscapeURL(parsedItem[index++].Trim());
+                    webCompletion.CompletionCode = UnityWebRequest.UnEscapeURL(parsedItem[index++].Trim());
+                }
+
+                // 3 is the number of image related fields
+                if (index + 3 > parsedItem.Length)
+                    return metadata;
+
+                var spriteWidthStr = parsedItem[index++];
+                var spriteHeightStr = parsedItem[index++];
+                var spriteDataStr = parsedItem[index++];
+                if (!string.IsNullOrWhiteSpace(spriteWidthStr)) {
+                    metadata.Sprite = GetSprite(spriteWidthStr, spriteHeightStr,
+                        UnityWebRequest.UnEscapeURL(spriteDataStr));
                     ImageHolder.HoldImage(metadata.Sprite);
                 }
+
+                if (index >= parsedItem.Length)
+                    return metadata;
+
+                metadata.GrantInfo = parsedItem[index++];
 
                 return metadata;
             } catch (Exception) {
@@ -78,7 +83,18 @@ namespace ClinicalTools.SimEncounters
             }
         }
 
-        protected Name GetName(string name)
+        protected virtual void AddCategories(EncounterMetadata metadata, string categories)
+        {
+            var categoriesArr = categories.Split(CategoryDivider);
+            if (categoriesArr.Length == 1)
+                categoriesArr = categories.Split(',');
+            foreach (var category in categoriesArr)
+                metadata.Categories.Add(UnityWebRequest.UnEscapeURL(category).Trim());
+        }
+
+        protected virtual EncounterMetadata CreateMetadata() => new EncounterMetadata();
+
+        protected virtual Name GetName(string name)
         {
             var nameParts = name.Split(CategoryDivider);
             switch (nameParts.Length) {
@@ -96,7 +112,7 @@ namespace ClinicalTools.SimEncounters
             }
         }
 
-        protected Difficulty GetDifficulty(string difficulty)
+        protected virtual Difficulty GetDifficulty(string difficulty)
         {
             difficulty = UnityWebRequest.UnEscapeURL(difficulty);
 
@@ -109,9 +125,9 @@ namespace ClinicalTools.SimEncounters
             return Difficulty.Beginner;
         }
 
-        protected bool GetBoolValue(string value) => value == "1";
+        protected virtual bool GetBoolValue(string value) => value == "1";
 
-        protected Sprite GetSprite(string widthText, string heightText, string spriteText)
+        protected virtual Sprite GetSprite(string widthText, string heightText, string spriteText)
         {
             if (!int.TryParse(widthText, out var width) || !int.TryParse(heightText, out var height))
                 return null;

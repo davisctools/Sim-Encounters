@@ -258,23 +258,23 @@ namespace ClinicalTools.SimEncounters
         {
             if (Next != null)
                 Next.gameObject.SetActive(false);
-            if (Previous == null)
+            if (Previous == null) {
+                Curve.SetPosition(Current.RectTransform);
                 return;
+            }
+
             Previous.gameObject.SetActive(true);
-            if (Current == null)
-                Debug.LogError("Current");
-            if (Previous == null)
-                Debug.LogError("Previous");
-            if (Curve == null)
-                Debug.LogError("Curve");
             Curve.SetMoveAmountBackward(Current.RectTransform, Previous.RectTransform, dist);
         }
         private void LeftSwipeUpdate(float dist)
         {
             if (Previous != null)
                 Previous.gameObject.SetActive(false);
-            if (Next == null)
+            if (Next == null) {
+                Curve.SetPosition(Current.RectTransform);
                 return;
+            }
+
             Next.gameObject.SetActive(true);
             Curve.SetMoveAmountForward(Current.RectTransform, Next.RectTransform, dist);
         }

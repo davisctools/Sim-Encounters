@@ -33,11 +33,16 @@ namespace ClinicalTools.SimEncounters
                 str += AppendValue(webCompletion.Url);
                 str += AppendValue(webCompletion.CompletionCode);
             }
+
             if (metadata.Sprite != null) {
                 str += AppendValue(metadata.Sprite.texture.width.ToString());
                 str += AppendValue(metadata.Sprite.texture.height.ToString());
                 str += AppendValue(SpriteSerializer.Serialize(metadata.Sprite));
+            } else {
+                str += CaseInfoDivider + CaseInfoDivider + CaseInfoDivider;
             }
+
+            str += AppendValue(metadata.GrantInfo);
 
             return str;
         }

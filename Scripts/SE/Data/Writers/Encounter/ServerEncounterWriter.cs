@@ -123,6 +123,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string SpriteDataVariable { get; } = "imageData";
         protected virtual string SpriteWidthVariable { get; } = "imageWidth";
         protected virtual string SpriteHeightVariable { get; } = "imageHeight";
+        protected virtual string GrantVariable { get; } = "grant";
         protected virtual void AddMetadataFields(WWWForm form, EncounterMetadata metadata)
         {
             if (metadata is INamed named) {
@@ -154,6 +155,8 @@ namespace ClinicalTools.SimEncounters
             AddEscapedField(form, SpriteDataVariable, SpriteSerializer.Serialize(metadata.Sprite));
             form.AddField(SpriteWidthVariable, metadata.Sprite.texture.width);
             form.AddField(SpriteHeightVariable, metadata.Sprite.texture.height);
+
+            form.AddField(GrantVariable, metadata.GrantInfo);
         }
 
         protected virtual void AddEscapedField(WWWForm form, string variable, string value)

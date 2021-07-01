@@ -13,6 +13,9 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private TextMeshProUGUI text;
         [SerializeField] private Toggle toggle;
 
+        [SerializeField] private Image check;
+        [SerializeField] private Image checkBackground;
+
         protected virtual void Awake()
         {
             toggle.onValueChanged.AddListener(ToggleChanged);
@@ -38,11 +41,22 @@ namespace ClinicalTools.SimEncounters
                 text.color = Color.white;
                 toggle.image.color = Section.Data.Color;
                 outline.gameObject.SetActive(false);
+
+                if (check != null)
+                    check.color = Section.Data.Color;
+                if (checkBackground != null)
+                    checkBackground.color = Color.white;
             } else if (Section.IsRead()) {
                 var colorManager = new ColorManager();
-                text.color = colorManager.GetColor(ColorType.Gray5);
+                var grayColor = colorManager.GetColor(ColorType.Gray5);
+                text.color = grayColor;
                 toggle.image.color = Color.white;
                 outline.gameObject.SetActive(true);
+
+                if (check != null)
+                    check.color = Color.white;
+                if (checkBackground != null)
+                    checkBackground.color = grayColor;
             } else {
                 var colorManager = new ColorManager();
                 text.color = Color.white;
