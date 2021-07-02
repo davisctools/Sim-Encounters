@@ -123,7 +123,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual string SpriteDataVariable { get; } = "imageData";
         protected virtual string SpriteWidthVariable { get; } = "imageWidth";
         protected virtual string SpriteHeightVariable { get; } = "imageHeight";
-        protected virtual string GrantVariable { get; } = "grant";
+        protected virtual string GrantVariable { get; } = "grantInfo";
         protected virtual void AddMetadataFields(WWWForm form, EncounterMetadata metadata)
         {
             if (metadata is INamed named) {

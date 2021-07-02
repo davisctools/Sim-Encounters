@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine.Networking;
-using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
@@ -9,7 +8,10 @@ namespace ClinicalTools.SimEncounters
         private readonly IUrlBuilder urlBuilder;
         private readonly IServerReader serverReader;
         private readonly IStringDeserializer<EncounterEditLock> parser;
-        public EncounterLocker(SignalBus signalBus, IUrlBuilder urlBuilder, IServerReader serverReader, IStringDeserializer<EncounterEditLock> parser)
+        public EncounterLocker(
+            IUrlBuilder urlBuilder, 
+            IServerReader serverReader, 
+            IStringDeserializer<EncounterEditLock> parser)
         {
             this.urlBuilder = urlBuilder;
             this.serverReader = serverReader;

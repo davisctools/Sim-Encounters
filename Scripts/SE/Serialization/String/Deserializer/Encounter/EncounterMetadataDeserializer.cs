@@ -75,7 +75,7 @@ namespace ClinicalTools.SimEncounters
                 if (index >= parsedItem.Length)
                     return metadata;
 
-                metadata.GrantInfo = parsedItem[index++];
+                metadata.GrantInfo = UnityWebRequest.UnEscapeURL(parsedItem[index++]);
 
                 return metadata;
             } catch (Exception) {
