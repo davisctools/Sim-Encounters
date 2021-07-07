@@ -1,10 +1,11 @@
-﻿namespace ClinicalTools.SimEncounters
+﻿using System;
+
+namespace ClinicalTools.SimEncounters
 {
     public abstract class ReaderOptionPanelBehaviour : BaseReaderPanelBehaviour
     {
-        public virtual void GetFeedback()
-        {
-            CurrentPanel.SetChildPanelsRead(true);
-        }
+        public abstract event Action SelectChanged;
+
+        public virtual void GetFeedback() => CurrentPanel.SetChildPanelsRead(true);
     }
 }

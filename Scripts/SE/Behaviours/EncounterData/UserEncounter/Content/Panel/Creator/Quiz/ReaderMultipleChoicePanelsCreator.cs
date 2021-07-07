@@ -12,11 +12,20 @@ namespace ClinicalTools.SimEncounters
         public Transform FeedbackParent { get => feedbackParent; set => feedbackParent = value; }
         [SerializeField] private Transform feedbackParent;
 
-        protected virtual void Awake() => FeedbackButton.onClick.AddListener(ShowFeedback);
+        protected virtual void Start()
+        {
+            FeedbackButton.interactable = false;
+            FeedbackButton.onClick.AddListener(ShowFeedback);
+        }
 
         protected override ReaderExclusiveOptionPanelBehaviour DrawPanel(UserPanel panel, bool active)
         {
             var panelBehaviour = base.DrawPanel(panel, active);
+            if (panelBehaviour == null)
+                return null;
+
+            panelBehaviour.SelectChanged += OptionSelectChanged;
+
             if (ToggleGroup != null)
                 panelBehaviour.SetToggleGroup(ToggleGroup);
             if (FeedbackParent != null)
@@ -24,8 +33,11 @@ namespace ClinicalTools.SimEncounters
             return panelBehaviour;
         }
 
+        protected virtual void OptionSelectChanged() => FeedbackButton.interactable = true;
+
         protected virtual void ShowFeedback()
         {
+            FeedbackButton.interactable = false;
             foreach (var child in Children.Values)
                 child.GetFeedback();
         }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ClinicalTools.SimEncounters
@@ -14,7 +15,13 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private Toggle toggle;
         public virtual ReaderFeedbackUI Feedback { get => feedback; set => feedback = value; }
         [SerializeField] private ReaderFeedbackUI feedback;
+
+        public override event Action SelectChanged;
+
         protected override bool SetReadOnSelect => true;
+
+        protected virtual void Start() => Toggle.onValueChanged.AddListener(OnToggleChanged);
+        protected virtual void OnToggleChanged(bool value) => SelectChanged?.Invoke();
 
         public override void GetFeedback()
         {
