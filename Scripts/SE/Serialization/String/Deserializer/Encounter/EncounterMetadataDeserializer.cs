@@ -33,7 +33,7 @@ namespace ClinicalTools.SimEncounters
                 if (metadata is INamed named)
                     named.Name = GetName(parsedItem[index++]);
                 else
-                    metadata.Title = parsedItem[index++];
+                    metadata.Title = UnityWebRequest.UnEscapeURL(parsedItem[index++]);
 
                 metadata.Difficulty = GetDifficulty(parsedItem[index++]);
                 metadata.Subtitle = UnityWebRequest.UnEscapeURL(parsedItem[index++]);
