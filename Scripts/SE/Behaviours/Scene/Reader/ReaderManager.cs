@@ -55,15 +55,6 @@ namespace ClinicalTools.SimEncounters
 #endif
         }
 
-        private bool started;
-        protected override void Start()
-        {
-            base.Start();
-            started = true;
-            if (SceneInfo != null)
-                SceneSelector.Select(this, new LoadingReaderSceneInfoSelectedEventArgs(SceneInfo));
-        }
-
         protected override void StartAsInitialScene()
         {
             Screen.fullScreen = false;
@@ -111,19 +102,18 @@ namespace ClinicalTools.SimEncounters
             Display(sceneInfo);
         }
 
-        protected LoadingReaderSceneInfo SceneInfo { get; set; }
         protected override void ProcessSceneInfo(LoadingReaderSceneInfo sceneInfo)
         {
-            SceneInfo = sceneInfo;
-
-            if (started)
-                SceneSelector.Select(this, new LoadingReaderSceneInfoSelectedEventArgs(SceneInfo));
-            sceneInfo.Result.AddOnCompletedListener(SceneInfoLoaded);
-
 #if DEEP_LINKING
-            if (onLoadAction != null)
+            if (onLoadAction != null && onLoadAction.Action == QuickActionType.Reader) {
+                SceneInfo.Result.RemoveListeners();
                 EncounterQuickStarter.StartEncounter(SceneInfo.User, SceneInfo.LoadingScreen, onLoadAction.EncounterId);
+                return;
+            }
 #endif
+
+            SceneSelector.Select(this, new LoadingReaderSceneInfoSelectedEventArgs(SceneInfo));
+            sceneInfo.Result.AddOnCompletedListener(SceneInfoLoaded);
         }
         protected virtual void SceneInfoLoaded(TaskResult<ReaderSceneInfo> sceneInfo)
         {
@@ -164,11 +154,12 @@ namespace ClinicalTools.SimEncounters
             if (quickAction.Action == QuickActionType.NA)
                 return;
 
-            SceneInfo.Result.RemoveListeners();
-            if (SceneInfo != null)
+            if (SceneInfo != null) {
+                SceneInfo.Result.RemoveListeners();
                 EncounterQuickStarter.StartEncounter(SceneInfo.User, SceneInfo.LoadingScreen, quickAction.EncounterId);
-            else
+            } else {
                 onLoadAction = quickAction;
+            }
         }
 #endif
     }

@@ -24,8 +24,25 @@ namespace ClinicalTools.SimEncounters
                 Instance = this;
         }
 
+        protected bool Started { get; set; }
+        protected T SceneInfo { get; set; }
+        protected override void Start()
+        {
+            base.Start();
+            Started = true;
+
+            if (SceneInfo != null)
+                Display(SceneInfo);
+        }
+
+
         public virtual void Display(T sceneInfo)
         {
+            if (!Started) {
+                SceneInfo = sceneInfo;
+                return;
+            }
+
             // Ensure that it's the main scene manager
             if (SceneManager.Instance == this)
                 ImageHolder.StopHoldingData();

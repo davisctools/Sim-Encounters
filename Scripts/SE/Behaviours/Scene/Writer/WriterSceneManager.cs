@@ -14,7 +14,7 @@ namespace ClinicalTools.SimEncounters
         [Inject]
         public virtual void Inject(
             ISelector<LoadingWriterSceneInfoSelectedEventArgs> sceneSelector,
-            IMetadataReader metadataReader, 
+            IMetadataReader metadataReader,
             IEncounterReader encounterReader)
         {
             SceneSelector = sceneSelector;

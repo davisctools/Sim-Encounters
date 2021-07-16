@@ -46,17 +46,6 @@ namespace ClinicalTools.SimEncounters
             DeepLinkManager.Instance.LinkActivated += Instance_LinkActivated;
 #endif
         }
-        private bool started;
-        protected override void Start()
-        {
-            base.Start();
-            started = true;
-
-            if (SceneInfo != null) {
-                MenuDrawer.Display(SceneInfo);
-                SceneInfoSelectedListener.Select(this, new LoadingMenuSceneInfoSelectedEventArgs(SceneInfo));
-            }
-        }
 
         protected override void StartAsInitialScene()
         {
@@ -68,25 +57,24 @@ namespace ClinicalTools.SimEncounters
 
         protected override void StartAsLaterScene() => Destroy(LoadingScreen.gameObject);
 
-        protected LoadingMenuSceneInfo SceneInfo { get; set; }
         protected override void ProcessSceneInfo(LoadingMenuSceneInfo sceneInfo)
         {
+#if DEEP_LINKING
+            if (onLoadAction != null && onLoadAction.Action == QuickActionType.Reader) {
+                SceneInfo.Result.RemoveListeners();
+                EncounterQuickStarter.StartEncounter(SceneInfo.User, SceneInfo.LoadingScreen, SceneInfo.MenuEncountersInfo, onLoadAction.EncounterId);
+                return;
+            }
+#endif
+
             if (sceneInfo.MenuArea == MenuArea.Cases)
                 foreach (var welcomeScreen in WelcomeScreens)
                     welcomeScreen.SetActive(false);
 
-            SceneInfo = sceneInfo;
             sceneInfo.Result.AddOnCompletedListener(SceneInfoLoaded);
 
-            if (started) {
-                MenuDrawer.Display(sceneInfo);
-                SceneInfoSelectedListener.Select(this, new LoadingMenuSceneInfoSelectedEventArgs(SceneInfo));
-            }
-
-#if DEEP_LINKING
-            if (onLoadAction != null)
-                EncounterQuickStarter.StartEncounter(SceneInfo.User, SceneInfo.LoadingScreen, SceneInfo.MenuEncountersInfo, onLoadAction.EncounterId);
-#endif
+            MenuDrawer.Display(sceneInfo);
+            SceneInfoSelectedListener.Select(this, new LoadingMenuSceneInfoSelectedEventArgs(sceneInfo));
         }
         protected virtual void SceneInfoLoaded(TaskResult<MenuSceneInfo> sceneInfo)
         {
@@ -112,10 +100,7 @@ namespace ClinicalTools.SimEncounters
         {
             var menuEncounters = MenuInfoReader.GetMenuEncountersInfo(user);
             var menuSceneInfo = new LoadingMenuSceneInfo(user, LoadingScreen, MenuArea.InitialSelection, menuEncounters);
-            if (started)
-                Display(menuSceneInfo);
-            else
-                SceneInfo = menuSceneInfo;
+            Display(menuSceneInfo);
         }
 
 #if DEEP_LINKING
@@ -140,11 +125,12 @@ namespace ClinicalTools.SimEncounters
             if (quickAction.Action == QuickActionType.NA)
                 return;
 
-            SceneInfo.Result.RemoveListeners();
-            if (SceneInfo != null)
+            if (SceneInfo != null) {
+                SceneInfo.Result.RemoveListeners();
                 EncounterQuickStarter.StartEncounter(SceneInfo.User, SceneInfo.LoadingScreen, SceneInfo.MenuEncountersInfo, quickAction.EncounterId);
-            else
+            } else {
                 onLoadAction = quickAction;
+            }
         }
 #endif
     }
