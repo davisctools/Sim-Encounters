@@ -41,6 +41,10 @@ namespace ClinicalTools.SimEncounters
 
             if (MenuDrawer is ILogoutHandler logoutHandler)
                 logoutHandler.Logout += Logout;
+
+#if DEEP_LINKING
+            DeepLinkManager.Instance.LinkActivated += Instance_LinkActivated;
+#endif
         }
         private bool started;
         protected override void Start()
@@ -62,10 +66,7 @@ namespace ClinicalTools.SimEncounters
                 Login(User.Guest);
         }
 
-        protected override void StartAsLaterScene()
-        {
-            Destroy(LoadingScreen.gameObject);
-        }
+        protected override void StartAsLaterScene() => Destroy(LoadingScreen.gameObject);
 
         protected LoadingMenuSceneInfo SceneInfo { get; set; }
         protected override void ProcessSceneInfo(LoadingMenuSceneInfo sceneInfo)
@@ -75,15 +76,17 @@ namespace ClinicalTools.SimEncounters
                     welcomeScreen.SetActive(false);
 
             SceneInfo = sceneInfo;
-#if DEEP_LINKING
-            DeepLinkManager.Instance.LinkActivated += Instance_LinkActivated;
-#endif
             sceneInfo.Result.AddOnCompletedListener(SceneInfoLoaded);
 
             if (started) {
                 MenuDrawer.Display(sceneInfo);
                 SceneInfoSelectedListener.Select(this, new LoadingMenuSceneInfoSelectedEventArgs(SceneInfo));
             }
+
+#if DEEP_LINKING
+            if (onLoadAction != null)
+                EncounterQuickStarter.StartEncounter(SceneInfo.User, SceneInfo.LoadingScreen, SceneInfo.MenuEncountersInfo, onLoadAction.EncounterId);
+#endif
         }
         protected virtual void SceneInfoLoaded(TaskResult<MenuSceneInfo> sceneInfo)
         {
@@ -127,6 +130,7 @@ namespace ClinicalTools.SimEncounters
             Instance_LinkActivated(linkActivation);
         }
 
+        private QuickAction onLoadAction;
         protected virtual void Instance_LinkActivated(LinkActivation s)
         {
             if (Instance != this)
@@ -137,7 +141,10 @@ namespace ClinicalTools.SimEncounters
                 return;
 
             SceneInfo.Result.RemoveListeners();
-            EncounterQuickStarter.StartEncounter(SceneInfo.User, SceneInfo.LoadingScreen, SceneInfo.MenuEncountersInfo, quickAction.EncounterId);
+            if (SceneInfo != null)
+                EncounterQuickStarter.StartEncounter(SceneInfo.User, SceneInfo.LoadingScreen, SceneInfo.MenuEncountersInfo, quickAction.EncounterId);
+            else
+                onLoadAction = quickAction;
         }
 #endif
     }

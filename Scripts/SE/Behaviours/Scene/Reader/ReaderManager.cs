@@ -46,6 +46,15 @@ namespace ClinicalTools.SimEncounters
         }
 #endif
 
+        protected override void Awake()
+        {
+            base.Awake();
+
+#if DEEP_LINKING
+            DeepLinkManager.Instance.LinkActivated += Instance_LinkActivated;
+#endif
+        }
+
         private bool started;
         protected override void Start()
         {
@@ -106,12 +115,15 @@ namespace ClinicalTools.SimEncounters
         protected override void ProcessSceneInfo(LoadingReaderSceneInfo sceneInfo)
         {
             SceneInfo = sceneInfo;
-#if DEEP_LINKING
-            DeepLinkManager.Instance.LinkActivated += Instance_LinkActivated;
-#endif
+
             if (started)
                 SceneSelector.Select(this, new LoadingReaderSceneInfoSelectedEventArgs(SceneInfo));
             sceneInfo.Result.AddOnCompletedListener(SceneInfoLoaded);
+
+#if DEEP_LINKING
+            if (onLoadAction != null)
+                EncounterQuickStarter.StartEncounter(SceneInfo.User, SceneInfo.LoadingScreen, onLoadAction.EncounterId);
+#endif
         }
         protected virtual void SceneInfoLoaded(TaskResult<ReaderSceneInfo> sceneInfo)
         {
@@ -145,6 +157,7 @@ namespace ClinicalTools.SimEncounters
             Instance_LinkActivated(linkActivation);
         }
 
+        private QuickAction onLoadAction;
         protected virtual void Instance_LinkActivated(LinkActivation s)
         {
             QuickAction quickAction = LinkActionFactory.GetLinkAction(s);
@@ -152,7 +165,10 @@ namespace ClinicalTools.SimEncounters
                 return;
 
             SceneInfo.Result.RemoveListeners();
-            EncounterQuickStarter.StartEncounter(SceneInfo.User, SceneInfo.LoadingScreen, quickAction.EncounterId);
+            if (SceneInfo != null)
+                EncounterQuickStarter.StartEncounter(SceneInfo.User, SceneInfo.LoadingScreen, quickAction.EncounterId);
+            else
+                onLoadAction = quickAction;
         }
 #endif
     }

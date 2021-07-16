@@ -15,6 +15,8 @@ namespace ClinicalTools.SimEncounters
 
         protected override void Awake()
         {
+            base.Awake();
+
             // The main scene manager from a scene is expected to not have a parent
             // This allows embedded scenes within scenes, while allowing them to
             // avoid causing overarching scene changes
