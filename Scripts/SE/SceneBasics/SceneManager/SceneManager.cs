@@ -38,10 +38,9 @@ namespace ClinicalTools.SimEncounters
 
         public virtual void Display(T sceneInfo)
         {
-            if (!Started) {
-                SceneInfo = sceneInfo;
+            SceneInfo = sceneInfo;
+            if (!Started)
                 return;
-            }
 
             // Ensure that it's the main scene manager
             if (SceneManager.Instance == this)
