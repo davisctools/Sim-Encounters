@@ -626,6 +626,7 @@ MonoBehaviour:
   prefix: 'Choose the best answer
 
 '
+  ignoreValue: 
   trim: 0
 --- !u!114 &7568191445404428408
 MonoBehaviour:
@@ -863,8 +864,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   childParent: {fileID: 5934707393294674414}
   panelOptions:
-  - {fileID: 7088269060945037547, guid: 4e0c32fa9c67cd14680cc41eeb2381ff, type: 3}
+  - {fileID: 5516666207298038028, guid: c41bd7aa874600448a6d0c5a3b8c410f, type: 3}
   spacerPrefab: {fileID: 0}
+  controlledObjects: []
   feedbackButton: {fileID: 1576087900063777629}
   toggleGroup: {fileID: 3444135754634928289}
   feedbackParent: {fileID: 5341153226775086308}
@@ -1104,8 +1106,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1868929647169073091, guid: 2739854e6fcd22143bb8e2e18f5038ff,
         type: 3}
+      propertyPath: m_Color.b
+      value: 0.576
+      objectReference: {fileID: 0}
+    - target: {fileID: 1868929647169073091, guid: 2739854e6fcd22143bb8e2e18f5038ff,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1868929647169073091, guid: 2739854e6fcd22143bb8e2e18f5038ff,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.282
+      objectReference: {fileID: 0}
+    - target: {fileID: 1868929647169073091, guid: 2739854e6fcd22143bb8e2e18f5038ff,
+        type: 3}
       propertyPath: m_PixelsPerUnitMultiplier
-      value: 0.6857151
+      value: 0.6856465
       objectReference: {fileID: 0}
     - target: {fileID: 2424420291224583262, guid: 2739854e6fcd22143bb8e2e18f5038ff,
         type: 3}
@@ -1136,6 +1153,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3770637267193557971, guid: 2739854e6fcd22143bb8e2e18f5038ff,
+        type: 3}
+      propertyPath: m_PreferredHeight
+      value: 140
       objectReference: {fileID: 0}
     - target: {fileID: 3933297760491702558, guid: 2739854e6fcd22143bb8e2e18f5038ff,
         type: 3}
@@ -1246,6 +1268,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836255830880653480, guid: 2739854e6fcd22143bb8e2e18f5038ff,
+        type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 7836255830880653480, guid: 2739854e6fcd22143bb8e2e18f5038ff,
+        type: 3}
+      propertyPath: m_Padding.m_Right
+      value: 150
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2739854e6fcd22143bb8e2e18f5038ff, type: 3}
