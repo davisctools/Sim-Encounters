@@ -48,8 +48,10 @@ namespace ClinicalTools.UI
             ConfirmationAction = confirmationAction;
             CancellationAction = cancellationAction;
             Title.text = title;
-            if (Description != null)
+            if (Description != null) {
+                Description.gameObject.SetActive(!string.IsNullOrWhiteSpace(description));
                 Description.text = description;
+            }
             gameObject.SetActive(true);
             if (ConfirmationLabel != null)
                 ConfirmationLabel.text = confirmationText.ToUpper();

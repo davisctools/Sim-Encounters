@@ -10,7 +10,8 @@ namespace ClinicalTools.SimEncounters
                BaseConfirmationPopup confirmationPopup)
             : base(menuSceneStarter, menuInfoReader, confirmationPopup) { }
 
-        protected override string ExitConfirmationTitle { get; } = "Exit to Main Menu";
+        protected override string ExitConfirmationTitle { get; } = "Close this Case";
+        protected override string ExitConfirmationDescription { get; } = "Your progress will be saved";
 
         public void StartMenuScene(UserEncounter userEncounter, ILoadingScreen loadingScreen, MenuArea menuArea)
         {
