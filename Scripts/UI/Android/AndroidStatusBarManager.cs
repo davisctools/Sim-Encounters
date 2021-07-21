@@ -20,13 +20,20 @@ namespace ClinicalTools.UI
             OriginalScreenHeight = Screen.height;
         }
 
-        void Update()
+        protected void Update()
         {
             Screen.fullScreen = false;
             ApplicationChrome.dimmed = false;
-            ApplicationChrome.statusBarState = ApplicationChrome.States.TranslucentOverContent;
+
+            ApplicationChrome.statusBarState = ShouldShowStatusBar() ? ApplicationChrome.States.TranslucentOverContent : ApplicationChrome.States.Hidden;
             ApplicationChrome.navigationBarState = ApplicationChrome.States.TranslucentOverContent;
             NavigationBarHeight = Screen.height - OriginalScreenHeight;
+        }
+
+        protected bool ShouldShowStatusBar()
+        {
+            var safeArea = Screen.safeArea;
+            return safeArea.y + safeArea.height + .001f < Screen.height;
         }
 #endif
     }
