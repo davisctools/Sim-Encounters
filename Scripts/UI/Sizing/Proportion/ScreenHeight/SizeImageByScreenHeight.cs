@@ -16,6 +16,7 @@ namespace ClinicalTools.UI
         [SerializeField] private bool sizeHeight = true;
 
         protected RectTransform RectTransform => (RectTransform)transform;
+        protected LayoutElement LayoutElement { get; set; }
 
         private Image image;
         protected Image Image {
@@ -30,7 +31,12 @@ namespace ClinicalTools.UI
         protected int ScreenHeight { get; set; }
         protected float LastScale { get; set; }
         protected float LossyScale { get; set; }
-        protected virtual void Awake() => UpdateSize();
+        protected virtual void Awake()
+        {
+            LayoutElement = GetComponent<LayoutElement>();
+            UpdateSize();
+        }
+
         protected virtual void Update()
         {
             if (RectTransform.lossyScale.y != LossyScale || Texture != Image.sprite.texture || ScreenHeight != Screen.height || LastScale != Scale)
@@ -51,10 +57,20 @@ namespace ClinicalTools.UI
             heightProportion *= Scale;
             var height = heightProportion * Texture.height;
             var width = heightProportion * Texture.width;
-            if (SizeWidth)
-                RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
-            if (SizeHeight)
-                RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+
+            if (SizeWidth) {
+                if (LayoutElement != null)
+                    LayoutElement.preferredWidth = width;
+                else
+                    RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+            }
+
+            if (SizeHeight) {
+                if (LayoutElement != null)
+                    LayoutElement.preferredHeight = height;
+                else
+                    RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+            }
         }
     }
 }
