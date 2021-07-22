@@ -14,7 +14,11 @@ namespace ClinicalTools.SimEncounters
         public virtual void Inject(ISelectedListener<UserSectionSelectedEventArgs> sectionSelector)
             => SectionSelector = sectionSelector;
 
-        protected virtual void Awake() => SectionSelector.Selected += OnSectionSelected;
+        protected override void Start()
+        {
+            base.Start();
+            SectionSelector.Selected += OnSectionSelected;
+        }
 
         protected override void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs e)
         {
