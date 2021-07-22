@@ -31,7 +31,10 @@ namespace ClinicalTools.SimEncounters
             TabButtonPool = tabButtonPool;
             UserSectionSelector = userSectionSelector;
             UserTabSelector = userTabSelector;
+        }
 
+        protected virtual void Start()
+        {
             UserSectionSelector.Selected += OnSectionSelected;
             if (UserSectionSelector.CurrentValue != null)
                 OnSectionSelected(UserSectionSelector, UserSectionSelector.CurrentValue);

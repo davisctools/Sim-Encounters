@@ -29,7 +29,7 @@ namespace ClinicalTools.SimEncounters
             BackButton = backButton;
             this.swipeManager = swipeManager;
         }
-        protected virtual void Awake()
+        protected virtual void Start()
         {
             InitializeSidebarParamaters();
         }

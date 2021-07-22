@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Zenject;
 
 namespace ClinicalTools.SimEncounters
@@ -7,6 +8,10 @@ namespace ClinicalTools.SimEncounters
     {
         public Transform TabParent { get => tabParent; set => tabParent = value; }
         [SerializeField] private Transform tabParent;
+        public RectTransform Header { get => header; set => header = value; }
+        [SerializeField] private RectTransform header;
+        public RectTransform Content { get => content; set => content = value; }
+        [SerializeField] private RectTransform content;
 
         protected UserTab CurrentTab { get; set; }
         protected ISelectedListener<UserTabSelectedEventArgs> UserTabSelector { get; set; }
@@ -35,6 +40,10 @@ namespace ClinicalTools.SimEncounters
                     CurrentTabDrawer.Select(sender, eventArgs);
                 return;
             }
+
+            bool isTableOfContents = eventArgs.SelectedTab.Data.Type.Equals("Table of Contents", StringComparison.InvariantCultureIgnoreCase);
+            Header.gameObject.SetActive(!isTableOfContents);
+            Content.anchorMax = isTableOfContents ? new Vector2(1, .99f) : new Vector2(1, .91f);
 
             CurrentTab = eventArgs.SelectedTab;
 

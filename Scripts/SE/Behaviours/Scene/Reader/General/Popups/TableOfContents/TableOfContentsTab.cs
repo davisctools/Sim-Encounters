@@ -12,6 +12,8 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private TMP_Text text;
         [SerializeField] private Button button;
         [SerializeField] private TextMeshProUGUI label;
+        [SerializeField] private bool highlightIfCurrent = true;
+        [SerializeField] private bool setTextColor = true;
 
         protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
         protected ISelector<UserSectionSelectedEventArgs> SectionSelector { get; set; }
@@ -64,8 +66,9 @@ namespace ClinicalTools.SimEncounters
         protected virtual void UpdateColors(bool isCurrentTab)
         {
             var sectionColor = SectionSelector.CurrentValue.SelectedSection.Data.Color;
-            image.color = isCurrentTab ? sectionColor : Color.white;
-            text.color = isCurrentTab ? Color.white : sectionColor;
+            image.color = highlightIfCurrent && isCurrentTab ? sectionColor : Color.white;
+            if (setTextColor)
+                text.color = highlightIfCurrent && isCurrentTab ? Color.white : sectionColor;
         }
     }
 }

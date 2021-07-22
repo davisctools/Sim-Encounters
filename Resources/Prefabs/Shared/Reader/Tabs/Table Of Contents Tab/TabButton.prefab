@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3975736967795461075}
   - component: {fileID: 8090964089911840264}
   - component: {fileID: 6313158368539043703}
+  - component: {fileID: 1770521116708070341}
   m_Layer: 5
   m_Name: TabDisplayText
   m_TagString: Untagged
@@ -90,8 +91,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4287516418
-  m_fontColor: {r: 0.007876454, g: 0.30933565, b: 0.5566038, a: 1}
+    rgba: 4289042309
+  m_fontColor: {r: 0.522, g: 0.592, b: 0.647, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -182,6 +183,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0032d5c9a7dd2fc419e963668e8f49c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1770521116708070341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840254979660398078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2335abc92733280448e06d990d4e3bd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorType: 8
 --- !u!1 &2699663711462717578
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,6 +357,8 @@ MonoBehaviour:
   text: {fileID: 3975736967795461075}
   button: {fileID: 3074328761687057207}
   label: {fileID: 3975736967795461075}
+  highlightIfCurrent: 0
+  setTextColor: 0
 --- !u!114 &8812470057959386047
 MonoBehaviour:
   m_ObjectHideFlags: 0
