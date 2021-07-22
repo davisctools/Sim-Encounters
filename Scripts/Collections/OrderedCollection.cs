@@ -29,6 +29,16 @@ namespace ClinicalTools.Collections
         public OrderedCollection() : base() { }
         public OrderedCollection(IKeyGenerator keyGenerator) : base(keyGenerator) { }
 
+        public virtual bool Insert(int index, string key, T value)
+        {
+            if (!base.AddKeyedValue(key, value))
+                return false;
+
+            PairList.Insert(index, new KeyValuePair<string, T>(key, value));
+            ValueList.Insert(index, value);
+            return true;
+        }
+
         public override bool AddKeyedValue(string key, T value)
         {
             if (!base.AddKeyedValue(key, value))
@@ -65,7 +75,7 @@ namespace ClinicalTools.Collections
                 PairList[i] = new KeyValuePair<string, T>(key, value);
                 break;
             }
-            
+
             base.Set(key, value);
         }
 

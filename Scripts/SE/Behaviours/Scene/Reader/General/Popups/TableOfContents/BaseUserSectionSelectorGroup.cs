@@ -19,6 +19,10 @@ namespace ClinicalTools.SimEncounters
         {
             EncounterSelector = encounterSelector;
             SectionFactory = sectionFactory;
+        }
+
+        protected virtual void Start()
+        {
             EncounterSelector.Selected += OnEncounterSelected;
             if (EncounterSelector.CurrentValue != null)
                 OnEncounterSelected(this, EncounterSelector.CurrentValue);

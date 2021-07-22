@@ -1,5 +1,6 @@
 ﻿using ClinicalTools.UI;
 using ClinicalTools.UI.Extensions;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,9 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private Transform tabButtonsParent;
         public virtual ScrollRect TabButtonsScroll { get => tabButtonsScroll; set => tabButtonsScroll = value; }
         [SerializeField] private ScrollRect tabButtonsScroll;
+
+        public bool ShowTableOfContents { get => showTableOfContents; set => showTableOfContents = value; }
+        [SerializeField] private bool showTableOfContents = true;
 
         protected SceneMonoMemoryPool<T> TabButtonPool { get; set; }
         protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
@@ -46,8 +50,8 @@ namespace ClinicalTools.SimEncounters
             
             ClearButtons();
 
-            foreach (var tab in Section.Data.Tabs)
-                AddButton(Section.GetTab(tab.Key));
+            foreach (var tab in Section.Tabs.Values)
+                AddButton(tab);
         }
 
         protected virtual void ClearButtons()
@@ -62,6 +66,9 @@ namespace ClinicalTools.SimEncounters
         protected Dictionary<UserTab, T> TabButtons { get; } = new Dictionary<UserTab, T>();
         protected void AddButton(UserTab userTab)
         {
+            if (!ShowTableOfContents && userTab.Data.Type.Equals("Table Of Contents", StringComparison.InvariantCultureIgnoreCase))
+                return;
+
             var tabButton = CreateNewTabButton();
             tabButton.Initialize(userTab);
             TabButtons.Add(userTab, tabButton);
@@ -84,6 +91,8 @@ namespace ClinicalTools.SimEncounters
 
             CurrentTab = tab;
 
+            if (!TabButtons.ContainsKey(CurrentTab))
+                return;
             var tabButtonTransform = (RectTransform)TabButtons[CurrentTab].transform;
             EnsureCurrentTabIsShowing(tabButtonTransform);
             NextFrame.Function(() => NextFrame.Function(() => EnsureCurrentTabIsShowing(tabButtonTransform)));

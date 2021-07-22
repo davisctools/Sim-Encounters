@@ -21,7 +21,8 @@ namespace ClinicalTools.SimEncounters
             if (CurrentTab == tab)
                 return;
 
-            TabButtons[tab].Select();
+            if (TabButtons.ContainsKey(tab))
+                TabButtons[tab].Select();
             foreach (var tabButton in TabButtons.Where((b) => b.Key != tab))
                 tabButton.Value.Deselect();
 

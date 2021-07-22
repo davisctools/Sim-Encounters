@@ -35,6 +35,7 @@ namespace ClinicalTools.SimEncounters
             if (result.IsCompleted() || !encounterData.IsCompleted() || !detailedStatus.IsCompleted())
                 return;
 
+            encounterData.Result.Value.Content.NonImageContent.Sections[0].Value.Tabs.Insert(0, "TOC", new Tab("Table Of Contents", "Table of Contents"));
             var encounter = new UserEncounter(user, encounterData.Result.Value, detailedStatus.Result.Value);
             SetEncounterStart(encounter);
 
