@@ -31,5 +31,12 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void UpdateOn() => gameObject.SetActive(CurrentSection.IsRead() ? !hideOnCompleted : hideOnCompleted);
+
+        protected virtual void OnDestroy()
+        {
+            SectionSelector.Selected -= OnSectionSelected;
+            if (CurrentSection != null)
+                CurrentSection.StatusChanged -= UpdateOn;
+        }
     }
 }

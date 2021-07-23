@@ -48,7 +48,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void TabStatusChanged()
         {
-            if (Tab.IsRead() == gameObject.activeSelf)
+            if (Tab == null || Tab.IsRead() == gameObject.activeSelf)
                 return;
 
             if (updateWhenCurrentTabChanged && LinearEncounterNavigator.CurrentTab?.SelectedTab == Tab)
@@ -58,5 +58,14 @@ namespace ClinicalTools.SimEncounters
         }
 
         protected virtual void UpdateOn() => gameObject.SetActive(Tab.IsRead());
+
+        protected virtual void OnDestroy()
+        {
+            TabSelector.Selected -= OnTabSelected;
+            if (updateWhenCurrentTabChanged)
+                LinearEncounterNavigator.EncounterTabPositionChanged -= EncounterTabPositionChanged;
+            if (Tab != null)
+                Tab.StatusChanged -= TabStatusChanged;
+        }
     }
 }
