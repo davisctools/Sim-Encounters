@@ -38,8 +38,9 @@ namespace ClinicalTools.SimEncounters
 #if DEEP_LINKING
         protected IEncounterQuickStarter EncounterQuickStarter { get; set; }
         protected QuickActionFactory LinkActionFactory { get; set; }
+        // Inject names must vary for Zenject to properly handle them
         [Inject]
-        public virtual void Inject(QuickActionFactory linkActionFactory, IEncounterQuickStarter encounterQuickStarter)
+        public virtual void DeepLinkingInject(QuickActionFactory linkActionFactory, IEncounterQuickStarter encounterQuickStarter)
         {
             LinkActionFactory = linkActionFactory;
             EncounterQuickStarter = encounterQuickStarter;

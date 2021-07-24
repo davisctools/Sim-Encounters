@@ -10,7 +10,10 @@ namespace ClinicalTools.SimEncounters
         public bool IsCompleted() => Result != null;
         private event Action<TaskResult> Completed;
 
-        public WaitableTask(bool completed = false)
+        // I would provide a default value of false as the completed value in the second constructor,
+        // but Zenject can't handle bools in the default constructor
+        public WaitableTask() { }
+        public WaitableTask(bool completed)
         {
             if (completed)
                 Result = new TaskResult();
