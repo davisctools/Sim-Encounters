@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -22,9 +23,11 @@ namespace ClinicalTools.UI
                 return;
 
             var link = text.textInfo.linkInfo[linkIndex];
-            var linkURL = link.GetLinkID();
+            var linkUrl = link.GetLinkID();
+            if (linkUrl.StartsWith("URL:", StringComparison.InvariantCultureIgnoreCase))
+                linkUrl = linkUrl.Substring(4);
 
-            Application.OpenURL(linkURL);
+            Application.OpenURL(linkUrl);
         }
     }
 }
