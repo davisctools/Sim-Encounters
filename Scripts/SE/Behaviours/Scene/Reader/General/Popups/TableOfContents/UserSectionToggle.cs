@@ -34,7 +34,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void ToggleChanged(bool isOn)
         {
             if (isOn && EncounterSelectedListener.CurrentValue.Encounter.GetCurrentSection() != Section)
-                Select(this, new UserTabSelectedEventArgs(Section.Tabs[0].Value, ChangeType.JumpTo));
+                Display(this, new UserTabSelectedEventArgs(Section.Tabs[0].Value, ChangeType.JumpTo));
 
             toggle.interactable = !isOn;
             if (isOn) {

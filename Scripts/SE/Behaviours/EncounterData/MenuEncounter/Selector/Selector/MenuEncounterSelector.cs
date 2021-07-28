@@ -4,7 +4,7 @@ using Zenject;
 namespace ClinicalTools.SimEncounters
 {
     public abstract class MenuEncounterSelector : MonoBehaviour,
-        ISelector<MenuEncounterSelectedEventArgs>,
+        ISelectedListener<MenuEncounterSelectedEventArgs>,
         ISelectedListener<EncounterMetadataSelectedEventArgs>
     {
         public MenuEncounterSelectedEventArgs CurrentValue { get; protected set; }
@@ -19,7 +19,7 @@ namespace ClinicalTools.SimEncounters
             remove => MetadataSelected -= value;
         }
 
-        public virtual void Select(object sender, MenuEncounterSelectedEventArgs eventArgs)
+        public virtual void Display(object sender, MenuEncounterSelectedEventArgs eventArgs)
         {
             CurrentValue = eventArgs;
             Selected?.Invoke(sender, eventArgs);

@@ -34,11 +34,8 @@ namespace ClinicalTools.SimEncounters
             SelectToggle.Selected += Selected;
         }
 
-        protected virtual void Selected()
-        {
-            if (TabSelector.CurrentValue.SelectedTab != Tab)
-                TabSelector.Select(this, new UserTabSelectedEventArgs(Tab, ChangeType.MoveTo));
-        }
+        protected virtual void Selected() => TabSelector.Select(this, new UserTabSelectedEventArgs(Tab, ChangeType.MoveTo));
+        
 
         private bool initialized;
         protected Color VisitedColor { get; set; } = new Color(1, 1, 1, .95f);

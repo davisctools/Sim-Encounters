@@ -19,12 +19,12 @@ namespace ClinicalTools.SimEncounters
         protected virtual void Start() => SelectButton.onClick.AddListener(OnSelected);
         protected virtual void OnSelected()
         {
-            Select(this, CurrentValue);
-            MenuEncounterOverview.Select(this, CurrentValue);
+            Display(this, CurrentValue);
+            MenuEncounterOverview.Display(this, CurrentValue);
         }
-        public override void Select(object sender, MenuEncounterSelectedEventArgs eventArgs)
+        public override void Display(object sender, MenuEncounterSelectedEventArgs eventArgs)
         {
-            base.Select(sender, eventArgs);
+            base.Display(sender, eventArgs);
 
             var status = eventArgs.Encounter.Status;
             CompletedObject.SetActive(status?.Completed == true);

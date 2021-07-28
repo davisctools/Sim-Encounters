@@ -49,7 +49,7 @@ namespace ClinicalTools.SimEncounters
             var option = (BaseReaderDialogueOption)ReaderPanelFactory.Create(prefab);
             option.transform.SetParent(OptionsParent);
             option.transform.localScale = Vector3.one;
-            option.Select(this, new UserPanelSelectedEventArgs(panel, true));
+            option.Display(this, new UserPanelSelectedEventArgs(panel, true));
             option.SetGroup(toggleGroup);
             option.CorrectlySelected += OnOptionSelectedCorrectly;
         }
@@ -57,7 +57,7 @@ namespace ClinicalTools.SimEncounters
         private void OnOptionSelectedCorrectly(object sender, DialogueOptionCorrectlySelectedEventArgs e)
         {
             PanelCompletedHandler.SetCompleted();
-            CorrectPanelBehaviour.Select(sender, new UserPanelSelectedEventArgs(e.Panel, true));
+            CorrectPanelBehaviour.Display(sender, new UserPanelSelectedEventArgs(e.Panel, true));
         }
 
         protected virtual BaseReaderDialogueOption GetChildPanelPrefab(UserPanel childPanel)

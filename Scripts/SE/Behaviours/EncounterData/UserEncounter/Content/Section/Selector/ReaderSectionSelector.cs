@@ -16,33 +16,36 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private ToggleGroup sectionsToggleGroup;
 
         protected ReaderSectionToggle.Factory SectionButtonFactory { get; set; }
-        protected ISelector<UserEncounterSelectedEventArgs> UserEncounterSelector { get; set; }
-        protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
+        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
+        protected ISelector<UserSectionSelectedEventArgs> SectionSelector { get; set; }
+        protected ISelectedListener<UserSectionSelectedEventArgs> SectionSelectedListener { get; set; }
         [Inject]
         public virtual void Inject(
             ReaderSectionToggle.Factory sectionButtonFactory,
-            ISelector<UserEncounterSelectedEventArgs> userEncounterSelector,
-            ISelector<UserSectionSelectedEventArgs> userSectionSelector)
+            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelectedListener,
+            ISelector<UserSectionSelectedEventArgs> sectionSelector,
+            ISelectedListener<UserSectionSelectedEventArgs> sectionSelectedListener)
         {
             SectionButtonFactory = sectionButtonFactory;
-            UserEncounterSelector = userEncounterSelector;
-            UserSectionSelector = userSectionSelector;
+            EncounterSelectedListener = encounterSelectedListener;
+            SectionSelector = sectionSelector;
+            SectionSelectedListener = sectionSelectedListener;
         }
         protected virtual void Start()
         {
-            UserEncounterSelector.Selected += OnEncounterSelected;
-            if (UserEncounterSelector.CurrentValue != null)
-                OnEncounterSelected(UserEncounterSelector, UserEncounterSelector.CurrentValue);
+            EncounterSelectedListener.Selected += OnEncounterSelected;
+            if (EncounterSelectedListener.CurrentValue != null)
+                OnEncounterSelected(EncounterSelectedListener, EncounterSelectedListener.CurrentValue);
 
-            UserSectionSelector.Selected += OnSectionSelected;
-            if (UserSectionSelector.CurrentValue != null)
-                OnSectionSelected(UserSectionSelector, UserSectionSelector.CurrentValue);
+            SectionSelectedListener.Selected += OnSectionSelected;
+            if (SectionSelectedListener.CurrentValue != null)
+                OnSectionSelected(SectionSelector, SectionSelectedListener.CurrentValue);
         }
 
         protected virtual void OnDestroy()
         {
-            UserEncounterSelector.Selected -= OnEncounterSelected;
-            UserSectionSelector.Selected -= OnSectionSelected;
+            EncounterSelectedListener.Selected -= OnEncounterSelected;
+            SectionSelectedListener.Selected -= OnSectionSelected;
         }
 
         protected UserEncounter UserEncounter { get; set; }
@@ -80,9 +83,8 @@ namespace ClinicalTools.SimEncounters
             CurrentSection = section;
 
             var selectedArgs = new UserSectionSelectedEventArgs(section, ChangeType.JumpTo);
-            UserSectionSelector?.Select(this, selectedArgs);
+            SectionSelector?.Select(this, selectedArgs);
         }
-
 
         protected virtual void OnSectionSelected(object sender, UserSectionSelectedEventArgs eventArgs)
         {

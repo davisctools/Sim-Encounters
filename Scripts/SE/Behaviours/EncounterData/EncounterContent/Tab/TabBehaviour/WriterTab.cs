@@ -8,9 +8,9 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private BaseWriterPanelsDrawer panelCreator;
 
         protected Tab CurrentTab { get; set; }
-        public override void Select(object sender, TabSelectedEventArgs eventArgs)
+        public override void Display(object sender, TabSelectedEventArgs eventArgs)
         {
-            base.Select(sender, eventArgs);
+            base.Display(sender, eventArgs);
 
             CurrentTab = eventArgs.SelectedTab;
             if (CurrentTab.Panels.Count == 0)

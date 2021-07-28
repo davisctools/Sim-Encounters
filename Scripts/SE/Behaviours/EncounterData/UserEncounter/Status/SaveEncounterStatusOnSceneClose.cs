@@ -6,13 +6,13 @@ namespace ClinicalTools.SimEncounters
     public class SaveEncounterStatusOnSceneClose : MonoBehaviour
     {
         protected IStatusWriter StatusWriter { get; set; }
-        protected ISelector<UserEncounterSelectedEventArgs> EncounterSelector { get; set; }
+        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
         [Inject]
         public virtual void Inject(
             IStatusWriter statusWriter,
-            ISelector<UserEncounterSelectedEventArgs> encounterSelector)
+            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelectedListener)
         {
-            EncounterSelector = encounterSelector;
+            EncounterSelectedListener = encounterSelectedListener;
             StatusWriter = statusWriter;
         }
         protected virtual void OnDestroy() => SaveStatus();
@@ -24,7 +24,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void SaveStatus()
         {
-            var encounter = EncounterSelector.CurrentValue.Encounter;
+            var encounter = EncounterSelectedListener.CurrentValue.Encounter;
             if (encounter == null)
                 return;
 

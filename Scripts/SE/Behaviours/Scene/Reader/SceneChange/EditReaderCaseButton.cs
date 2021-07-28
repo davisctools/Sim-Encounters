@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
@@ -12,22 +11,22 @@ namespace ClinicalTools.SimEncounters
         private Button button;
 
         protected IWriterSceneStarter WriterSceneStarter { get; set; }
-        protected ISelector<ReaderSceneInfoSelectedEventArgs> SceneInfoSelector { get; set; }
-        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelector { get; set; }
+        protected ISelectedListener<ReaderSceneInfoSelectedEventArgs> SceneInfoSelectedListener { get; set; }
+        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
 
         [Inject]
         public void Inject(
             IWriterSceneStarter writerSceneStarter,
-            ISelector<ReaderSceneInfoSelectedEventArgs> sceneInfoSelector,
-            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelector)
+            ISelectedListener<ReaderSceneInfoSelectedEventArgs> sceneInfoSelectedListener,
+            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelectedListener)
         {
             WriterSceneStarter = writerSceneStarter;
-            SceneInfoSelector = sceneInfoSelector;
+            SceneInfoSelectedListener = sceneInfoSelectedListener;
 
-            EncounterSelector = encounterSelector;
-            EncounterSelector.Selected += OnEncounterSelected;
-            if (EncounterSelector.CurrentValue != null)
-                OnEncounterSelected(EncounterSelector, EncounterSelector.CurrentValue);
+            EncounterSelectedListener = encounterSelectedListener;
+            EncounterSelectedListener.Selected += OnEncounterSelected;
+            if (EncounterSelectedListener.CurrentValue != null)
+                OnEncounterSelected(EncounterSelectedListener, EncounterSelectedListener.CurrentValue);
         }
 
         protected virtual void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs e)
@@ -36,7 +35,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void Awake() => Button.onClick.AddListener(ShowInstructions);
         public virtual void ShowInstructions()
         {
-            var sceneInfo = SceneInfoSelector.CurrentValue.SceneInfo;
+            var sceneInfo = SceneInfoSelectedListener.CurrentValue.SceneInfo;
             var encounter = new WaitableTask<Encounter>(sceneInfo.Encounter.Data);
             var writerSceneInfo = new LoadingWriterSceneInfo(sceneInfo.User, sceneInfo.LoadingScreen, encounter);
             WriterSceneStarter.StartScene(writerSceneInfo);

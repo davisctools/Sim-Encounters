@@ -14,9 +14,9 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private GameObject incompletedObject;
         protected override bool SetReadOnSelect => true;
 
-        public override void Select(object sender, UserPanelSelectedEventArgs eventArgs)
+        public override void Display(object sender, UserPanelSelectedEventArgs eventArgs)
         {
-            base.Select(sender, eventArgs);
+            base.Display(sender, eventArgs);
 
             CompletedObject.gameObject.SetActive(false);
             IncompletedObject.gameObject.SetActive(true);

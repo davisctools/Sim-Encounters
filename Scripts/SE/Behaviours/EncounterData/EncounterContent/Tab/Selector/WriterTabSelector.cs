@@ -21,12 +21,14 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private Button addButton;
         protected ISelectedListener<SectionSelectedEventArgs> SectionSelectedListener { get; set; }
         protected ISelector<TabSelectedEventArgs> TabSelector { get; set; }
+        protected ISelectedListener<TabSelectedEventArgs> TabSelectedListener { get; set; }
         protected virtual BaseWriterTabToggle.Pool TabButtonPool { get; set; }
         protected virtual TabCreatorPopup AddTabPopup { get; set; }
         [Inject]
         public virtual void Inject(
             ISelectedListener<SectionSelectedEventArgs> sectionSelectedListener,
             ISelector<TabSelectedEventArgs> tabSelector,
+            ISelectedListener<TabSelectedEventArgs> tabSelectedListener,
             BaseWriterTabToggle.Pool tabButtonPool,
             TabCreatorPopup addTabPopup)
         {
@@ -39,9 +41,11 @@ namespace ClinicalTools.SimEncounters
                 OnSectionSelected(this, SectionSelectedListener.CurrentValue);
 
             TabSelector = tabSelector;
-            TabSelector.Selected += OnTabSelected;
-            if (TabSelector.CurrentValue != null)
-                OnTabSelected(this, TabSelector.CurrentValue);
+
+            TabSelectedListener = tabSelectedListener;
+            TabSelectedListener.Selected += OnTabSelected;
+            if (TabSelectedListener.CurrentValue != null)
+                OnTabSelected(this, TabSelectedListener.CurrentValue);
         }
 
         protected virtual void Awake()

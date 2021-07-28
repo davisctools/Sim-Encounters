@@ -3,7 +3,7 @@
 namespace ClinicalTools.SimEncounters
 {
     public class UserPanelSelectorBehaviour : MonoBehaviour,
-        ISelector<UserPanelSelectedEventArgs>,
+        ISelectedListener<UserPanelSelectedEventArgs>,
         ISelectedListener<PanelSelectedEventArgs>
     {
         public UserPanelSelectedEventArgs CurrentValue { get; protected set; }
@@ -17,7 +17,7 @@ namespace ClinicalTools.SimEncounters
             remove => PanelSelected -= value;
         }
 
-        public virtual void Select(object sender, UserPanelSelectedEventArgs eventArgs)
+        public virtual void Display(object sender, UserPanelSelectedEventArgs eventArgs)
         {
             CurrentValue = eventArgs;
             Selected?.Invoke(sender, eventArgs);

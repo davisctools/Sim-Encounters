@@ -2,8 +2,11 @@
 {
     public class EncounterSelectorManager :
         ISelector<EncounterSelectedEventArgs>,
+        ISelectedListener<EncounterSelectedEventArgs>,
         ISelector<SectionSelectedEventArgs>,
+        ISelectedListener<SectionSelectedEventArgs>,
         ISelector<TabSelectedEventArgs>,
+        ISelectedListener<TabSelectedEventArgs>,
         ISelectedListener<EncounterMetadataSelectedEventArgs>
     {
         protected EncounterSelectedEventArgs EncounterValue { get; set; }

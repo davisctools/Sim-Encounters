@@ -11,25 +11,28 @@ namespace ClinicalTools.SimEncounters
 
         protected UserEncounter CurrentUserEncounter { get; set; }
         protected BaseReaderEncounterInfoPopup EncounterInfoPopup { get; set; }
-        protected ISelector<UserEncounterSelectedEventArgs> UserEncounterSelector { get; set; }
+        protected ISelector<UserEncounterSelectedEventArgs> EncounterSelector { get; set; }
+        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
         [Inject]
         public virtual void Inject(
-            ISelector<UserEncounterSelectedEventArgs> userEncounterSelector, 
+            ISelector<UserEncounterSelectedEventArgs> encounterSelector,
+            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelectedListener,
             BaseReaderEncounterInfoPopup encounterInfoPopup)
         {
+            EncounterSelector = encounterSelector;
+            EncounterSelectedListener = encounterSelectedListener;
             EncounterInfoPopup = encounterInfoPopup;
-            UserEncounterSelector = userEncounterSelector;
         }
         protected virtual void Start()
         {
-            UserEncounterSelector.Selected += OnUserEncounterSelected;
-            if (UserEncounterSelector.CurrentValue != null)
-                OnUserEncounterSelected(UserEncounterSelector, UserEncounterSelector.CurrentValue);
+            EncounterSelectedListener.Selected += OnUserEncounterSelected;
+            if (EncounterSelectedListener.CurrentValue != null)
+                OnUserEncounterSelected(EncounterSelector, EncounterSelectedListener.CurrentValue);
         }
         protected virtual void OnUserEncounterSelected(object sender, UserEncounterSelectedEventArgs eventArgs) 
             => CurrentUserEncounter = eventArgs.Encounter;
 
-        protected virtual void OnDestroy() => UserEncounterSelector.Selected -= OnUserEncounterSelected;
+        protected virtual void OnDestroy() => EncounterSelectedListener.Selected -= OnUserEncounterSelected;
         protected virtual void Awake() => Button.onClick.AddListener(ShowEncounterInfo);
         public virtual void ShowEncounterInfo() => EncounterInfoPopup.ShowEncounterInfo(CurrentUserEncounter);
     }

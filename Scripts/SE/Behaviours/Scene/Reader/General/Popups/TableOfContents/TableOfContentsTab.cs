@@ -15,14 +15,20 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private bool highlightIfCurrent = true;
         [SerializeField] private bool setTextColor = true;
 
+        protected virtual IColorManager ColorManager { get; } = new ColorManager();
+
         protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
         protected ISelector<UserSectionSelectedEventArgs> SectionSelector { get; set; }
+        protected ISelectedListener<UserSectionSelectedEventArgs> SectionSelectedListener { get; set; }
         [Inject]
-        public virtual void Inject(ISelectedListener<UserEncounterSelectedEventArgs> encounterSelectedListener,
-            ISelector<UserSectionSelectedEventArgs> sectionSelector)
+        public virtual void Inject(
+            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelectedListener,
+            ISelector<UserSectionSelectedEventArgs> sectionSelector,
+            ISelectedListener<UserSectionSelectedEventArgs> sectionSelectedListener)
         {
             EncounterSelectedListener = encounterSelectedListener;
             SectionSelector = sectionSelector;
+            SectionSelectedListener = sectionSelectedListener;
         }
 
         protected virtual void Start() => button.onClick.AddListener(SelectTab);
@@ -36,7 +42,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void SelectTab()
         {
-            var Section = SectionSelector.CurrentValue.SelectedSection;
+            var Section = SectionSelectedListener.CurrentValue.SelectedSection;
             Section.Data.SetCurrentTab(Tab.Data);
             SectionSelector.Select(this, new UserSectionSelectedEventArgs(Section, ChangeType.JumpTo));
             TabSelector.Select(this, new UserTabSelectedEventArgs(Tab, ChangeType.JumpTo));
@@ -65,10 +71,10 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void UpdateColors(bool isCurrentTab)
         {
-            var sectionColor = SectionSelector.CurrentValue.SelectedSection.Data.Color;
+            var sectionColor = SectionSelectedListener.CurrentValue.SelectedSection.Data.Color;
             image.color = highlightIfCurrent && isCurrentTab ? sectionColor : Color.white;
             if (setTextColor)
-                text.color = highlightIfCurrent && isCurrentTab ? Color.white : sectionColor;
+                text.color = highlightIfCurrent && isCurrentTab ? Color.white : ColorManager.GetColor(ColorType.Gray6);
         }
     }
 }

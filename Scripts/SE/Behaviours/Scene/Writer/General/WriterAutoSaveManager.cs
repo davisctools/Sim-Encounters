@@ -10,27 +10,27 @@ namespace ClinicalTools.SimEncounters
     {
         protected SignalBus SignalBus { get; set; }
         protected BaseMessageHandler MessageHandler { get; set; }
-        protected ISelector<WriterSceneInfoSelectedEventArgs> SceneInfoSelector { get; set; }
+        protected ISelectedListener<WriterSceneInfoSelectedEventArgs> SceneInfoSelectedListener { get; set; }
         protected IEncounterWriter EncounterWriter { get; set; }
         [Inject]
         public virtual void Inject(
             SignalBus signalBus,
             BaseMessageHandler messageHandler,
-            ISelector<WriterSceneInfoSelectedEventArgs> sceneInfoSelector,
+            ISelectedListener<WriterSceneInfoSelectedEventArgs> sceneInfoSelectedListener,
             [Inject(Id = SaveType.Autosave)] IEncounterWriter encounterWriter)
         {
             SignalBus = signalBus;
             MessageHandler = messageHandler;
-            SceneInfoSelector = sceneInfoSelector;
+            SceneInfoSelectedListener = sceneInfoSelectedListener;
             EncounterWriter = encounterWriter;
         }
 
         protected virtual Button Button { get; set; }
         protected virtual void Start()
         {
-            SceneInfoSelector.Selected += SceneLoaded;
-            if (SceneInfoSelector.CurrentValue != null)
-                SceneLoaded(this, SceneInfoSelector.CurrentValue);
+            SceneInfoSelectedListener.Selected += SceneLoaded;
+            if (SceneInfoSelectedListener.CurrentValue != null)
+                SceneLoaded(this, SceneInfoSelectedListener.CurrentValue);
         }
 
         protected Coroutine CurrentCoroutine { get; set; }
@@ -50,11 +50,11 @@ namespace ClinicalTools.SimEncounters
             yield return AutosaveCoroutine();
         }
 
-        protected WriterSceneInfo SceneInfo => SceneInfoSelector.CurrentValue.SceneInfo;
+        protected WriterSceneInfo SceneInfo => SceneInfoSelectedListener.CurrentValue.SceneInfo;
         protected virtual void AutosaveEncounter()
         {
             SignalBus.Fire<SerializeEncounterSignal>();
-            var sceneInfo = SceneInfoSelector.CurrentValue.SceneInfo;
+            var sceneInfo = SceneInfoSelectedListener.CurrentValue.SceneInfo;
             var writerTask = EncounterWriter.Save(sceneInfo.User, sceneInfo.Encounter);
             writerTask.AddOnCompletedListener(AutosaveCompleted);
         }

@@ -19,9 +19,9 @@ namespace ClinicalTools.SimEncounters
         }
 
         public virtual void Initialize(UserTab tab)
-            => base.Select(this, new UserTabSelectedEventArgs(Tab = tab, ChangeType.JumpTo));
+            => base.Display(this, new UserTabSelectedEventArgs(Tab = tab, ChangeType.JumpTo));
 
-        public override void Select(object sender, UserTabSelectedEventArgs eventArgs)
+        public override void Display(object sender, UserTabSelectedEventArgs eventArgs)
             => TabSelector.Select(sender, eventArgs);
 
         public new class Factory : PlaceholderFactory<BaseSelectableUserTabBehaviour> { }

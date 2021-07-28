@@ -29,7 +29,7 @@ namespace ClinicalTools.SimEncounters
             var panels = new List<BaseWriterPanel>();
             foreach (var panel in childPanels) {
                 var panelUI = InstantiatePanel();
-                panelUI.Select(this, new PanelSelectedEventArgs(panel.Value));
+                panelUI.Display(this, new PanelSelectedEventArgs(panel.Value));
                 panels.Add(panelUI);
                 WriterPanels.Add(panel.Key, panelUI);
             }
@@ -44,7 +44,7 @@ namespace ClinicalTools.SimEncounters
                 var panel = new Panel(PanelPrefab.Type);
                 panel.Values.Add("PanelNameValue", panelName);
                 var panelUI = InstantiatePanel();
-                panelUI.Select(this, new PanelSelectedEventArgs(panel));
+                panelUI.Display(this, new PanelSelectedEventArgs(panel));
                 panels.Add(panelUI);
                 WriterPanels.Add(panelUI);
             }

@@ -39,7 +39,7 @@ namespace ClinicalTools.SimEncounters
                 var prefab = childrenPanelManager.ChoosePrefab(PanelOptions, panel.Value);
                 var panelUI = InstantiatePanel(prefab);
                 ReorderableGroup.Add(panelUI);
-                panelUI.Select(this, new PanelSelectedEventArgs(panel.Value));
+                panelUI.Display(this, new PanelSelectedEventArgs(panel.Value));
                 panelUI.Deleted += () => PanelDeleted(panelUI);
                 panels.Add(panelUI);
                 WriterPanels.Add(panel.Key, panelUI);
@@ -61,7 +61,7 @@ namespace ClinicalTools.SimEncounters
         {
             var panelUI = InstantiatePanel(prefab);
             ReorderableGroup.Add(panelUI);
-            panelUI.Select(this, new PanelSelectedEventArgs(null));
+            panelUI.Display(this, new PanelSelectedEventArgs(null));
             panelUI.Deleted += () => PanelDeleted(panelUI);
             WriterPanels.Add(panelUI);
         }

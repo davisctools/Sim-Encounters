@@ -1,7 +1,7 @@
 ﻿namespace ClinicalTools.SimEncounters
 {
     public class UserSectionSelectorBehaviour : UserTabSelectorBehaviour,
-        ISelector<UserSectionSelectedEventArgs>,
+        ISelectedListener<UserSectionSelectedEventArgs>,
         ISelectedListener<SectionSelectedEventArgs>
     {
         protected UserSectionSelectedEventArgs UserSectionValue { get; set; }
@@ -20,7 +20,7 @@
             remove => SectionSelected -= value;
         }
 
-        public virtual void Select(object sender, UserSectionSelectedEventArgs eventArgs)
+        public virtual void Display(object sender, UserSectionSelectedEventArgs eventArgs)
         {
             UserSectionValue = eventArgs;
             UserSectionSelected?.Invoke(sender, UserSectionValue);
@@ -29,11 +29,11 @@
             SectionSelected?.Invoke(sender, SectionValue);
         }
 
-        public override void Select(object sender, UserTabSelectedEventArgs eventArgs)
+        public override void Display(object sender, UserTabSelectedEventArgs eventArgs)
         {
             if (eventArgs.ChangeType != ChangeType.Inactive)
                 SectionValue.SelectedSection.SetCurrentTab(eventArgs.SelectedTab.Data);
-            base.Select(sender, eventArgs);
+            base.Display(sender, eventArgs);
         }
     }
 }

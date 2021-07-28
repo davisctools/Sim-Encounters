@@ -37,7 +37,7 @@ namespace ClinicalTools.SimEncounters
         {
             if (CurrentTab == eventArgs.SelectedTab) {
                 if (CurrentTabDrawer != null)
-                    CurrentTabDrawer.Select(sender, eventArgs);
+                    CurrentTabDrawer.Display(sender, eventArgs);
                 return;
             }
 
@@ -53,7 +53,7 @@ namespace ClinicalTools.SimEncounters
             var tab = eventArgs.SelectedTab;
             CurrentTabDrawer = TabDrawerFactory.Create(GetTabPrefabPath(tab.Data));
             CurrentTabDrawer.transform.SetParent(TabParent);
-            CurrentTabDrawer.Select(sender, eventArgs);
+            CurrentTabDrawer.Display(sender, eventArgs);
         }
 
         protected virtual string GetTabPrefabPath(Tab tab)

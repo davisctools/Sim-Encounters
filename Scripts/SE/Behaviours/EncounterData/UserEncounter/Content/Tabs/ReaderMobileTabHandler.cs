@@ -30,8 +30,9 @@ namespace ClinicalTools.SimEncounters
             Contents[3] = TabDrawer4;
         }
 
-        protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
-        protected ISelector<UserTabSelectedEventArgs> UserTabSelector { get; set; }
+        protected ISelectedListener<UserSectionSelectedEventArgs> SectionSelecedListener { get; set; }
+        protected ISelector<UserTabSelectedEventArgs> TabSelector { get; set; }
+        protected ISelectedListener<UserTabSelectedEventArgs> TabSelectedListener { get; set; }
         protected AnimationMonitor AnimationMonitor { get; set; }
         protected SwipeManager SwipeManager { get; set; }
         protected IShiftTransformsAnimator Curve { get; set; }
@@ -40,11 +41,13 @@ namespace ClinicalTools.SimEncounters
             AnimationMonitor animationMonitor,
             IShiftTransformsAnimator curve,
             SwipeManager swipeManager,
-            ISelector<UserSectionSelectedEventArgs> userSectionSelector,
-            ISelector<UserTabSelectedEventArgs> userTabSelector)
+            ISelectedListener<UserSectionSelectedEventArgs> sectionSelectedHandler,
+            ISelector<UserTabSelectedEventArgs> tabSelector,
+            ISelectedListener<UserTabSelectedEventArgs> tabSelectedHandler)
         {
-            UserSectionSelector = userSectionSelector;
-            UserTabSelector = userTabSelector;
+            SectionSelecedListener = sectionSelectedHandler;
+            TabSelector = tabSelector;
+            TabSelectedListener = tabSelectedHandler;
 
             AnimationMonitor = animationMonitor;
             Curve = curve;
@@ -53,13 +56,13 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void Start()
         {
-            UserSectionSelector.Selected += OnSectionSelected;
-            if (UserSectionSelector.CurrentValue != null)
-                OnSectionSelected(UserSectionSelector, UserSectionSelector.CurrentValue);
+            SectionSelecedListener.Selected += OnSectionSelected;
+            if (SectionSelecedListener.CurrentValue != null)
+                OnSectionSelected(SectionSelecedListener, SectionSelecedListener.CurrentValue);
 
-            UserTabSelector.Selected += OnTabSelected;
-            if (UserTabSelector.CurrentValue != null)
-                OnTabSelected(UserTabSelector, UserTabSelector.CurrentValue);
+            TabSelectedListener.Selected += OnTabSelected;
+            if (TabSelectedListener.CurrentValue != null)
+                OnTabSelected(TabSelectedListener, TabSelectedListener.CurrentValue);
         }
 
         protected ReaderTabContent Current { get; set; }
@@ -134,7 +137,7 @@ namespace ClinicalTools.SimEncounters
                 Next = unusedContent.Pop();
 
             var useDelay = Current.Tab != eventArgs.SelectedTab;
-            Current.Select(sender, eventArgs);
+            Current.Display(sender, eventArgs);
 
             TabDraw(useDelay, eventArgs.ChangeType);
         }
@@ -171,9 +174,9 @@ namespace ClinicalTools.SimEncounters
                 yield return null;
 
             if (Previous != null)
-                Previous.Select(this, new UserTabSelectedEventArgs(PreviousTab, ChangeType.Inactive));
+                Previous.Display(this, new UserTabSelectedEventArgs(PreviousTab, ChangeType.Inactive));
             if (Next != null)
-                Next.Select(this, new UserTabSelectedEventArgs(NextTab, ChangeType.Inactive));
+                Next.Display(this, new UserTabSelectedEventArgs(NextTab, ChangeType.Inactive));
         }
 
         protected virtual IEnumerator InstantTabTransition()
@@ -285,12 +288,12 @@ namespace ClinicalTools.SimEncounters
             var dist = (obj.LastPosition.x - obj.StartPosition.x) / SwipeParamater.StartPositionRange.Value.width;
             if (dist > 0 && Previous != null) {
                 if (dist > .5f || obj.Velocity.x / Screen.dpi > 1.5f)
-                    UserTabSelector.Select(this, new UserTabSelectedEventArgs(Previous.Tab, ChangeType.Previous));
+                    TabSelector.Select(this, new UserTabSelectedEventArgs(Previous.Tab, ChangeType.Previous));
                 else
                     currentCoroutine = StartCoroutine(ShiftForward(Previous));
             } else if (dist < 0 && Next != null) {
                 if (dist < -.5f || obj.Velocity.x / Screen.dpi < -1.5f)
-                    UserTabSelector.Select(this, new UserTabSelectedEventArgs(Next.Tab, ChangeType.Next));
+                    TabSelector.Select(this, new UserTabSelectedEventArgs(Next.Tab, ChangeType.Next));
                 else
                     currentCoroutine = StartCoroutine(ShiftBackward(Next));
             }

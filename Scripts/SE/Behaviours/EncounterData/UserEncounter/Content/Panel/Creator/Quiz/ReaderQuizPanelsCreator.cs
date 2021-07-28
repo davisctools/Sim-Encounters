@@ -43,7 +43,7 @@ namespace ClinicalTools.SimEncounters
                 var panel = ReaderPanelFactory.Create(prefab);
                 panel.transform.SetParent(transform);
                 panel.transform.localScale = Vector3.one;
-                panel.Select(this, new UserPanelSelectedEventArgs(childPanel, active));
+                panel.Display(this, new UserPanelSelectedEventArgs(childPanel, active));
                 Children.Add(childPanel, panel);
             }
         }
@@ -60,7 +60,7 @@ namespace ClinicalTools.SimEncounters
         protected virtual void SelectChildren()
         {
             foreach (var child in Children)
-                child.Value.Select(this, new UserPanelSelectedEventArgs(child.Key, IsActive));
+                child.Value.Display(this, new UserPanelSelectedEventArgs(child.Key, IsActive));
         }
 
         protected virtual BaseReaderPanelBehaviour GetChildPanelPrefab(UserPanel panel)

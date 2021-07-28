@@ -8,25 +8,33 @@ namespace ClinicalTools.SimEncounters
     public class BackButtonEncounterNavigation
     {
         protected ISelector<UserSectionSelectedEventArgs> SectionSelector { get; set; }
+        protected ISelectedListener<UserSectionSelectedEventArgs> SectionSelectedListener { get; set; }
         protected ISelector<UserTabSelectedEventArgs> TabSelector { get; set; }
+        protected ISelectedListener<UserTabSelectedEventArgs> TabSelectedListener { get; set; }
         protected AndroidBackButton BackButton { get; set; }
         [Inject]
         public virtual void Inject(
-            ISelector<UserSectionSelectedEventArgs> userSectionSelector,
-            ISelector<UserTabSelectedEventArgs> userTabSelector,
+            ISelector<UserSectionSelectedEventArgs> sectionSelector,
+            ISelectedListener<UserSectionSelectedEventArgs> sectionSelectedListener,
+            ISelector<UserTabSelectedEventArgs> tabSelector,
+            ISelectedListener<UserTabSelectedEventArgs> tabSelectedListener,
             AndroidBackButton backButton)
         {
-            SectionSelector = userSectionSelector;
-            TabSelector = userTabSelector;
-            TabSelector.Selected += OnTabSelected;
-            if (TabSelector.CurrentValue != null)
-                OnTabSelected(this, TabSelector.CurrentValue);
+            SectionSelector = sectionSelector;
+            SectionSelectedListener = sectionSelectedListener;
+
+            TabSelector = tabSelector;
+
+            TabSelectedListener = tabSelectedListener;
+            TabSelectedListener.Selected += OnTabSelected;
+            if (TabSelectedListener.CurrentValue != null)
+                OnTabSelected(this, TabSelectedListener.CurrentValue);
 
             BackButton = backButton;
             BackButton.Register(OnBackButton);
         }
 
-        protected UserSection CurrentSection => SectionSelector.CurrentValue.SelectedSection;
+        protected UserSection CurrentSection => SectionSelectedListener.CurrentValue.SelectedSection;
 
         protected Stack<Tuple<UserSection, UserTabSelectedEventArgs>> TabChangedEvents { get; } = new Stack<Tuple<UserSection, UserTabSelectedEventArgs>>();
         protected Tuple<UserSection, UserTab> LastTab { get; set;  }

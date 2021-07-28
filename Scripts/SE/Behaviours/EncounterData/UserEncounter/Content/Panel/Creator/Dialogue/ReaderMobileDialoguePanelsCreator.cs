@@ -46,7 +46,7 @@ namespace ClinicalTools.SimEncounters
                 WasActive = active;
 
                 for (var i = 0; i < PanelBehaviours.Count; i++)
-                    PanelBehaviours[i].Select(this, new UserPanelSelectedEventArgs(Panels[i].Value, WasActive));
+                    PanelBehaviours[i].Display(this, new UserPanelSelectedEventArgs(Panels[i].Value, WasActive));
 
                 return;
             }
@@ -91,7 +91,7 @@ namespace ClinicalTools.SimEncounters
             panelDisplay.transform.SetParent(transform);
             panelDisplay.transform.localScale = Vector3.one;
             panelDisplay.transform.SetAsLastSibling();
-            panelDisplay.Select(this, new UserPanelSelectedEventArgs(panel, WasActive));
+            panelDisplay.Display(this, new UserPanelSelectedEventArgs(panel, WasActive));
             return panelDisplay;
         }
 
@@ -119,7 +119,7 @@ namespace ClinicalTools.SimEncounters
             panelDisplay.transform.SetParent(transform);
             panelDisplay.transform.localScale = Vector3.one;
             panelDisplay.transform.SetAsLastSibling();
-            panelDisplay.Select(this, new UserPanelSelectedEventArgs(panels[panelIndex], WasActive));
+            panelDisplay.Display(this, new UserPanelSelectedEventArgs(panels[panelIndex], WasActive));
 
             panelDisplay.Completed += () => DeserializeChildren(panels, panelIndex + 1);
             return panelDisplay;

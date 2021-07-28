@@ -17,15 +17,17 @@ namespace ClinicalTools.SimEncounters
         protected AnimationMonitor AnimationMonitor { get; set; }
         protected SwipeManager SwipeManager { get; set; }
         protected ICurve Curve { get; set; }
-        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelector { get; set; }
+        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
         protected ISelector<UserSectionSelectedEventArgs> SectionSelector { get; set; }
+        protected ISelectedListener<UserSectionSelectedEventArgs> SectionSelectedListener { get; set; }
         [Inject]
         public virtual void Inject(
             AnimationMonitor animationMonitor,
             SwipeManager swipeManager,
             ICurve curve,
-            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelector,
-            ISelector<UserSectionSelectedEventArgs> sectionSelector)
+            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelectedListener,
+            ISelector<UserSectionSelectedEventArgs> sectionSelector,
+            ISelectedListener<UserSectionSelectedEventArgs> sectionSelectedListener)
         {
             foreach (var behaviour in swipableSectionBehaviours) {
                 if (behaviour is ISwipableSection swipableSection)
@@ -36,11 +38,13 @@ namespace ClinicalTools.SimEncounters
             SwipeManager = swipeManager;
             Curve = curve;
 
-            EncounterSelector = encounterSelector;
+            EncounterSelectedListener = encounterSelectedListener;
             SectionSelector = sectionSelector;
-            SectionSelector.Selected += OnSectionSelected;
-            if (SectionSelector.CurrentValue != null)
-                OnSectionSelected(SectionSelector, SectionSelector.CurrentValue);
+
+            SectionSelectedListener = sectionSelectedListener;
+            SectionSelectedListener.Selected += OnSectionSelected;
+            if (SectionSelectedListener.CurrentValue != null)
+                OnSectionSelected(SectionSelector, SectionSelectedListener.CurrentValue);
         }
 
         protected virtual void OnEnable()
@@ -56,7 +60,7 @@ namespace ClinicalTools.SimEncounters
         protected UserSection CurrentSection { get; set; }
         protected virtual void OnSectionSelected(object sender, UserSectionSelectedEventArgs e)
         {
-            var encounter = EncounterSelector.CurrentValue.Encounter;
+            var encounter = EncounterSelectedListener.CurrentValue.Encounter;
             var nonImageContent = encounter.Data.Content.NonImageContent;
             var sectionIndex = nonImageContent.CurrentSectionIndex;
             PreviousSection = (sectionIndex > 0) ? encounter.Sections[sectionIndex - 1].Value : null;
@@ -101,7 +105,7 @@ namespace ClinicalTools.SimEncounters
                 CurrentCoroutine = null;
             }
 
-            var section = SectionSelector.CurrentValue.SelectedSection.Data;
+            var section = SectionSelectedListener.CurrentValue.SelectedSection.Data;
             CanSwipeLeft = NextSection != null && section.CurrentTabIndex + 1 == section.Tabs.Count;
             CanSwipeRight = PreviousSection != null && section.CurrentTabIndex == 0;
             StartMove();

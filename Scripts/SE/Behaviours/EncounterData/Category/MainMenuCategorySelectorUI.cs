@@ -19,27 +19,27 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void Start() => SelectButton.onClick.AddListener(CategorySelected);
 
-        public override void Select(object sender, CategorySelectedEventArgs eventArgs)
+        public override void Display(object sender, CategorySelectedEventArgs eventArgs)
         {
             CategoryLabel.text = eventArgs.Category.Name;
 
             if (eventArgs.Category.IsCompleted())
                 CompletedObject.SetActive(true);
 
-            base.Select(sender, eventArgs);
+            base.Display(sender, eventArgs);
         }
 
-        protected virtual void CategorySelected() => Select(this, CurrentValue);
+        protected virtual void CategorySelected() => Display(this, CurrentValue);
 
     }
-    public abstract class CategorySelector : MonoBehaviour,
-        ISelector<CategorySelectedEventArgs>
+
+    public abstract class CategorySelector : MonoBehaviour, ISelectedListener<CategorySelectedEventArgs>
     {
         public virtual CategorySelectedEventArgs CurrentValue { get; protected set; }
 
         public event SelectedHandler<CategorySelectedEventArgs> Selected;
 
-        public virtual void Select(object sender, CategorySelectedEventArgs eventArgs)
+        public virtual void Display(object sender, CategorySelectedEventArgs eventArgs)
         {
             CurrentValue = eventArgs;
             Selected?.Invoke(sender, eventArgs);

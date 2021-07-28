@@ -19,13 +19,15 @@ namespace ClinicalTools.SimEncounters
 
         protected ISelectedListener<EncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
         protected ISelector<SectionSelectedEventArgs> SectionSelector { get; set; }
+        protected ISelectedListener<SectionSelectedEventArgs> SectionSelectedListener { get; set; }
         protected virtual BaseWriterSectionToggle.Pool SectionButtonPool { get; set; }
         protected virtual SectionCreatorPopup AddSectionPopup { get; set; }
 
         [Inject]
         public virtual void Inject(
             ISelectedListener<EncounterSelectedEventArgs> encounterSelectedListener,
-            ISelector<SectionSelectedEventArgs> sectionSelectedListener,
+            ISelector<SectionSelectedEventArgs> sectionSelector,
+            ISelectedListener<SectionSelectedEventArgs> sectionSelectedListener,
             BaseWriterSectionToggle.Pool sectionButtonPool,
             SectionCreatorPopup addSectionPopup)
         {
@@ -37,10 +39,12 @@ namespace ClinicalTools.SimEncounters
             if (EncounterSelectedListener.CurrentValue != null)
                 OnEncounterSelected(this, EncounterSelectedListener.CurrentValue);
 
-            SectionSelector = sectionSelectedListener;
-            SectionSelector.Selected += OnSectionSelected;
-            if (SectionSelector.CurrentValue != null)
-                OnSectionSelected(this, SectionSelector.CurrentValue);
+            SectionSelector = sectionSelector;
+
+            SectionSelectedListener = sectionSelectedListener;
+            SectionSelectedListener.Selected += OnSectionSelected;
+            if (SectionSelectedListener.CurrentValue != null)
+                OnSectionSelected(this, SectionSelectedListener.CurrentValue);
         }
 
         protected Encounter CurrentEncounter { get; set; }
@@ -109,7 +113,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void OnSectionEdited(Section section)
         {
-            if (section == SectionSelector.CurrentValue.SelectedSection)
+            if (section == SectionSelectedListener.CurrentValue.SelectedSection)
                 SectionSelector.Select(this, new SectionSelectedEventArgs(section, SelectionType.Edited));
         }
 

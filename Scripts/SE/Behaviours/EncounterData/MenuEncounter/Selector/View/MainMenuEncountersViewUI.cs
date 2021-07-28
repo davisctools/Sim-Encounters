@@ -87,9 +87,9 @@ namespace ClinicalTools.SimEncounters
             encounterUI.transform.localScale = Vector3.one;
 
             if (IsRead)
-                encounterUI.Select(this, new MenuEncounterSelectedEventArgs(encounter, EncounterSelectionType.Read));
+                encounterUI.Display(this, new MenuEncounterSelectedEventArgs(encounter, EncounterSelectionType.Read));
             else
-                encounterUI.Select(this, new MenuEncounterSelectedEventArgs(encounter, EncounterSelectionType.Edit));
+                encounterUI.Display(this, new MenuEncounterSelectedEventArgs(encounter, EncounterSelectionType.Edit));
 
             EncounterDisplays.Add(encounterUI);
         }

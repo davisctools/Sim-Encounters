@@ -4,7 +4,7 @@ using Zenject;
 namespace ClinicalTools.SimEncounters
 {
     public class UserTabSelectorBehaviour : MonoBehaviour,
-        ISelector<UserTabSelectedEventArgs>,
+        ISelectedListener<UserTabSelectedEventArgs>,
         ISelectedListener<TabSelectedEventArgs>
     {
         protected UserTabSelectedEventArgs UserTabValue { get; set; }
@@ -23,7 +23,7 @@ namespace ClinicalTools.SimEncounters
             remove => TabSelected -= value;
         }
 
-        public virtual void Select(object sender, UserTabSelectedEventArgs eventArgs)
+        public virtual void Display(object sender, UserTabSelectedEventArgs eventArgs)
         {
             UserTabValue = eventArgs;
             UserTabSelected?.Invoke(sender, UserTabValue);

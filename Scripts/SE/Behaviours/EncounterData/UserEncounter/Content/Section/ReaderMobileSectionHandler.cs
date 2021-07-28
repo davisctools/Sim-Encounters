@@ -31,22 +31,22 @@ namespace ClinicalTools.SimEncounters
             Contents[3] = SectionDrawer4;
         }
 
-        protected ISelectedListener<UserEncounterSelectedEventArgs> UserEncounterSelector { get; set; }
-        protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
-        protected ISelector<UserTabSelectedEventArgs> UserTabSelector { get; set; }
+        protected ISelectedListener<UserEncounterSelectedEventArgs> UserEncounterSelectedListener { get; set; }
+        protected ISelectedListener<UserSectionSelectedEventArgs> UserSectionSelectedListener { get; set; }
+        protected ISelectedListener<UserTabSelectedEventArgs> UserTabSelectedListener { get; set; }
         protected AnimationMonitor AnimationMonitor { get; set; }
         protected IShiftTransformsAnimator Curve { get; set; }
         [Inject]
         public virtual void Inject(
             AnimationMonitor animationMonitor,
             IShiftTransformsAnimator curve,
-            ISelectedListener<UserEncounterSelectedEventArgs> userEncounterSelector,
-            ISelector<UserSectionSelectedEventArgs> userSectionSelector,
-            ISelector<UserTabSelectedEventArgs> userTabSelector)
+            ISelectedListener<UserEncounterSelectedEventArgs> userEncounterSelectedListener,
+            ISelectedListener<UserSectionSelectedEventArgs> userSectionSelectedListener,
+            ISelectedListener<UserTabSelectedEventArgs> userTabSelectedListener)
         {
-            UserEncounterSelector = userEncounterSelector;
-            UserSectionSelector = userSectionSelector;
-            UserTabSelector = userTabSelector;
+            UserEncounterSelectedListener = userEncounterSelectedListener;
+            UserSectionSelectedListener = userSectionSelectedListener;
+            UserTabSelectedListener = userTabSelectedListener;
 
             AnimationMonitor = animationMonitor;
             Curve = curve;
@@ -54,17 +54,17 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void Start()
         {
-            UserEncounterSelector.Selected += OnEncounterSelected;
-            if (UserEncounterSelector.CurrentValue != null)
-                OnEncounterSelected(UserEncounterSelector, UserEncounterSelector.CurrentValue);
+            UserEncounterSelectedListener.Selected += OnEncounterSelected;
+            if (UserEncounterSelectedListener.CurrentValue != null)
+                OnEncounterSelected(UserEncounterSelectedListener, UserEncounterSelectedListener.CurrentValue);
 
-            UserSectionSelector.Selected += OnSectionSelected;
-            if (UserSectionSelector.CurrentValue != null)
-                OnSectionSelected(UserSectionSelector, UserSectionSelector.CurrentValue);
+            UserSectionSelectedListener.Selected += OnSectionSelected;
+            if (UserSectionSelectedListener.CurrentValue != null)
+                OnSectionSelected(UserSectionSelectedListener, UserSectionSelectedListener.CurrentValue);
 
-            UserTabSelector.Selected += OnTabSelected;
-            if (UserTabSelector.CurrentValue != null)
-                OnTabSelected(UserTabSelector, UserTabSelector.CurrentValue);
+            UserTabSelectedListener.Selected += OnTabSelected;
+            if (UserTabSelectedListener.CurrentValue != null)
+                OnTabSelected(UserTabSelectedListener, UserTabSelectedListener.CurrentValue);
         }
 
         protected ReaderSectionContent Current { get; set; }
@@ -88,9 +88,7 @@ namespace ClinicalTools.SimEncounters
             if (Leaving == null)
                 return;
 
-            Leaving.UserSectionSelected -= UserSectionSelector.Select;
-            Leaving.UserTabSelected -= UserTabSelector.Select;
-            Leaving.Select(this, new UserTabSelectedEventArgs(Leaving.Tab, ChangeType.Inactive));
+            Leaving.Display(this, new UserTabSelectedEventArgs(Leaving.Tab, ChangeType.Inactive));
         }
 
         protected virtual void OnSectionSelected(object sender, UserSectionSelectedEventArgs eventArgs)
@@ -106,9 +104,7 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void OnTabSelected(object sender, UserTabSelectedEventArgs eventArgs)
         {
-            Current.UserTabSelected -= UserTabSelector.Select;
-            Current.Select(sender, eventArgs);
-            Current.UserTabSelected += UserTabSelector.Select;
+            Current.Display(sender, eventArgs);
         }
 
         protected UserSection PreviousSection { get; set; }
@@ -146,9 +142,7 @@ namespace ClinicalTools.SimEncounters
             if (NextSection != null && Next == null)
                 Next = unusedContent.Pop();
 
-            Current.Select(sender, eventArgs);
-            Current.UserSectionSelected += UserSectionSelector.Select;
-            Current.UserTabSelected += UserTabSelector.Select;
+            Current.Display(sender, eventArgs);
 
             SectionDraw();
         }
@@ -174,12 +168,12 @@ namespace ClinicalTools.SimEncounters
                 yield return null;
 
             if (Previous != null) {
-                Previous.Select(this, new UserSectionSelectedEventArgs(PreviousSection, ChangeType.Inactive));
+                Previous.Display(this, new UserSectionSelectedEventArgs(PreviousSection, ChangeType.Inactive));
                 Previous.SetLastTab(this, ChangeType.Inactive);
             }
 
             if (Next != null) {
-                Next.Select(this, new UserSectionSelectedEventArgs(NextSection, ChangeType.Inactive));
+                Next.Display(this, new UserSectionSelectedEventArgs(NextSection, ChangeType.Inactive));
                 Next.SetFirstTab(this, ChangeType.Inactive);
             }
         }
@@ -198,8 +192,8 @@ namespace ClinicalTools.SimEncounters
         }
         public void Move(Direction dir, float dist)
         {
-            if (Current == null || Current.Section != UserSectionSelector.CurrentValue.SelectedSection)
-                OnSectionSelected(UserSectionSelector, UserSectionSelector.CurrentValue);
+            if (Current == null || Current.Section != UserSectionSelectedListener.CurrentValue.SelectedSection)
+                OnSectionSelected(UserSectionSelectedListener, UserSectionSelectedListener.CurrentValue);
 
             if (dir == Direction.NA)
                 ResetMovement();

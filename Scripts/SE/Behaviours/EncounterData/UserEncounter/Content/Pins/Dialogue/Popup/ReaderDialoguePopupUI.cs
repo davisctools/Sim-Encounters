@@ -1,11 +1,10 @@
 ﻿using ClinicalTools.UI;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace ClinicalTools.SimEncounters
 {
-    public class ReaderDialoguePopupUI : BaseUserDialoguePinDrawer, ISelector<UserDialoguePinSelectedEventArgs>
+    public class ReaderDialoguePopupUI : BaseUserDialoguePinDrawer, ISelectedListener<UserDialoguePinSelectedEventArgs>
     {
         public BaseChildUserPanelsDrawer PanelCreator { get => panelCreator; set => panelCreator = value; }
         [SerializeField] private BaseChildUserPanelsDrawer panelCreator;
@@ -18,7 +17,7 @@ namespace ClinicalTools.SimEncounters
 
         public override void Display(UserDialoguePin dialoguePin)
         {
-            Select(this, new UserDialoguePinSelectedEventArgs(dialoguePin));
+            Selected?.Invoke(this, new UserDialoguePinSelectedEventArgs(dialoguePin));
 
             gameObject.SetActive(true);
 
@@ -30,6 +29,5 @@ namespace ClinicalTools.SimEncounters
         }
 
         public UserDialoguePinSelectedEventArgs CurrentValue { get; protected set; }
-        public void Select(object sender, UserDialoguePinSelectedEventArgs eventArgs) => Selected?.Invoke(sender, eventArgs);
     }
 }

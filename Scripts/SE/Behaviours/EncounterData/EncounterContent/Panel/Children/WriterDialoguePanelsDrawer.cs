@@ -77,7 +77,7 @@ namespace ClinicalTools.SimEncounters
 
             var panelUI = InstantiatePanel(EntryPrefab);
             ReorderableGroup.Add(panelUI);
-            panelUI.Select(this, new PanelSelectedEventArgs(panel));
+            panelUI.Display(this, new PanelSelectedEventArgs(panel));
             WriterPanels.Add(panelUI);
         }
 
@@ -85,14 +85,14 @@ namespace ClinicalTools.SimEncounters
         {
             var panelUI = InstantiatePanel(TextboxPrefab);
             ReorderableGroup.Add(panelUI);
-            panelUI.Select(this, new PanelSelectedEventArgs(null));
+            panelUI.Display(this, new PanelSelectedEventArgs(null));
             WriterPanels.Add(panelUI);
         }
         protected virtual void AddChoice()
         {
             var panelUI = InstantiatePanel(ChoicePrefab);
             ReorderableGroup.Add(panelUI);
-            panelUI.Select(this, new PanelSelectedEventArgs(null));
+            panelUI.Display(this, new PanelSelectedEventArgs(null));
             WriterPanels.Add(panelUI);
         }
 
@@ -114,7 +114,7 @@ namespace ClinicalTools.SimEncounters
                 var prefab = childrenPanelManager.ChoosePrefab(PanelPrefabs, panel.Value);
                 var panelUI = InstantiatePanel(prefab);
                 ReorderableGroup.Add(panelUI);
-                panelUI.Select(this, new PanelSelectedEventArgs(panel.Value));
+                panelUI.Display(this, new PanelSelectedEventArgs(panel.Value));
                 WriterPanels.Add(panel.Key, panelUI);
             }
         }

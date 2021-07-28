@@ -10,10 +10,10 @@ namespace ClinicalTools.SimEncounters
         public UserTab Tab => UserTabValue?.SelectedTab;
 
         public void SetFirstTab(object sender, ChangeType changeType) 
-            => Select(sender, new UserTabSelectedEventArgs(Section.Tabs[0].Value, changeType));
+            => Display(sender, new UserTabSelectedEventArgs(Section.Tabs[0].Value, changeType));
         public void SetCurrentTab(object sender, ChangeType changeType)
-            => Select(sender, new UserTabSelectedEventArgs(Section.GetCurrentTab(), changeType));
+            => Display(sender, new UserTabSelectedEventArgs(Section.GetCurrentTab(), changeType));
         public void SetLastTab(object sender, ChangeType changeType)
-            => Select(sender, new UserTabSelectedEventArgs(Section.Tabs[Section.Tabs.Count - 1].Value, changeType));
+            => Display(sender, new UserTabSelectedEventArgs(Section.Tabs[Section.Tabs.Count - 1].Value, changeType));
     }
 }

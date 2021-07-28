@@ -19,11 +19,11 @@ namespace ClinicalTools.SimEncounters
         }
 
         public virtual void Initialize(UserSection section)
-            => base.Select(this, new UserSectionSelectedEventArgs(Section = section, ChangeType.JumpTo));
+            => base.Display(this, new UserSectionSelectedEventArgs(Section = section, ChangeType.JumpTo));
 
-        public override void Select(object sender, UserSectionSelectedEventArgs eventArgs)
+        public override void Display(object sender, UserSectionSelectedEventArgs eventArgs)
             => SectionSelector.Select(sender, eventArgs);
-        public override void Select(object sender, UserTabSelectedEventArgs eventArgs)
+        public override void Display(object sender, UserTabSelectedEventArgs eventArgs)
         {
             SectionValue.SelectedSection.SetCurrentTab(eventArgs.SelectedTab.Data);
             SectionSelector.Select(sender, UserSectionValue);

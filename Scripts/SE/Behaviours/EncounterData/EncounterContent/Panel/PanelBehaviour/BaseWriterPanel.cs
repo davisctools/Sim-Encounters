@@ -4,7 +4,7 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public abstract class BaseWriterPanel : MonoBehaviour, ISelector<PanelSelectedEventArgs>
+    public abstract class BaseWriterPanel : MonoBehaviour, ISelectedListener<PanelSelectedEventArgs>
     {
         protected abstract BaseWriterPanelsDrawer ChildPanelCreator { get; }
         protected abstract BaseWriterPinsDrawer PinsDrawer { get; }
@@ -17,7 +17,7 @@ namespace ClinicalTools.SimEncounters
         public virtual event SelectedHandler<PanelSelectedEventArgs> Selected;
 
         protected IWriterPanelField[] Fields { get; set; }
-        public virtual void Select(object sender, PanelSelectedEventArgs eventArgs)
+        public virtual void Display(object sender, PanelSelectedEventArgs eventArgs)
         {
             if (CurrentValue == eventArgs)
                 return;

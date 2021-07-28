@@ -1,7 +1,7 @@
 ﻿namespace ClinicalTools.SimEncounters
 {
     public class MenuEncounterOverview : BaseMenuEncounterOverview,
-        ISelector<MenuEncounterSelectedEventArgs>,
+        ISelectedListener<MenuEncounterSelectedEventArgs>,
         ISelectedListener<EncounterMetadataSelectedEventArgs>
     {
         public MenuEncounterSelectedEventArgs CurrentValue { get; protected set; }
@@ -15,7 +15,7 @@
             remove => MetadataSelected -= value;
         }
 
-        public override void Select(object sender, MenuEncounterSelectedEventArgs eventArgs)
+        public override void Display(object sender, MenuEncounterSelectedEventArgs eventArgs)
         {
             gameObject.SetActive(true);
 

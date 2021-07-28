@@ -46,7 +46,7 @@ namespace ClinicalTools.SimEncounters
             var categoryUI = OptionPool.Spawn(); 
             categoryUI.transform.SetParent(OptionsParent);
             categoryUI.transform.localScale = Vector3.one;
-            categoryUI.Select(this, new CategorySelectedEventArgs(category));
+            categoryUI.Display(this, new CategorySelectedEventArgs(category));
             categoryUI.Selected += Select;
             CategoryUIs.Add(categoryUI);
         }

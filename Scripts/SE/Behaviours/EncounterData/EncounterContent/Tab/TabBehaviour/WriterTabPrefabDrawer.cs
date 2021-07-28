@@ -54,7 +54,7 @@ namespace ClinicalTools.SimEncounters
             ((RectTransform)CurrentTabDrawer.transform).offsetMin = Vector2.zero;
             ((RectTransform)CurrentTabDrawer.transform).offsetMax = Vector2.zero;
 
-            CurrentTabDrawer.Select(sender, e);
+            CurrentTabDrawer.Display(sender, e);
         }
 
         protected virtual string GetTabPath(Tab tab)

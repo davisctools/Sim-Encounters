@@ -3,12 +3,12 @@ using Zenject;
 
 namespace ClinicalTools.SimEncounters
 {
-    public abstract class BaseTabDrawer : MonoBehaviour, ISelector<TabSelectedEventArgs>
+    public abstract class BaseTabDrawer : MonoBehaviour, ISelectedListener<TabSelectedEventArgs>
     {
         public TabSelectedEventArgs CurrentValue { get; protected set;}
         public event SelectedHandler<TabSelectedEventArgs> Selected;
 
-        public virtual void Select(object sender, TabSelectedEventArgs eventArgs)
+        public virtual void Display(object sender, TabSelectedEventArgs eventArgs)
         {
             CurrentValue = eventArgs;
             Selected?.Invoke(sender, eventArgs);

@@ -20,28 +20,29 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private bool showTableOfContents = true;
 
         protected SceneMonoMemoryPool<T> TabButtonPool { get; set; }
-        protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
-        protected ISelector<UserTabSelectedEventArgs> UserTabSelector { get; set; }
+        protected ISelectedListener<UserSectionSelectedEventArgs> SectionSelectedListener { get; set; }
+        protected ISelectedListener<UserTabSelectedEventArgs> TabSelectedListener { get; set; }
         [Inject]
         public virtual void Inject(
             SceneMonoMemoryPool<T> tabButtonPool,
-            ISelector<UserSectionSelectedEventArgs> userSectionSelector,
-            ISelector<UserTabSelectedEventArgs> userTabSelector)
+            ISelectedListener<UserSectionSelectedEventArgs> sectionSelectedListener,
+            ISelectedListener<UserTabSelectedEventArgs> tabSelectedListener)
         {
             TabButtonPool = tabButtonPool;
-            UserSectionSelector = userSectionSelector;
-            UserTabSelector = userTabSelector;
+
+            SectionSelectedListener = sectionSelectedListener;
+            TabSelectedListener = tabSelectedListener;
         }
 
         protected virtual void Start()
         {
-            UserSectionSelector.Selected += OnSectionSelected;
-            if (UserSectionSelector.CurrentValue != null)
-                OnSectionSelected(UserSectionSelector, UserSectionSelector.CurrentValue);
+            SectionSelectedListener.Selected += OnSectionSelected;
+            if (SectionSelectedListener.CurrentValue != null)
+                OnSectionSelected(SectionSelectedListener, SectionSelectedListener.CurrentValue);
 
-            UserTabSelector.Selected += OnTabSelected;
-            if (UserTabSelector.CurrentValue != null)
-                OnTabSelected(UserTabSelector, UserTabSelector.CurrentValue);
+            TabSelectedListener.Selected += OnTabSelected;
+            if (TabSelectedListener.CurrentValue != null)
+                OnTabSelected(TabSelectedListener, TabSelectedListener.CurrentValue);
         }
 
         protected UserSection Section { get; set; }
@@ -50,7 +51,7 @@ namespace ClinicalTools.SimEncounters
             if (Section == eventArgs.SelectedSection)
                 return;
             Section = eventArgs.SelectedSection;
-            
+
             ClearButtons();
 
             foreach (var tab in Section.Tabs.Values)
@@ -113,6 +114,12 @@ namespace ClinicalTools.SimEncounters
                 return;
 
             OnSelected(eventArgs.SelectedTab);
+        }
+
+        protected virtual void OnDestroy()
+        {
+            SectionSelectedListener.Selected -= OnSectionSelected;
+            TabSelectedListener.Selected -= OnTabSelected;
         }
     }
 }

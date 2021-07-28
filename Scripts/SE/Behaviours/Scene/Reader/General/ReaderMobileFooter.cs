@@ -14,20 +14,20 @@ namespace ClinicalTools.SimEncounters
         [SerializeField] private Button primaryFinishButton;
 
         protected ILinearEncounterNavigator LinearEncounterNavigator { get; set; }
-        protected ISelector<UserEncounterSelectedEventArgs> UserEncounterSelector { get; set; }
-        protected ISelector<UserTabSelectedEventArgs> UserTabSelector { get; set; }
+        protected ISelectedListener<UserEncounterSelectedEventArgs> EncounterSelectedListener { get; set; }
+        protected ISelectedListener<UserTabSelectedEventArgs> TabSelectedListener { get; set; }
         protected SignalBus SignalBus { get; set; }
         protected IUserEncounterMenuSceneStarter MenuSceneStarter { get; set; }
         [Inject]
         public virtual void Inject(
             ILinearEncounterNavigator linearEncounterNavigator,
-            ISelector<UserEncounterSelectedEventArgs> userEncounterSelector,
-            ISelector<UserTabSelectedEventArgs> userTabSelector,
+            ISelectedListener<UserEncounterSelectedEventArgs> encounterSelectedListener,
+            ISelectedListener<UserTabSelectedEventArgs> tabSelectedListener,
             SignalBus signalBus,
             IUserEncounterMenuSceneStarter menuSceneStarter)
         {
-            UserEncounterSelector = userEncounterSelector;
-            UserTabSelector = userTabSelector;
+            EncounterSelectedListener = encounterSelectedListener;
+            TabSelectedListener = tabSelectedListener;
 
             LinearEncounterNavigator = linearEncounterNavigator;
             SignalBus = signalBus;
@@ -44,13 +44,13 @@ namespace ClinicalTools.SimEncounters
 
         protected virtual void Start()
         {
-            UserEncounterSelector.Selected += OnEncounterSelected;
-            if (UserEncounterSelector.CurrentValue != null)
-                OnEncounterSelected(UserEncounterSelector, UserEncounterSelector.CurrentValue);
+            EncounterSelectedListener.Selected += OnEncounterSelected;
+            if (EncounterSelectedListener.CurrentValue != null)
+                OnEncounterSelected(EncounterSelectedListener, EncounterSelectedListener.CurrentValue);
 
-            UserTabSelector.Selected += OnTabSelected;
-            if (UserTabSelector.CurrentValue != null)
-                OnTabSelected(UserTabSelector, UserTabSelector.CurrentValue);
+            TabSelectedListener.Selected += OnTabSelected;
+            if (TabSelectedListener.CurrentValue != null)
+                OnTabSelected(TabSelectedListener, TabSelectedListener.CurrentValue);
         }
 
         protected UserEncounter UserEncounter { get; set; }

@@ -5,31 +5,38 @@ namespace ClinicalTools.SimEncounters
 {
     public class LinearUserEncounterNavigator : ILinearEncounterNavigator
     {
-        protected ISelector<UserEncounterSelectedEventArgs> UserEncounterSelector { get; set; }
+        protected ISelectedListener<UserEncounterSelectedEventArgs> UserEncounterSelectedListener { get; set; }
         protected ISelector<UserSectionSelectedEventArgs> UserSectionSelector { get; set; }
+        protected ISelectedListener<UserSectionSelectedEventArgs> UserSectionSelectedListener { get; set; }
         protected ISelector<UserTabSelectedEventArgs> UserTabSelector { get; set; }
+        protected ISelectedListener<UserTabSelectedEventArgs> UserTabSelectedListener { get; set; }
 
         public event SelectedHandler<UserTabSelectedEventArgs> EncounterTabPositionChanged;
-        public UserTabSelectedEventArgs CurrentTab => UserTabSelector.CurrentValue;
+        public UserTabSelectedEventArgs CurrentTab => UserTabSelectedListener.CurrentValue;
 
         [Inject]
         public virtual void Inject(
-            ISelector<UserEncounterSelectedEventArgs> userEncounterSelector,
+            ISelectedListener<UserEncounterSelectedEventArgs> userEncounterSelectedListener,
             ISelector<UserSectionSelectedEventArgs> userSectionSelector,
-            ISelector<UserTabSelectedEventArgs> userTabSelector)
+            ISelectedListener<UserSectionSelectedEventArgs> userSectionSelectedListener,
+            ISelector<UserTabSelectedEventArgs> userTabSelector,
+            ISelectedListener<UserTabSelectedEventArgs> userTabSelectedListener)
         {
-            UserEncounterSelector = userEncounterSelector;
-            UserEncounterSelector.Selected += OnEncounterSelected;
-            if (UserEncounterSelector.CurrentValue != null)
-                OnEncounterSelected(UserEncounterSelector, UserEncounterSelector.CurrentValue);
+            UserEncounterSelectedListener = userEncounterSelectedListener;
+            UserEncounterSelectedListener.Selected += OnEncounterSelected;
+            if (UserEncounterSelectedListener.CurrentValue != null)
+                OnEncounterSelected(UserEncounterSelectedListener, UserEncounterSelectedListener.CurrentValue);
 
             UserSectionSelector = userSectionSelector;
-            UserSectionSelector.Selected += OnSectionSelected;
-            if (UserSectionSelector.CurrentValue != null)
-                OnSectionSelected(UserSectionSelector, UserSectionSelector.CurrentValue);
 
+            UserSectionSelectedListener = userSectionSelectedListener;
+            UserSectionSelectedListener.Selected += OnSectionSelected;
+            if (UserSectionSelectedListener.CurrentValue != null)
+                OnSectionSelected(UserSectionSelectedListener, UserSectionSelectedListener.CurrentValue);
+
+            UserTabSelectedListener = userTabSelectedListener;
             UserTabSelector = userTabSelector;
-            UserTabSelector.Selected += OnTabSelected;
+            UserTabSelectedListener.Selected += OnTabSelected;
         }
 
         protected UserEncounter UserEncounter { get; set; }

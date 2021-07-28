@@ -13,9 +13,9 @@ namespace ClinicalTools.SimEncounters
         protected UserPanel CurrentPanel { get; set; }
         protected abstract bool SetReadOnSelect { get; }
 
-        public override void Select(object sender, UserPanelSelectedEventArgs eventArgs)
+        public override void Display(object sender, UserPanelSelectedEventArgs eventArgs)
         {
-            base.Select(sender, eventArgs);
+            base.Display(sender, eventArgs);
             CurrentPanel = eventArgs.SelectedPanel;
 
             if (ChildPanelsDrawer != null)
