@@ -64,8 +64,10 @@ namespace ClinicalTools.UI
             SetPlaceholderIndex(draggable);
             draggable.RectTransform.SetAsLastSibling();
 
-            Offset = DistanceFromMouse(draggable.RectTransform, mousePosition);
+            Offset = GetOffset(draggable.RectTransform, mousePosition);
         }
+
+        protected virtual float GetOffset(RectTransform rectTransform, Vector3 mousePosition) => DistanceFromMouse(rectTransform, mousePosition);
 
         protected virtual void SetPlaceholderIndex(IDraggable draggable)
             => Placeholder.transform.SetSiblingIndex(draggable.RectTransform.GetSiblingIndex());

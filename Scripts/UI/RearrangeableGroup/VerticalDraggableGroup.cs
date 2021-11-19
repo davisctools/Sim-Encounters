@@ -42,11 +42,21 @@ namespace ClinicalTools.UI
             => DistanceFromMouse(neighbor.RectTransform, mousePosition) - Offset > 0;
         protected override bool AfterNeighbor(IDraggable neighbor, Vector3 mousePosition)
             => DistanceFromMouse(neighbor.RectTransform, mousePosition) - Offset < 0;
+
+
+        // Offset seems to be making it a bit harder to move certain things to the desired position,
+        // so disabling it would help with somethings.
+        // I'll need to keep an out to make sure this isn't breaking other things.
+        protected override float GetOffset(RectTransform rectTransform, Vector3 mousePosition) => 0;
+        
         protected override float DistanceFromMouse(RectTransform rectTransform, Vector3 mousePosition)
         {
             var worldCorners = new Vector3[4];
             rectTransform.GetWorldCorners(worldCorners);
-            return mousePosition.y - worldCorners[0].y;
+
+            // Average should make moving feel more natural, but I need to keep an eye out for parts of the code that may have broken
+             return mousePosition.y - ((worldCorners[0].y + worldCorners[1].y) / 2);
+            //return mousePosition.y - worldCorners[0].y;
         }
     }
 }
