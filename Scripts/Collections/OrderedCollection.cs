@@ -65,6 +65,14 @@ namespace ClinicalTools.Collections
 
             base.Remove(value);
         }
+        public virtual void RemoveAt(int index)
+        {
+            var value = ValueList[index];
+            ValueList.RemoveAt(index);
+            PairList.RemoveAt(index);
+
+            base.Remove(value);
+        }
 
         protected override void Set(string key, T value)
         {

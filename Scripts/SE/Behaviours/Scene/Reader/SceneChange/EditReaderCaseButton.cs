@@ -32,10 +32,20 @@ namespace ClinicalTools.SimEncounters
         protected virtual void OnEncounterSelected(object sender, UserEncounterSelectedEventArgs e)
             => gameObject.SetActive(e.Encounter.Data.Metadata.AuthorAccountId == e.Encounter.User.AccountId);
 
-        protected virtual void Awake() => Button.onClick.AddListener(ShowInstructions);
-        public virtual void ShowInstructions()
+        protected virtual void Awake() => Button.onClick.AddListener(StartWriter);
+        public virtual void StartWriter()
         {
             var sceneInfo = SceneInfoSelectedListener.CurrentValue.SceneInfo;
+
+            // Removes the table of contents tab
+            // TODO: handle the ToC tab more elegantly
+            if (sceneInfo.Encounter.Sections.Count > 0) {
+                var firstSection = sceneInfo.Encounter.Sections[0].Value.Data;
+                firstSection.Tabs.RemoveAt(0);
+                if (firstSection.CurrentTabIndex > 0)
+                    firstSection.CurrentTabIndex--;
+            }
+
             var encounter = new WaitableTask<Encounter>(sceneInfo.Encounter.Data);
             var writerSceneInfo = new LoadingWriterSceneInfo(sceneInfo.User, sceneInfo.LoadingScreen, encounter);
             WriterSceneStarter.StartScene(writerSceneInfo);
